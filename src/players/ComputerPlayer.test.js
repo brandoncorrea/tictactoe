@@ -11,3 +11,9 @@ test('Initializes player with O token', () => {
   var token = player.getToken();
   expect(token).toBe('O');
 })
+
+test('Defaults token to X', () => {
+  var player = new ComputerPlayer();
+  var token = player.getToken();
+  expect(token).toBe('X');
+})
