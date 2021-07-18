@@ -5,9 +5,8 @@ export default class GameBoard {
     ['', '', '']
   ]
 
-  placeToken(token, cell) {
+  placeToken = (token, cell) =>
     this.board[cell.row][cell.col] = token;
-  }
 
   getToken = cell => 
     this.board[cell.row][cell.col];
