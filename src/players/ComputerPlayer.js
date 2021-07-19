@@ -1,3 +1,5 @@
+import Cell from '../models/Cell';
+
 export default class ComputerPlayer {
   
   constructor(token) {
@@ -7,4 +9,6 @@ export default class ComputerPlayer {
   }
 
   getToken = () => this.token;
+
+  getNextMove = board => new Cell(1, 1);
 }
