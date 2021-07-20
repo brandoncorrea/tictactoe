@@ -7,6 +7,12 @@ export default class GameBoard {
 
   getSize = () => this.board.length;
 
+  clone = () => {
+    var clone = new GameBoard();
+    clone.setBoard(this.board);
+    return clone;
+  }
+
   setBoard = board => {
     if (!board)
       throw "Game board must have a value."
