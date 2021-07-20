@@ -5,6 +5,21 @@ const cloneArray = (orig) =>
 
 export default class GameBoardAnalyzer {
 
+  // Returns the next best cell to play
+  getOptimalCell(game, token, opponentToken) {
+    if (game.isOver())
+      return null;
+
+    var winningPaths = this
+      .getAllPaths(game, token, opponentToken)
+      .filter(i => i.length === 1);
+
+    if (winningPaths.length)
+      return winningPaths[0][0];
+
+    return null;
+  }
+
   // Returns all possible paths given a table
   getAllPaths(game, playerToken, opponentToken, currentPath) {
     currentPath = currentPath || [];
