@@ -1,3 +1,4 @@
+import { GameResult } from '../enums/GameResult';
 import GameBoard from '../game/GameBoard';
 import Cell from '../models/Cell';
 import GameBoardAnalyzer from './GameBoardAnalyzer';
@@ -33,6 +34,9 @@ const assertPathsReturned = (board, expectedPaths) => {
     expect(
       cellPaths.some(cellPath => pathsMatch(path1, cellPath.path))
     ).toBeTruthy());
+    
+  cellPaths.forEach(cellPath =>
+    expect(cellPath.gameResult).not.toBe(GameResult.None))
 }
 
 test('Returns one path of one cell when there is one cell left for a draw', () =>
@@ -59,8 +63,8 @@ test('Returns paths with board of two empty cells', () =>
       ['O', 'O', ''],
       ['', 'O', 'X']],
     [
-      [new Cell(1, 2), new Cell(2, 0)],
-      [new Cell(2, 0), new Cell(1, 2)]
+      [new Cell(1, 2)],
+      [new Cell(2, 0)]
     ]))
 
 test('Returns paths with board of three empty cells', () => {
@@ -73,12 +77,12 @@ test('Returns paths with board of three empty cells', () => {
     ['', 'O', ''],
     ['', 'O', 'X']],
     [
+      [A],
       [A, C],
-      [A, B, C],
+      [B],
       [B, C],
-      [B, A, C],
-      [C, B, A],
-      [C, A, B],
+      [C, A],
+      [C, B],
     ])
 })
 
@@ -95,32 +99,32 @@ test('Returns paths with board of four empty cells', () =>  {
     ['', 'X', 'O']],
     [
       // Start on A
-      [A, B, C, D],
-      [A, B, D],
-      [A, C, B, D],
-      [A, C, D],
-      [A, D, B, C],
-      [A, D, C, B],
+      [A, C],
+      [A, D],
+      [A, B],
+      [A, D],
+      [A, B],
+      [A, C],
       
       // Start on B
+      [B],
       [B, A],
-      [B, C, A, D],
-      [B, C, D, A],
-      [B, D, A, C],
-      [B, D, C],
+      [B, D],
+      [B, A],
+      [B, C],
       
       // Start on C
+      [C],
       [C, A],
-      [C, B, A, D],
-      [C, B, D, A],
-      [C, D, A, B],
-      [C, D, B],
+      [C, D],
+      [C, A],
+      [C, B],
       
       // Start on D
+      [D],
       [D, A],
-      [D, B, A],
-      [D, B, C, A],
-      [D, C, A],
-      [D, C, B, A]
+      [D, C],
+      [D, A],
+      [D, B]
     ])
 })

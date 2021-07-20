@@ -1,8 +1,6 @@
+import { GameResult } from "../enums/GameResult";
 import Cell from "../models/Cell";
 import CellPath from "../models/CellPath";
-
-const cloneArray = (orig) =>
-  Array.from(orig, i => i);
 
 export default class GameBoardAnalyzer {
 
@@ -16,7 +14,7 @@ export default class GameBoardAnalyzer {
       .filter(i => i.path.length === 1);
 
     if (winningPaths.length)
-      return winningPaths[0].path[0];
+      return winningPaths[winningPaths.length - 1].path[0];
 
     return null;
   }
@@ -26,8 +24,10 @@ export default class GameBoardAnalyzer {
     currentPath = currentPath || new CellPath(playerToken);
     var paths = [];
     
-    if (game.isOver()) 
+    if (game.isOver()) {
+      currentPath.gameResult = GameResult.Win;
       return [currentPath];
+    }
     
     var size = game.getSize();
     for (var r = 0; r < size; r++)
@@ -49,7 +49,9 @@ export default class GameBoardAnalyzer {
       return [];
 
     game.placeToken(playerToken, cell);
-    currentPath.path.push(cell);
+    if (currentPath.token === playerToken)
+      currentPath.path.push(cell);
+      
     return this.getAllPaths(
       game,
       opponentToken,

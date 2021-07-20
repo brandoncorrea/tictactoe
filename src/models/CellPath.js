@@ -8,13 +8,13 @@ export default class CellPath {
   clone() {
     var cellPath = new CellPath(this.token);
     cellPath.path = cloneArray(this.path);
-    cellPath.win = this.win;
+    cellPath.gameResult = this.gameResult;
     return cellPath;
   }
 
   constructor(token) {
     this.path = []; // Array of Cell
     this.token = token;
-    this.gameResult = GameResult.Loss;
+    this.gameResult = GameResult.None;
   }
 }
