@@ -1,3 +1,6 @@
+const copyArray_2d = arr =>
+  Array.from(arr, i => Array.from(i));
+
 export default class GameBoard {
   placeToken = (token, cell) =>
     this.board[cell.row][cell.col] = token;
@@ -6,6 +9,7 @@ export default class GameBoard {
     this.board[cell.row][cell.col];
 
   getSize = () => this.board.length;
+  getTable = () => copyArray_2d(this.board);
 
   clone = () => {
     var clone = new GameBoard();
@@ -20,7 +24,7 @@ export default class GameBoard {
       throw "Game board cannot be empty.";
 
     // Remove object reference on board
-    var newBoard = Array.from(board, x => Array.from(x));
+    var newBoard = copyArray_2d(board);
 
     // Validate new board
     for (var r = 0; r < newBoard.length; r++) {
