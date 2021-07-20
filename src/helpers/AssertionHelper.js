@@ -1,4 +1,4 @@
-export default class Comparer {
+export default class AssertionHelper {
 
   // Expects the length of item1 and item2 to be equivalent
   static assertLengthsEqual = (expected, actual) =>
