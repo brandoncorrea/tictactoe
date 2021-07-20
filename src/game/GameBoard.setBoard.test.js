@@ -1,20 +1,10 @@
 import Cell from '../models/Cell';
 import GameBoard from './GameBoard';
+import AssertionHelper from '../helpers/AssertionHelper';
 
 const assertSetBoard = (game, board) => {
   game.setBoard(board);
-
-  // Number of rows should be equal
-  expect(game.board.length).toBe(board.length);
-
-  for (var r = 0; r < board.length; r++) {
-    // length of each row should be equal
-    expect(game.board[r].length).toBe(board[r].length);
-
-    // All cells should be equal
-    for (var c = 0; c < board[r].length; c++)
-      expect(game.getToken(new Cell(r, c))).toBe(board[r][c])
-  }
+  AssertionHelper.assertArraysEqual_2d(game.board, board);
 }
 
 const assertThrows = (game, board, message) =>
@@ -78,17 +68,17 @@ test('Set Board throws when a cell is not a string, null, or undefined', () =>
 
 test('Set Board initializes missing values with empty tokens', () => {
   var game = new GameBoard();
-  var board = [
+  game.setBoard([
     [null, null, undefined],
     [null, undefined, null],
     [undefined, null, null]
-  ]
+  ]);
 
-  game.setBoard(board);
-
-  for (var r = 0; r < board.length; r++)
-    for (var c = 0; c < board[r].length; c++)
-      expect(game.getToken(new Cell(r, c))).toBe('');
+  AssertionHelper.assertArraysEqual_2d(
+    [['', '', ''],
+    ['', '', ''],
+    ['', '', '']], 
+    game.board);
 })
 
 test('Set Board does not hold references to the original object', () => {

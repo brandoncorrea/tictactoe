@@ -1,16 +1,10 @@
 import GameBoard from './GameBoard';
+import AssertionHelper from '../helpers/AssertionHelper';
 
 const assertCloneEquivalency = (board) => {
   var game = new GameBoard();
   game.setBoard(board);
-  var clone = game.clone();
-  expect(clone.board.length).toBe(game.board.length);
-  
-  for (var r = 0; r < game.board.length; r++) {
-    expect(clone.board[r].length).toBe(game.board[r].length);
-    for (var c = 0; c < game.board[r].length; c++)
-      expect(clone.board[r][c]).toBe(game.board[r][c]);
-  }
+  AssertionHelper.assertArraysEqual_2d(game.board, game.clone().board);
 }
 
 test('Creates a member-wise clone', () =>
