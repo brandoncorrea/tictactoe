@@ -72,6 +72,25 @@ export default class GameBoard {
       hasBottomLeftDiagonal(token, this.board);
   }
 
+  // True if the board has any empty cells
+  hasEmptyCells = () =>
+    this.board.some(row => row.some(token => token === ''));
+  
+  // True if the game has come to a draw
+  isDraw() {
+    var tokens = [];
+    if (this.hasEmptyCells())
+      return false;
+
+    this.board.forEach(row => 
+      row.forEach(token => {
+        if (!tokens.includes(token))
+          tokens.push(token);
+      }))
+
+    return !tokens.some(token => this.tokenWon(token));
+  }
+
   // Assigns a table to the board property
   setBoard = board => {
     if (!board)
