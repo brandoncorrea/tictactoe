@@ -1,3 +1,5 @@
+import { GameResult } from "../enums/GameResult";
+
 const cloneArray = (orig) =>
   Array.from(orig, i => i);
 
@@ -13,6 +15,6 @@ export default class CellPath {
   constructor(token) {
     this.path = []; // Array of Cell
     this.token = token;
-    this.win = false;
+    this.gameResult = GameResult.Loss;
   }
 }
