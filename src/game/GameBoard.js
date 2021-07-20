@@ -75,21 +75,27 @@ export default class GameBoard {
   // True if the board has any empty cells
   hasEmptyCells = () =>
     this.board.some(row => row.some(token => token === ''));
-  
-  // True if the game has come to a draw
-  isDraw() {
-    var tokens = [];
-    if (this.hasEmptyCells())
-      return false;
 
+  // Returns an array of active tokens on the board
+  getActiveTokens() {
+    var tokens = [];
     this.board.forEach(row => 
       row.forEach(token => {
-        if (!tokens.includes(token))
+        if (!tokens.includes(token) && token !== '')
           tokens.push(token);
       }))
-
-    return !tokens.some(token => this.tokenWon(token));
+    return tokens;
   }
+  
+  // True if the game has come to a draw
+  isDraw = () =>
+    !this.hasEmptyCells() &&
+    !this.getActiveTokens().some(token => this.tokenWon(token));
+
+  // True if the game is complete
+  isOver = () =>
+    !this.hasEmptyCells() ||
+    this.getActiveTokens().some(token => this.tokenWon(token));
 
   // Assigns a table to the board property
   setBoard = board => {
