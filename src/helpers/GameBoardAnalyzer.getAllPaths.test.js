@@ -26,7 +26,7 @@ const assertPathsReturned = (board, expectedPaths) => {
   var game = new GameBoard();
   var analyzer = new GameBoardAnalyzer();
   game.setBoard(board);
-  var paths = analyzer.getAllPaths(game);
+  var paths = analyzer.getAllPaths(game, 'X', 'O');
 
   expect(paths.length).toBe(expectedPaths.length);
   expectedPaths.forEach(path1 =>
@@ -59,6 +59,68 @@ test('Returns paths with board of two empty cells', () =>
       ['O', 'O', ''],
       ['', 'O', 'X']],
     [
-      [new Cell(1, 2)],
-      [new Cell(2, 0)]
+      [new Cell(1, 2), new Cell(2, 0)],
+      [new Cell(2, 0), new Cell(1, 2)]
     ]))
+
+test('Returns paths with board of three empty cells', () => {
+  var A = new Cell(1, 0);
+  var B = new Cell(1, 2);
+  var C = new Cell(2, 0);
+
+  assertPathsReturned(
+    [['X', 'X', 'O'],
+    ['', 'O', ''],
+    ['', 'O', 'X']],
+    [
+      [A, C],
+      [A, B, C],
+      [B, C],
+      [B, A, C],
+      [C, B, A],
+      [C, A, B],
+    ])
+})
+
+test('Returns paths with board of four empty cells', () =>  {
+
+  var A = new Cell(0, 2);
+  var B = new Cell(1, 0);
+  var C = new Cell(1, 2);
+  var D = new Cell(2, 0);
+
+  assertPathsReturned(
+    [['O', 'O', ''],
+    ['', 'X', ''],
+    ['', 'X', 'O']],
+    [
+      // Start on A
+      [A, B, C, D],
+      [A, B, D],
+      [A, C, B, D],
+      [A, C, D],
+      [A, D, B, C],
+      [A, D, C, B],
+      
+      // Start on B
+      [B, A],
+      [B, C, A, D],
+      [B, C, D, A],
+      [B, D, A, C],
+      [B, D, C],
+      
+      // Start on C
+      [C, A],
+      [C, B, A, D],
+      [C, B, D, A],
+      [C, D, A, B],
+      [C, D, B],
+      
+      // Start on D
+      [D, A],
+      [D, B, A],
+      [D, B, C, A],
+      [D, C, A],
+      [D, C, B, A]
+    ])
+})
