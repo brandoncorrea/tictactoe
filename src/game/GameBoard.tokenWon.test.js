@@ -1,17 +1,14 @@
-import GameBoardAnalyzer from './GameBoardAnalyzer';
-import GameBoard from '../game/GameBoard';
+import GameBoard from './GameBoard';
 
 const assertTokenWins = (board, token, tokenWins) => {
   var game = new GameBoard();
-  var analyzer = new GameBoardAnalyzer();
   game.setBoard(board);
-  expect(analyzer.tokenWon(token, game)).toBe(tokenWins);
+  expect(game.tokenWon(token)).toBe(tokenWins);
 }
 
 test('Returns false for new game', () => {
   var game = new GameBoard();
-  var analyzer = new GameBoardAnalyzer();
-  expect(analyzer.tokenWon('X', game)).toBeFalsy();
+  expect(game.tokenWon('X', game)).toBeFalsy();
 })
 
 test('Returns false for one cell in row', () => 
