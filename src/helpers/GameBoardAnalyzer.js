@@ -7,34 +7,37 @@ export default class GameBoardAnalyzer {
 
   // Returns all possible paths given a table
   getAllPaths(game, playerToken, opponentToken, currentPath) {
-    if (!currentPath)
-      currentPath = [];
+    currentPath = currentPath || [];
     var paths = [];
-    var size = game.getSize();
-
+    
     if (game.isOver())
       return [currentPath];
-
-    for (var r = 0; r < size; r++) {
-      for (var c = 0; c < size; c++) {
-        var cell = new Cell(r, c);
-        if (!game.getToken(cell)) {
-          var clone = game.clone();
-          clone.placeToken(playerToken, cell);
-          currentPath.push(cell);
-
-          paths = paths.concat(
-            this.getAllPaths(
-              clone,
-              opponentToken,
-              playerToken, 
-              cloneArray(currentPath)));
-
-          currentPath.pop();
-        }
-      }
-    }
+    
+    var size = game.getSize();
+    for (var r = 0; r < size; r++)
+      for (var c = 0; c < size; c++) 
+        paths = paths.concat(
+          this.getRemainingPathsFromCell(
+            game.clone(), 
+            playerToken, 
+            opponentToken,
+            cloneArray(currentPath), 
+            new Cell(r, c)));
 
     return paths;
+  }
+
+  // Places a token in a cell and gets all possible paths after that move
+  getRemainingPathsFromCell(game, playerToken, opponentToken, currentPath, cell) {
+    if (game.getToken(cell))
+      return [];
+
+    game.placeToken(playerToken, cell);
+    currentPath.push(cell);
+    return this.getAllPaths(
+        game,
+        opponentToken,
+        playerToken,
+        currentPath);
   }
 }
