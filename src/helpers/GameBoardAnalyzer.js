@@ -1,5 +1,6 @@
 import Cell from "../models/Cell";
 
+// True if the token has the row index
 const hasRow = (token, game, row) => {
   var size = game.getSize()
   for (var col = 0; col < size; col++)
@@ -8,6 +9,7 @@ const hasRow = (token, game, row) => {
   return true;
 }
 
+// True if the token has the specified column index
 const hasCol = (token, game, col) => {
   var size = game.getSize()
   for (var row = 0; row < size; row++)
@@ -16,6 +18,7 @@ const hasCol = (token, game, col) => {
   return true;
 }
 
+// True if the token has the top-left diagonal
 const hasTopLeftDiagonal = (token, game) => {
   var size = game.getSize();
   for (var i = 0; i < size; i++)
@@ -24,6 +27,7 @@ const hasTopLeftDiagonal = (token, game) => {
   return true;
 }
 
+// True if the token has the bottom-left diagonal
 const hasBottomLeftDiagonal = (token, game) => {
   var size = game.getSize();
   for (var r = 0, c = size - 1; r < size && c >= 0; r++, c--)
@@ -33,6 +37,8 @@ const hasBottomLeftDiagonal = (token, game) => {
 }
 
 export default class GameBoardAnalyzer {
+
+  // Returns all possible paths given a table
   getAllPaths(game) {
     var paths = [];
     var size = game.getSize();
@@ -49,6 +55,7 @@ export default class GameBoardAnalyzer {
     return paths;
   }
 
+  // True if the token has a winning set of cells
   tokenWon(token, game) {
     var size = game.getSize();
     for (var i = 0; i < size; i++)
