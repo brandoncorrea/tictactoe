@@ -26,12 +26,12 @@ const assertPathsReturned = (board, expectedPaths) => {
   var game = new GameBoard();
   var analyzer = new GameBoardAnalyzer();
   game.setBoard(board);
-  var paths = analyzer.getAllPaths(game, 'X', 'O');
+  var cellPaths = analyzer.getAllPaths(game, 'X', 'O');
 
-  expect(paths.length).toBe(expectedPaths.length);
+  expect(cellPaths.length).toBe(expectedPaths.length);
   expectedPaths.forEach(path1 =>
     expect(
-      paths.some(path2 => pathsMatch(path1, path2))
+      cellPaths.some(cellPath => pathsMatch(path1, cellPath.path))
     ).toBeTruthy());
 }
 

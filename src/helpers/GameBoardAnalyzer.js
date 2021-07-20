@@ -1,4 +1,5 @@
 import Cell from "../models/Cell";
+import CellPath from "../models/CellPath";
 
 const cloneArray = (orig) =>
   Array.from(orig, i => i);
@@ -12,20 +13,20 @@ export default class GameBoardAnalyzer {
 
     var winningPaths = this
       .getAllPaths(game, token, opponentToken)
-      .filter(i => i.length === 1);
+      .filter(i => i.path.length === 1);
 
     if (winningPaths.length)
-      return winningPaths[0][0];
+      return winningPaths[0].path[0];
 
     return null;
   }
 
   // Returns all possible paths given a table
   getAllPaths(game, playerToken, opponentToken, currentPath) {
-    currentPath = currentPath || [];
+    currentPath = currentPath || new CellPath(playerToken);
     var paths = [];
     
-    if (game.isOver())
+    if (game.isOver()) 
       return [currentPath];
     
     var size = game.getSize();
@@ -36,7 +37,7 @@ export default class GameBoardAnalyzer {
             game.clone(), 
             playerToken, 
             opponentToken,
-            cloneArray(currentPath), 
+            currentPath.clone(), 
             new Cell(r, c)));
 
     return paths;
@@ -48,11 +49,11 @@ export default class GameBoardAnalyzer {
       return [];
 
     game.placeToken(playerToken, cell);
-    currentPath.push(cell);
+    currentPath.path.push(cell);
     return this.getAllPaths(
-        game,
-        opponentToken,
-        playerToken,
-        currentPath);
+      game,
+      opponentToken,
+      playerToken,
+      currentPath);
   }
 }
