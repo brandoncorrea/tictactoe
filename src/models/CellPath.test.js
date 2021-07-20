@@ -5,6 +5,7 @@ test('Cell path can create a memberwise clone', () => {
   var clone = path.clone();
   expect(clone.token).toBe(path.token);
   expect(clone.win).toBe(path.win);
+  expect(clone.gameResult).toBe(path.gameResult);
   expect(clone.path.length).toBe(path.path.length);
   for (var i = 0; i < clone.path; i++) {
     var cloneCell = clone.path[i];
