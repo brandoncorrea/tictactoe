@@ -6,7 +6,7 @@ export default class GameBoardAnalyzer {
 
   // Returns the next best cell to play
   getOptimalCell(game, token, opponentToken) {
-    if (game.isOver())
+    if (game.getGameResult(token) !== GameResult.None)
       return null;
 
     var winningPaths = this
@@ -24,10 +24,9 @@ export default class GameBoardAnalyzer {
     currentPath = currentPath || new CellPath(playerToken);
     var paths = [];
     
-    if (game.isOver()) {
-      currentPath.gameResult = GameResult.Win;
+    currentPath.gameResult = game.getGameResult(currentPath.token);
+    if (currentPath.gameResult !== GameResult.None)
       return [currentPath];
-    }
     
     var size = game.getSize();
     for (var r = 0; r < size; r++)

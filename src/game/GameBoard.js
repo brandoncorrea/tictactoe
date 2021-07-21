@@ -1,7 +1,8 @@
+import { GameResult } from '../enums/GameResult';
+
 // Clones a 2d array
 const copyArray_2d = arr =>
   Array.from(arr, i => Array.from(i));
-
 
 // True if the token has the row index
 const hasRow = (token, table, row) => {
@@ -87,15 +88,24 @@ export default class GameBoard {
     return tokens;
   }
   
-  // True if the game has come to a draw
-  isDraw = () =>
-    !this.hasEmptyCells() &&
-    !this.getActiveTokens().some(token => this.tokenWon(token));
+  // Returns the game result for the given token
+  getGameResult = token => {
 
-  // True if the game is complete
-  isOver = () =>
-    !this.hasEmptyCells() ||
-    this.getActiveTokens().some(token => this.tokenWon(token));
+    if (this.tokenWon(token))
+      return GameResult.Win;
+
+    if (!this.getActiveTokens().some(token => this.tokenWon(token))) {
+      if (this.hasEmptyCells())
+        return GameResult.None;
+      else
+        return GameResult.Draw;
+    }
+    
+    return GameResult.Loss;
+  }
+  
+  isDraw = () => this.getGameResult() === GameResult.Draw;
+  isOver = () => this.getGameResult() !== GameResult.None;
 
   // Assigns a table to the board property
   setBoard = board => {
