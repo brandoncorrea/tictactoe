@@ -15,6 +15,7 @@ const assertReturnsCell = (board, expected) => {
   var analyzer = new GameBoardAnalyzer();
   game.setBoard(board);
   var cell = analyzer.getOptimalCell(game, 'X', 'O');
+  //expect(cell).toBe(expected);
   expect(cell.row).toBe(expected.row);
   expect(cell.col).toBe(expected.col);
 }
@@ -52,3 +53,11 @@ test('Returns the winning cell when two cells remain', () =>
     ['X', '', '']
   ],
   new Cell(2, 2)))
+
+test('Blocks opponent if game cannot be won on current move', () => 
+  assertReturnsCell([
+    ['O', 'X', ''],
+    ['O', '', 'X'],
+    ['', '', '']
+  ],
+  new Cell(2, 0)))
