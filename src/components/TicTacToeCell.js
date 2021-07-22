@@ -1,22 +1,24 @@
 import { Component } from "react";
 import { Table } from "semantic-ui-react";
+import ScoreRepository from "../data/ScoreRepository";
 import SettingsRepository from "../data/SettingsRepository";
 import { GameResult } from "../enums/GameResult";
-import GameBoard from "../game/GameBoard";
 import Cell from '../models/Cell'
 
 export default class TicTacToeCell extends Component {
-  settings = new SettingsRepository();
   constructor(props) {
     super(props);
     this.state = {
-      game: props.game,
       content: props.content,
-      cell: new Cell(props.row, props.col),
-      style: {
-        cursor: 'pointer', 
-        height: props.height,
-      },
+    }
+
+    this.settings = new SettingsRepository();
+    this.score = new ScoreRepository();
+    this.cell = new Cell(props.row, props.col);
+    this.game = props.game;
+    this.style = {
+      cursor: 'pointer', 
+      height: props.height,
     }
 
     this.handleClick = this.handleClick.bind(this);
@@ -24,17 +26,26 @@ export default class TicTacToeCell extends Component {
 
   handleClick() {
     var token = this.settings.getUserIcon();
-    if (this.state.game.getGameResult() !== GameResult.None)
+    if (this.game.getGameResult(token) !== GameResult.None)
       return;
 
-    this.state.game.placeToken(this.settings.getUserIcon(), this.state.cell);
+    this.game.placeToken(this.settings.getUserIcon(), this.cell);
     this.setState({ content: token })
+
+    // Update score
+    var result = this.game.getGameResult(token);
+    if (result === GameResult.Draw)
+      this.score.addDraw();
+    else if (result === GameResult.Loss)
+      this.score.addLoss();
+    else if (result === GameResult.Win)
+      this.score.addWin();
   }
 
   render = () =>
     <Table.Cell
       selectable
-      style={this.state.style}
+      style={this.style}
       content={this.state.content}
       onClick={this.handleClick} />
 }
