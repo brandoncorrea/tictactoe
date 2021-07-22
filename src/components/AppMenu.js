@@ -4,12 +4,13 @@ import TicTacToeTable from './TicTacToeTable'
 import { MenuOptions } from '../enums/MenuOptions'
 import GameBoard from '../game/GameBoard';
 import Settings from './Settings';
+import Score from './Score';
 
 export default class AppMenu extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      activeItem: MenuOptions.NewGame,
+      activeItem: MenuOptions.Score,
       game: new GameBoard()
     }
   }
@@ -22,6 +23,11 @@ export default class AppMenu extends Component {
     return (
       <div>
         <Menu pointing secondary>
+          <Menu.Item
+            name={MenuOptions.Score}
+            active={activeItem === MenuOptions.Score}
+            onClick={this.handleItemClick}
+          />
           <Menu.Item
             name={MenuOptions.NewGame}
             active={activeItem === MenuOptions.NewGame}
@@ -40,6 +46,8 @@ export default class AppMenu extends Component {
               ? <TicTacToeTable table={this.state.game.getTable()}/>
             : activeItem === MenuOptions.Settings
               ? <Settings />
+            : activeItem === MenuOptions.Score
+              ? <Score />
             : <></>
           }
         </Segment>
