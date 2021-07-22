@@ -4,28 +4,27 @@ import Guid from "../data/Guid";
 import TicTacToeCell from "./TicTacToeCell";
 
 export default class TicTacToeRow extends Component {
-  column = 0;
   constructor(props) {
     super(props);
     this.state = {
+      rowNumber: props.rowNumber,
       row: props.row,
-      data: props.data,
       height: props.height,
-      game: props.game
+      onCellClick: props.onCellClick      
     }
   }
 
   render = () => 
     <Table.Row>
       {
-        this.state.data.map(col => 
+        Array.from(Array(this.state.row.length).keys()).map(col => 
           <TicTacToeCell 
             key={Guid.newGuid()}
-            game={this.state.game}
+            onCellClick={this.state.onCellClick}
             height={this.state.height} 
-            col={this.column++}
-            row={this.state.row}
-            content={col} />)
+            col={col}
+            row={this.state.rowNumber}
+            content={this.state.row[col]} />)
       }
     </Table.Row>
 }

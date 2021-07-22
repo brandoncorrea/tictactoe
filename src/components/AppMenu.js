@@ -1,17 +1,15 @@
 import React, { Component } from 'react'
 import { Menu, Segment } from 'semantic-ui-react'
-import TicTacToeTable from './TicTacToeTable'
 import { MenuOptions } from '../enums/MenuOptions'
-import GameBoard from '../game/GameBoard';
 import Settings from './Settings';
 import Score from './Score';
+import Game from './Game';
 
 export default class AppMenu extends Component {
   constructor(props) {
     super(props);
     this.state = { 
       activeItem: MenuOptions.Score,
-      game: new GameBoard()
     }
   }
 
@@ -43,7 +41,7 @@ export default class AppMenu extends Component {
         <Segment>
           {
             activeItem === MenuOptions.NewGame 
-              ? <TicTacToeTable table={this.state.game.getTable()}/>
+              ? <Game />
             : activeItem === MenuOptions.Settings
               ? <Settings />
             : activeItem === MenuOptions.Score
