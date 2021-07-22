@@ -3,6 +3,7 @@ import { Menu, Segment } from 'semantic-ui-react'
 import TicTacToeTable from './TicTacToeTable'
 import { MenuOptions } from '../enums/MenuOptions'
 import GameBoard from '../game/GameBoard';
+import Settings from './Settings';
 
 export default class AppMenu extends Component {
   constructor(props) {
@@ -26,12 +27,19 @@ export default class AppMenu extends Component {
             active={activeItem === MenuOptions.NewGame}
             onClick={this.handleItemClick}
           />
+          <Menu.Item
+            name={MenuOptions.Settings}
+            active={activeItem === MenuOptions.Settings}
+            onClick={this.handleItemClick}
+          />
         </Menu>
 
         <Segment>
           {
             activeItem === MenuOptions.NewGame 
               ? <TicTacToeTable table={this.state.game.getTable()}/>
+            : activeItem == MenuOptions.Settings
+              ? <Settings />
             : <></>
           }
         </Segment>

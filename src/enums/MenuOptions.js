@@ -1,3 +1,4 @@
 export const MenuOptions = {
-  NewGame: 'newGame'
+  NewGame: 'newGame',
+  Settings: 'settings',
 }
