@@ -1,3 +1,4 @@
+import { FirstPlayer } from "../enums/FirstPlayer";
 import { PlayerIcon } from "../enums/PlayerIcon";
 import { StorageNames } from "../enums/StorageNames";
 
@@ -23,6 +24,8 @@ export default class SettingsRepository {
     setIcon(icon, StorageNames.UserIcon, StorageNames.ComputerIcon);
   setComputerIcon = icon => 
     setIcon(icon, StorageNames.ComputerIcon, StorageNames.UserIcon);
+  setFirstPlayer = player => 
+    setItem(StorageNames.FirstPlayer, player);
 
   // Getters
   getUserIcon = () => 
@@ -33,4 +36,7 @@ export default class SettingsRepository {
     getItem(StorageNames.ComputerIcon) || 
     getItem(StorageNames.UserIcon) !== PlayerIcon.X && PlayerIcon.X ||
     PlayerIcon.O;
+  getFirstPlayer = () =>
+    Number(getItem(StorageNames.FirstPlayer)) || 
+    FirstPlayer.Computer;
 }
