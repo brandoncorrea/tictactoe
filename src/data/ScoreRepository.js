@@ -11,4 +11,9 @@ export default class ScoreRepository {
   getWins = () =>  getNumber(StorageNames.Wins);
   getLosses = () => getNumber(StorageNames.Losses);
   getDraws = () => getNumber(StorageNames.Draws);
+
+  // Adders
+  addWin = () => this.setWins(this.getWins() + 1);
+  addDraw = () => this.setDraws(this.getDraws() + 1);
+  addLoss = () => this.setLosses(this.getLosses() + 1);
 }
