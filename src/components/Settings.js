@@ -1,10 +1,12 @@
 import { Component } from "react";
 import { Form, Radio, Dropdown } from "semantic-ui-react";
+import SettingsRepository from "../data/SettingsRepository";
 import { FirstPlayer } from "../enums/FirstPlayer";
 import { PlayerIcon } from "../enums/PlayerIcon";
 
 export default class Settings extends Component {
 
+  settings = new SettingsRepository();
   iconOptions = [
     { key: PlayerIcon.X, text: PlayerIcon.X, value: PlayerIcon.X },
     { key: PlayerIcon.O, text: PlayerIcon.O, value: PlayerIcon.O },
@@ -13,18 +15,23 @@ export default class Settings extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstPlayer: FirstPlayer.User,
-      selectedIcon: this.iconOptions[0].value
+      firstPlayer: this.settings.getFirstPlayer(),
+      selectedIcon: this.settings.getUserIcon(),
     }
 
     this.handleFirstPlayerChange = this.handleFirstPlayerChange.bind(this);
     this.handleIconChange = this.handleIconChange.bind(this);
   }
 
-  handleFirstPlayerChange = (e, target) =>
-    this.setState({ firstPlayer: target.value });
-  handleIconChange = (e, target) =>
-    this.setState({ selectedIcon: target.value });
+  handleFirstPlayerChange = (e, target) => {
+    this.settings.setFirstPlayer(target.value);
+    this.setState({ firstPlayer: this.settings.getFirstPlayer() });
+  }
+  
+  handleIconChange = (e, target) => {
+    this.settings.setUserIcon(target.value);
+    this.setState({ selectedIcon: this.settings.getUserIcon() });
+  }
 
   render = () =>
     <Form>
