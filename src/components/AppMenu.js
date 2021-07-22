@@ -38,7 +38,7 @@ export default class AppMenu extends Component {
           {
             activeItem === MenuOptions.NewGame 
               ? <TicTacToeTable table={this.state.game.getTable()}/>
-            : activeItem == MenuOptions.Settings
+            : activeItem === MenuOptions.Settings
               ? <Settings />
             : <></>
           }

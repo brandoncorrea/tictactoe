@@ -30,11 +30,11 @@ export default class SettingsRepository {
   // Getters
   getUserIcon = () => 
     getItem(StorageNames.UserIcon) || 
-    getItem(StorageNames.ComputerIcon) !== PlayerIcon.X && PlayerIcon.X ||
+    (getItem(StorageNames.ComputerIcon) !== PlayerIcon.X && PlayerIcon.X) ||
     PlayerIcon.O;
   getComputerIcon = () => 
     getItem(StorageNames.ComputerIcon) || 
-    getItem(StorageNames.UserIcon) !== PlayerIcon.X && PlayerIcon.X ||
+    (getItem(StorageNames.UserIcon) !== PlayerIcon.X && PlayerIcon.X) ||
     PlayerIcon.O;
   getFirstPlayer = () =>
     Number(getItem(StorageNames.FirstPlayer)) || 
