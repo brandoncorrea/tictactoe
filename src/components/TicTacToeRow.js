@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { Table } from 'semantic-ui-react';
+import Guid from "../data/Guid";
 import TicTacToeCell from "./TicTacToeCell";
 
 export default class TicTacToeRow extends Component {
@@ -16,6 +17,7 @@ export default class TicTacToeRow extends Component {
       {
         this.state.row.map(col => 
           <TicTacToeCell 
+            key={Guid.newGuid()}
             height={this.state.height} 
             content={col} />)
       }
