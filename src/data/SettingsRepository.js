@@ -1,12 +1,7 @@
 import { FirstPlayer } from "../enums/FirstPlayer";
 import { PlayerIcon } from "../enums/PlayerIcon";
 import { StorageNames } from "../enums/StorageNames";
-
-// Shorthand localStorage accessors
-const setItem = (key, value) =>
-  localStorage.setItem(key, value);
-const getItem = key =>
-  localStorage.getItem(key);
+import { getItem, setItem, getNumber } from '../helpers/LocalStorageHelper';
 
 // Sets a storage's icon value and updates an opposing storage if the icons are the same
 const setIcon = (icon, destinationStorageName, verifyStorageName) => {
@@ -37,6 +32,6 @@ export default class SettingsRepository {
     (getItem(StorageNames.UserIcon) !== PlayerIcon.X && PlayerIcon.X) ||
     PlayerIcon.O;
   getFirstPlayer = () =>
-    Number(getItem(StorageNames.FirstPlayer)) || 
+    getNumber(StorageNames.FirstPlayer) || 
     FirstPlayer.Computer;
 }
