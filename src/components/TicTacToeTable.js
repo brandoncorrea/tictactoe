@@ -24,7 +24,7 @@ export default class TicTacToeTable extends Component {
 
   render = () =>
     <Container>
-      <Table fixed celled style={this.state.style}>
+      <Table fixed unstackable celled style={this.state.style}>
         <Table.Body>
           {
             this.state.table.map(row =>
