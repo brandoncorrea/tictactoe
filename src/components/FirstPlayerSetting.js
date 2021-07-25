@@ -25,14 +25,14 @@ export default class FirstPlayerSetting extends Component {
     <label>Who goes first?</label>
     <Form.Field
       control={Radio}
-      label='I will go first'
+      label={`Me (${this.settings.getIconPlayer1()})`}
       value={FirstPlayer.User}
       checked={this.state.value === FirstPlayer.User}
       onChange={this.handleChange}
       />
     <Form.Field
       control={Radio}
-      label='The Computer goes first'
+      label={`Opponent (${this.settings.getIconPlayer2()})`}
       value={FirstPlayer.Computer}
       checked={this.state.value === FirstPlayer.Computer}
       onChange={this.handleChange}

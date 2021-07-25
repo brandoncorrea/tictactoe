@@ -34,5 +34,8 @@ export default class IconSetting extends Component {
           value={this.state.value}
           onChange={this.handleChange}/>
       </Form.Field>
+      <Form.Field>
+        <label>Opponent's icon is {this.settings.getIconPlayer2()}</label>
+      </Form.Field>
     </Form.Group>
 }
