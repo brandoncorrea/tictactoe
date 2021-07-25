@@ -1,4 +1,5 @@
 import { FirstPlayer } from "../enums/FirstPlayer";
+import { GameMode } from "../enums/GameMode";
 import { PlayerIcon } from "../enums/PlayerIcon";
 import { StorageNames } from "../enums/StorageNames";
 import { getItem, setItem, getNumber } from '../helpers/LocalStorageHelper';
@@ -21,6 +22,8 @@ export default class SettingsRepository {
     setIcon(icon, StorageNames.ComputerIcon, StorageNames.UserIcon);
   setFirstPlayer = player => 
     setItem(StorageNames.FirstPlayer, player);
+  setGameMode = mode =>
+    setItem(StorageNames.GameMode, mode);
 
   // Getters
   getUserIcon = () => {
@@ -48,4 +51,9 @@ export default class SettingsRepository {
   getFirstPlayer = () =>
     getNumber(StorageNames.FirstPlayer) || 
     FirstPlayer.Computer;
+
+  getGameMode = () => 
+    getNumber(StorageNames.GameMode) === GameMode.PvP 
+      ? GameMode.PvP 
+      : GameMode.PvE;
 }

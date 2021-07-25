@@ -4,5 +4,6 @@ export const StorageNames = {
   FirstPlayer: 'firstPlayer',
   Wins: 'wins',
   Losses: 'losses',
-  Draws: 'draws'
+  Draws: 'draws',
+  GameMode: 'gameMode',
 }
