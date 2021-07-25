@@ -1,6 +1,6 @@
 export const StorageNames = {
-  UserIcon: 'playerIcon',
-  ComputerIcon: 'computerIcon',
+  IconPlayer1: 'iconPlayer1',
+  IconPlayer2: 'iconPlayer2',
   FirstPlayer: 'firstPlayer',
   Wins: 'wins',
   Losses: 'losses',

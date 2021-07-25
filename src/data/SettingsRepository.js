@@ -16,34 +16,34 @@ const setIcon = (icon, destinationStorageName, verifyStorageName) => {
 
 export default class SettingsRepository {
   // Setters
-  setUserIcon = icon => 
-    setIcon(icon, StorageNames.UserIcon, StorageNames.ComputerIcon);
-  setComputerIcon = icon => 
-    setIcon(icon, StorageNames.ComputerIcon, StorageNames.UserIcon);
+  setIconPlayer1 = icon => 
+    setIcon(icon, StorageNames.IconPlayer1, StorageNames.IconPlayer2);
+  setIconPlayer2 = icon => 
+    setIcon(icon, StorageNames.IconPlayer2, StorageNames.IconPlayer1);
   setFirstPlayer = player => 
     setItem(StorageNames.FirstPlayer, player);
   setGameMode = mode =>
     setItem(StorageNames.GameMode, mode);
 
   // Getters
-  getUserIcon = () => {
-    var userIcon = getItem(StorageNames.UserIcon);
-    if (userIcon) 
-      return userIcon;
+  getIconPlayer1 = () => {
+    var player1 = getItem(StorageNames.IconPlayer1);
+    if (player1) 
+      return player1;
 
-    var computerIcon = getItem(StorageNames.ComputerIcon);
-    if (computerIcon && computerIcon !== PlayerIcon.O)
+    var player2 = getItem(StorageNames.IconPlayer2);
+    if (player2 && player2 !== PlayerIcon.O)
       return PlayerIcon.O;
     return PlayerIcon.X;
   }
 
-  getComputerIcon = () => {
-    var computerIcon = getItem(StorageNames.ComputerIcon);
-    if (computerIcon) 
-      return computerIcon;
+  getIconPlayer2 = () => {
+    var player2 = getItem(StorageNames.IconPlayer2);
+    if (player2) 
+      return player2;
 
-    var userIcon = getItem(StorageNames.UserIcon);
-    if (userIcon && userIcon !== PlayerIcon.X)
+    var player1 = getItem(StorageNames.IconPlayer1);
+    if (player1 && player1 !== PlayerIcon.X)
       return PlayerIcon.X;
     return PlayerIcon.O;
   }

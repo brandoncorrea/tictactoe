@@ -17,12 +17,16 @@ export default class Game extends Component {
     super(props);
     this.state = {
       game: props.game,
-      nextPlayer: this.settings.getUserIcon()
+      nextPlayer: this.settings.getIconPlayer1()
     }
 
     // Play computer's turn if they go first
-    if (this.settings.getFirstPlayer() === FirstPlayer.Computer)
-      this.playComputerTurn();
+    var playerIcon2 = this.settings.getIconPlayer2();
+    if (this.settings.getGameMode() === GameMode.PvE && 
+      this.settings.getFirstPlayer() === FirstPlayer.Computer &&
+      !this.state.game.board.some(row => row.some(cell => cell === playerIcon2))) {
+        this.playComputerTurn();
+      }
 
     // Initialize onclick events
     if (this.settings.getGameMode() === GameMode.PvE)
@@ -33,12 +37,12 @@ export default class Game extends Component {
   }
 
   gameOver = () =>
-    this.state.game.getGameResult(this.settings.getUserIcon()) !== GameResult.None
+    this.state.game.getGameResult(this.settings.getIconPlayer1()) !== GameResult.None
 
   // Uses minimax to determine the computer's move and plays that cell
   playComputerTurn() {
-    var userToken = this.settings.getUserIcon();
-    var computerToken = this.settings.getComputerIcon();
+    var userToken = this.settings.getIconPlayer1();
+    var computerToken = this.settings.getIconPlayer2();
     var minimax = new TicTacToeMinimax(computerToken, userToken);
     var cell = minimax.getNextBestCell(this.state.game.getTable());
     this.state.game.placeToken(computerToken, cell);
@@ -61,7 +65,7 @@ export default class Game extends Component {
     if (this.gameOver() || this.state.game.getToken(cell)) return;
 
     // Play user's turn
-    var token = this.settings.getUserIcon();
+    var token = this.settings.getIconPlayer1();
     this.state.game.placeToken(token, cell);
     this.setState({ });
 

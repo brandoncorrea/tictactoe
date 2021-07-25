@@ -14,15 +14,15 @@ export default class IconSetting extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: this.settings.getUserIcon()
+      value: this.settings.getIconPlayer1()
     }
 
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(e, target) {
-    this.settings.setUserIcon(target.value);
-    this.setState({ value: this.settings.getUserIcon() });
+    this.settings.setIconPlayer1(target.value);
+    this.setState({ value: this.settings.getIconPlayer1() });
   }
 
   render = () =>
