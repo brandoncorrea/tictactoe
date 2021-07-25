@@ -21,12 +21,10 @@ export default class Game extends Component {
     }
 
     // Play computer's turn if they go first
-    var playerIcon2 = this.settings.getIconPlayer2();
     if (this.settings.getGameMode() === GameMode.PvE && 
       this.settings.getFirstPlayer() === FirstPlayer.Computer &&
-      !this.state.game.board.some(row => row.some(cell => cell === playerIcon2))) {
+      this.state.game.board.every(row => row.every(cell => cell === '')))
         this.playComputerTurn();
-      }
 
     // Initialize onclick events
     if (this.settings.getGameMode() === GameMode.PvE)
