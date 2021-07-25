@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { Container } from "semantic-ui-react";
+import TicTacToeMinimax from "../algorithms/TicTacToeMinimax";
 import ScoreRepository from "../data/ScoreRepository";
 import SettingsRepository from "../data/SettingsRepository";
 import { FirstPlayer } from "../enums/FirstPlayer";
@@ -30,11 +31,8 @@ export default class Game extends Component {
   playComputerTurn() {
     var userToken = this.settings.getUserIcon();
     var computerToken = this.settings.getComputerIcon();
-    var cell = this.state.analyzer.getOptimalCell(
-      this.state.game, 
-      computerToken, 
-      userToken)
-
+    var minimax = new TicTacToeMinimax(computerToken, userToken);
+    var cell = minimax.getNextBestCell(this.state.game.getTable());
     this.state.game.placeToken(computerToken, cell);
     this.setState({ });
   }
