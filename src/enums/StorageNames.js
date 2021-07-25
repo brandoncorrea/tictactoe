@@ -6,4 +6,5 @@ export const StorageNames = {
   Losses: 'losses',
   Draws: 'draws',
   GameMode: 'gameMode',
+  TableSize: 'tableSize',
 }

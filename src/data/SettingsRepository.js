@@ -24,6 +24,13 @@ export default class SettingsRepository {
     setItem(StorageNames.FirstPlayer, player);
   setGameMode = mode =>
     setItem(StorageNames.GameMode, mode);
+  setTableSize = size => {
+    if (isNaN(size))
+      throw Error("Size must be a numeric value.");
+    if (size < 1)
+      throw Error("Size must be 1 or greater.");
+    setItem(StorageNames.TableSize, size);
+  }
 
   // Getters
   getIconPlayer1 = () => {
@@ -56,4 +63,9 @@ export default class SettingsRepository {
     getNumber(StorageNames.GameMode) === GameMode.PvP 
       ? GameMode.PvP 
       : GameMode.PvE;
+
+  getTableSize = () => {
+    var size = getNumber(StorageNames.TableSize)
+    return size >= 1 ? size : 3;
+  }
 }
