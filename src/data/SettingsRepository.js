@@ -1,4 +1,4 @@
-import { FirstPlayer } from "../enums/FirstPlayer";
+import { Players } from "../enums/Players";
 import { GameMode } from "../enums/GameMode";
 import { PlayerIcon } from "../enums/PlayerIcon";
 import { StorageNames } from "../enums/StorageNames";
@@ -50,7 +50,7 @@ export default class SettingsRepository {
 
   getFirstPlayer = () =>
     getNumber(StorageNames.FirstPlayer) || 
-    FirstPlayer.Computer;
+    Players.Player2;
 
   getGameMode = () => 
     getNumber(StorageNames.GameMode) === GameMode.PvP 

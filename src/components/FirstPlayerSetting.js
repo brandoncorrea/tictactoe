@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Form, Radio } from 'semantic-ui-react';
 import SettingsRepository from "../data/SettingsRepository";
-import { FirstPlayer } from "../enums/FirstPlayer";
+import { Players } from "../enums/Players";
 
 export default class FirstPlayerSetting extends Component {
   settings = new SettingsRepository()
@@ -25,16 +25,16 @@ export default class FirstPlayerSetting extends Component {
     <label>Who goes first?</label>
     <Form.Field
       control={Radio}
-      label={`Me (${this.settings.getIconPlayer1()})`}
-      value={FirstPlayer.User}
-      checked={this.state.value === FirstPlayer.User}
+      label="I'll go first"
+      value={Players.Player1}
+      checked={this.state.value === Players.Player1}
       onChange={this.handleChange}
       />
     <Form.Field
       control={Radio}
-      label={`Opponent (${this.settings.getIconPlayer2()})`}
-      value={FirstPlayer.Computer}
-      checked={this.state.value === FirstPlayer.Computer}
+      label='Opponent will go first'
+      value={Players.Player2}
+      checked={this.state.value === Players.Player2}
       onChange={this.handleChange}
       />
   </Form.Group>

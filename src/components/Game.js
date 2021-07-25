@@ -3,7 +3,7 @@ import { Container } from "semantic-ui-react";
 import TicTacToeMinimax from "../algorithms/TicTacToeMinimax";
 import ScoreRepository from "../data/ScoreRepository";
 import SettingsRepository from "../data/SettingsRepository";
-import { FirstPlayer } from "../enums/FirstPlayer";
+import { Players } from "../enums/Players";
 import { GameMode } from "../enums/GameMode";
 import { GameResult } from "../enums/GameResult";
 import { PlayerIcon } from "../enums/PlayerIcon";
@@ -22,7 +22,7 @@ export default class Game extends Component {
 
     // Play computer's turn if they go first
     if (this.settings.getGameMode() === GameMode.PvE && 
-      this.settings.getFirstPlayer() === FirstPlayer.Computer &&
+      this.settings.getFirstPlayer() === Players.Player2 &&
       this.state.game.board.every(row => row.every(cell => cell === '')))
         this.playComputerTurn();
 
