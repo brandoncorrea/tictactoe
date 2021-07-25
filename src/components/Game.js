@@ -4,30 +4,38 @@ import TicTacToeMinimax from "../algorithms/TicTacToeMinimax";
 import ScoreRepository from "../data/ScoreRepository";
 import SettingsRepository from "../data/SettingsRepository";
 import { FirstPlayer } from "../enums/FirstPlayer";
+import { GameMode } from "../enums/GameMode";
 import { GameResult } from "../enums/GameResult";
-import GameBoard from "../game/GameBoard";
-import GameBoardAnalyzer from "../helpers/GameBoardAnalyzer";
+import { PlayerIcon } from "../enums/PlayerIcon";
 import TicTacToeTable from "./TicTacToeTable";
 
 export default class Game extends Component {
+  settings = new SettingsRepository();
+  score = new ScoreRepository();
 
   constructor(props) {
     super(props);
     this.state = {
       game: props.game,
-      analyzer: new GameBoardAnalyzer(),
+      nextPlayer: this.settings.getUserIcon()
     }
 
-    this.settings = new SettingsRepository();
-    this.score = new ScoreRepository();
-    this.onCellClick = this.onCellClick.bind(this);
+    // Play computer's turn if they go first
     if (this.settings.getFirstPlayer() === FirstPlayer.Computer)
       this.playComputerTurn();
+
+    // Initialize onclick events
+    if (this.settings.getGameMode() === GameMode.PvE)
+      this.state.onCellClick = this.onCellClickPvE;
+    else
+      this.state.onCellClick = this.onCellClickPvP;
+    this.state.onCellClick = this.state.onCellClick.bind(this);
   }
 
   gameOver = () =>
     this.state.game.getGameResult(this.settings.getUserIcon()) !== GameResult.None
 
+  // Uses minimax to determine the computer's move and plays that cell
   playComputerTurn() {
     var userToken = this.settings.getUserIcon();
     var computerToken = this.settings.getComputerIcon();
@@ -37,22 +45,9 @@ export default class Game extends Component {
     this.setState({ });
   }
 
-  onCellClick(cell) {
-    if (this.gameOver() || this.state.game.getToken(cell)) return;
-
-    // Play user's turn
-    var userToken = this.settings.getUserIcon();
-    this.state.game.placeToken(userToken, cell);
-    this.setState({ });
-
-    // Play computer's turn
-    if (!this.gameOver())
-      this.playComputerTurn()
-      
-    this.setState({ });
-
-    // Update score
-    var result = this.state.game.getGameResult(userToken);
+  // Updates the score repository with the result of the game
+  updateScore(token) {
+    var result = this.state.game.getGameResult(token);
     if (result === GameResult.Draw)
       this.score.addDraw();
     else if (result === GameResult.Loss)
@@ -61,10 +56,45 @@ export default class Game extends Component {
       this.score.addWin();
   }
 
+  // When GameMode is PvE, use this
+  onCellClickPvE(cell) {
+    if (this.gameOver() || this.state.game.getToken(cell)) return;
+
+    // Play user's turn
+    var token = this.settings.getUserIcon();
+    this.state.game.placeToken(token, cell);
+    this.setState({ });
+
+    // Play computer's turn
+    if (!this.gameOver())
+      this.playComputerTurn()
+      
+    this.setState({ });
+    this.updateScore(token);
+  }
+
+  // When GameMode is PvP, use this
+  onCellClickPvP(cell) {
+    if (this.gameOver() || this.state.game.getToken(cell)) return;
+
+    // Play user's turn
+    var token = this.state.nextPlayer;
+    this.state.game.placeToken(token, cell);
+
+    // Switch the turn to the next player
+    this.setState({ 
+      nextPlayer: token === PlayerIcon.X 
+        ? PlayerIcon.O 
+        : PlayerIcon.X 
+    });
+
+    this.updateScore(token);
+  }
+
   render = () => 
     <Container>
       <TicTacToeTable 
         table={this.state.game.board}
-        onCellClick={this.onCellClick} />
+        onCellClick={this.state.onCellClick} />
     </Container>
 } 
