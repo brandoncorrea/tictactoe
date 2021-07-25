@@ -14,7 +14,7 @@ export default class Game extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      game: new GameBoard(),
+      game: props.game,
       analyzer: new GameBoardAnalyzer(),
     }
 

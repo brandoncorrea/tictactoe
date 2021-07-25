@@ -4,12 +4,14 @@ import { MenuOptions } from '../enums/MenuOptions'
 import Settings from './Settings';
 import Score from './Score';
 import Game from './Game';
+import GameBoard from '../game/GameBoard';
 
 export default class AppMenu extends Component {
   constructor(props) {
     super(props);
     this.state = { 
       activeItem: MenuOptions.Score,
+      game: new GameBoard()
     }
   }
 
@@ -27,8 +29,8 @@ export default class AppMenu extends Component {
             onClick={this.handleItemClick}
           />
           <Menu.Item
-            name={MenuOptions.NewGame}
-            active={activeItem === MenuOptions.NewGame}
+            name={MenuOptions.Game}
+            active={activeItem === MenuOptions.Game}
             onClick={this.handleItemClick}
           />
           <Menu.Item
@@ -40,8 +42,8 @@ export default class AppMenu extends Component {
 
         <Segment>
           {
-            activeItem === MenuOptions.NewGame 
-              ? <Game />
+            activeItem === MenuOptions.Game 
+              ? <Game game={this.state.game} />
             : activeItem === MenuOptions.Settings
               ? <Settings />
             : activeItem === MenuOptions.Score

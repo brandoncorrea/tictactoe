@@ -1,5 +1,5 @@
 export const MenuOptions = {
-  NewGame: 'newGame',
+  Game: 'game',
   Settings: 'settings',
   Score: 'score',
 }
