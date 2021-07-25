@@ -38,7 +38,7 @@ export default class Game extends Component {
   }
 
   onCellClick(cell) {
-    if (this.gameOver()) return;
+    if (this.gameOver() || this.state.game.getToken(cell)) return;
 
     // Play user's turn
     var userToken = this.settings.getUserIcon();
