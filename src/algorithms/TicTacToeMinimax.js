@@ -68,24 +68,24 @@ export default class TicTacToeMinimax {
     var children = this.getChildren(cloneTable);
     
     if (maximizingPlayer) {
-      var maxEval = Number.NEGATIVE_INFINITY;
+      var maxEval = Number.POSITIVE_INFINITY;
       
       children.forEach(child => {
         var minimax = this.minimax(cloneTable, child, alpha, beta, false);
-        maxEval = max(maxEval, minimax);
-        alpha = max(alpha, minimax);
-        if (beta <= alpha) return minEval;
+        maxEval = min(maxEval, minimax);
+        beta = min(beta, minimax);
+        if (beta <= alpha) return maxEval;
       })
 
       return maxEval;
     } else {
-      var minEval = Number.POSITIVE_INFINITY;
+      var minEval = Number.NEGATIVE_INFINITY;
 
       children.forEach(child => {
         var minimax = this.minimax(cloneTable, child, alpha, beta, true);
-        minEval = min(minEval, minimax);
-        beta = min(beta, minimax);
-        if (beta <= alpha) return minEval;
+        minEval = max(minEval, minimax);
+        alpha = max(alpha, minimax)
+        if (beta <= alpha) return maxEval;
       })
 
       return minEval
