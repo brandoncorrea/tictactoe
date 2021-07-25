@@ -5,13 +5,16 @@ import Settings from './Settings';
 import Score from './Score';
 import Game from './Game';
 import GameBoard from '../game/GameBoard';
+import SettingsRepository from '../data/SettingsRepository';
 
 export default class AppMenu extends Component {
+  settings = new SettingsRepository();
+
   constructor(props) {
     super(props);
     this.state = { 
       activeItem: MenuOptions.Score,
-      game: new GameBoard()
+      game: new GameBoard(3, this.settings.getIconPlayer1(), this.settings.getIconPlayer2())
     }
   }
 

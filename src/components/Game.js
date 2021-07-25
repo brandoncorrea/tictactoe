@@ -6,7 +6,6 @@ import SettingsRepository from "../data/SettingsRepository";
 import { Players } from "../enums/Players";
 import { GameMode } from "../enums/GameMode";
 import { GameResult } from "../enums/GameResult";
-import { PlayerIcon } from "../enums/PlayerIcon";
 import TicTacToeTable from "./TicTacToeTable";
 
 export default class Game extends Component {
@@ -23,7 +22,7 @@ export default class Game extends Component {
     // Play computer's turn if they go first
     if (this.settings.getGameMode() === GameMode.PvE && 
       this.settings.getFirstPlayer() === Players.Player2 &&
-      this.state.game.board.every(row => row.every(cell => cell === '')))
+      this.state.game.board.every(row => row.every(cell => cell === Players.None)))
         this.playComputerTurn();
 
     // Initialize onclick events
@@ -34,22 +33,20 @@ export default class Game extends Component {
     this.state.onCellClick = this.state.onCellClick.bind(this);
   }
 
-  gameOver = () =>
-    this.state.game.getGameResult(this.settings.getIconPlayer1()) !== GameResult.None
+  isGameOver = () =>
+    this.state.game.getGameResult() !== GameResult.None
 
   // Uses minimax to determine the computer's move and plays that cell
   playComputerTurn() {
-    var userToken = this.settings.getIconPlayer1();
-    var computerToken = this.settings.getIconPlayer2();
-    var minimax = new TicTacToeMinimax(computerToken, userToken);
+    var minimax = new TicTacToeMinimax(Players.Player2, Players.Player1);
     var cell = minimax.getNextBestCell(this.state.game.getTable());
-    this.state.game.placeToken(computerToken, cell);
+    this.state.game.movePlayer2(cell);
     this.setState({ });
   }
 
   // Updates the score repository with the result of the game
-  updateScore(token) {
-    var result = this.state.game.getGameResult(token);
+  updateScore() {
+    var result = this.state.game.getGameResult();
     if (result === GameResult.Draw)
       this.score.addDraw();
     else if (result === GameResult.Loss)
@@ -60,37 +57,38 @@ export default class Game extends Component {
 
   // When GameMode is PvE, use this
   onCellClickPvE(cell) {
-    if (this.gameOver() || this.state.game.getToken(cell)) return;
+    if (this.isGameOver() || this.state.game.getToken(cell)) return;
 
     // Play user's turn
-    var token = this.settings.getIconPlayer1();
-    this.state.game.placeToken(token, cell);
+    this.state.game.movePlayer1(cell);
     this.setState({ });
 
     // Play computer's turn
-    if (!this.gameOver())
+    if (!this.isGameOver())
       this.playComputerTurn()
       
     this.setState({ });
-    this.updateScore(token);
+    this.updateScore();
   }
 
   // When GameMode is PvP, use this
   onCellClickPvP(cell) {
-    if (this.gameOver() || this.state.game.getToken(cell)) return;
+    if (this.isGameOver() || this.state.game.getToken(cell)) return;
 
     // Play user's turn
-    var token = this.state.nextPlayer;
-    this.state.game.placeToken(token, cell);
-
+    if (this.state.nextPlayer === Players.Player1)
+      this.state.game.movePlayer1(cell);
+    else
+      this.state.game.movePlayer2(cell);
+    
     // Switch the turn to the next player
     this.setState({ 
-      nextPlayer: token === PlayerIcon.X 
-        ? PlayerIcon.O 
-        : PlayerIcon.X 
+      nextPlayer: this.state.nextPlayer === Players.Player1
+        ? Players.Player2
+        : Players.Player1
     });
 
-    this.updateScore(token);
+    this.updateScore();
   }
 
   render = () => 

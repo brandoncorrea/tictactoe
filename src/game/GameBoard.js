@@ -1,54 +1,18 @@
 import { GameResult } from '../enums/GameResult';
+import { Players } from '../enums/Players';
 import { copyArray_2d } from '../helpers/ArrayHelper';
-
-// True if the token has the row index
-const hasRow = (token, table, row) => {
-  for (var col = 0; col < table.length; col++)
-    if (table[row][col] !== token)
-      return false;
-  return true;
-}
-
-// True if the token has the specified column index
-const hasCol = (token, table, col) => {
-  for (var row = 0; row < table.length; row++)
-    if (table[row][col] !== token)
-      return false;
-  return true;
-}
-
-// True if the token has the top-left diagonal
-const hasTopLeftDiagonal = (token, table) => {
-  for (var i = 0; i < table.length; i++)
-    if (table[i][i] !== token)
-      return false;
-  return true;
-}
-
-// True if the token has the bottom-left diagonal
-const hasBottomLeftDiagonal = (token, table) => {
-  var r = 0;
-  var c = table.length - 1;
-
-  for ( ; r < table.length && c >= 0; r++, c--)
-    if (table[r][c] !== token)
-      return false;
-
-  return true;
-}
+import { hasCol, hasRow, hasBottomLeftDiagonal, hasTopLeftDiagonal } from '../helpers/TableHelper';
 
 export default class GameBoard {
-  // Updates the cell with the token
-  placeToken = (token, cell) =>
-    this.board[cell.row][cell.col] = token;
+  movePlayer1 = cell => 
+    this.board[cell.row][cell.col] = Players.Player1;
+  movePlayer2 = cell => 
+    this.board[cell.row][cell.col] = Players.Player2;
 
   // Returns the token from a given cell
   getToken = cell => 
     this.board[cell.row][cell.col];
 
-  // Returns the size of the game board
-  getSize = () => this.board.length;
-  
   // Returns the game board table
   getTable = () => copyArray_2d(this.board);
 
@@ -60,50 +24,32 @@ export default class GameBoard {
   }
 
   // True if the token has a winning set of cells
-  tokenWon(token) {
+  playerWon(player) {
     for (var i = 0; i < this.board.length; i++)
-      if (hasRow(token, this.board, i) || 
-        hasCol(token, this.board, i))
+      if (hasRow(player, this.board, i) || 
+        hasCol(player, this.board, i))
         return true;
 
-    return hasTopLeftDiagonal(token, this.board) || 
-      hasBottomLeftDiagonal(token, this.board);
+    return hasTopLeftDiagonal(player, this.board) || 
+      hasBottomLeftDiagonal(player, this.board);
   }
 
   // True if the board has any empty cells
   hasEmptyCells = () =>
-    this.board.some(row => row.some(token => token === ''));
-
-  // Returns an array of active tokens on the board
-  getActiveTokens() {
-    var tokens = [];
-    this.board.forEach(row => 
-      row.forEach(token => {
-        if (!tokens.includes(token) && token !== '')
-          tokens.push(token);
-      }))
-    return tokens;
-  }
+    this.board.some(row => row.some(token => token === Players.None));
   
   // Returns the game result for the given token
-  getGameResult = token => {
-
-    if (this.tokenWon(token))
+  getGameResult = () => {
+    if (this.playerWon(Players.Player1))
       return GameResult.Win;
-
-    if (!this.getActiveTokens().some(token => this.tokenWon(token))) {
-      if (this.hasEmptyCells())
-        return GameResult.None;
-      else
-        return GameResult.Draw;
-    }
-    
-    return GameResult.Loss;
+    else if (this.playerWon(Players.Player2))
+      return GameResult.Loss;
+    else if (this.hasEmptyCells())
+      return GameResult.None;
+    else
+      return GameResult.Draw;
   }
   
-  isDraw = () => this.getGameResult() === GameResult.Draw;
-  isOver = () => this.getGameResult() !== GameResult.None;
-
   // Assigns a table to the board property
   setBoard = board => {
     if (!board)
@@ -122,10 +68,10 @@ export default class GameBoard {
       // Initialize missing values with an empty token
       for (var c = 0; c < newBoard[r].length; c++) {
         if (!newBoard[r][c])
-          newBoard[r][c] = '';
+          newBoard[r][c] = Players.None;
         // Accept only string values
-        else if (typeof newBoard[r][c] !== "string")
-          throw new Error("Game board must only contain string values.");
+        else if (typeof newBoard[r][c] !== "number")
+          throw new Error("Game board must only contain numeric values.");
       }
     }
     
@@ -133,7 +79,10 @@ export default class GameBoard {
   }
 
   // Initializes the board with a size
-  constructor(size) {
+  constructor(size, playerToken1, playerToken2) {
+    this.playerToken1 = playerToken1;
+    this.playerToken2 = playerToken2;
+
     if (size === 0)
       throw new Error("Size cannot be less than 1.");
     if (!size)
@@ -146,7 +95,7 @@ export default class GameBoard {
     for (var r = 0; r < size; r++) {
       var row = [];
       for (var c = 0; c < size; c++)
-        row.push('');
+        row.push(Players.None);
       this.board.push(row);
     }
   }

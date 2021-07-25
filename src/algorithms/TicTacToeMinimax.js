@@ -1,3 +1,5 @@
+import { GameResult } from "../enums/GameResult";
+import { Players } from "../enums/Players";
 import GameBoard from "../game/GameBoard";
 import { copyArray_2d } from '../helpers/ArrayHelper';
 import Cell from "../models/Cell";
@@ -18,7 +20,7 @@ export default class TicTacToeMinimax {
     var cells = [];
     for (var r = 0; r < table.length; r++) 
       for (var c = 0; c < table.length; c++) 
-        if (table[r][c] === '') 
+        if (table[r][c] === Players.None) 
           cells.push(new Cell(r, c));
     return cells;
   }
@@ -27,9 +29,9 @@ export default class TicTacToeMinimax {
     var game = new GameBoard();
     game.setBoard(table);
 
-    if (game.tokenWon(this.maximizingToken))
+    if (game.playerWon(this.maximizingToken))
       return 1;
-    else if (game.isDraw())
+    else if (game.getGameResult() === GameResult.Draw)
       return 0;
     else
       return -1;
@@ -38,7 +40,7 @@ export default class TicTacToeMinimax {
   isGameOver(table) {
     var game = new GameBoard();
     game.setBoard(table);
-    return game.isOver();
+    return game.getGameResult() !== GameResult.None;
   }
 
   getNextBestCell = table => {

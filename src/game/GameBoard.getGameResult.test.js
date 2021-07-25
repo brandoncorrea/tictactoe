@@ -1,29 +1,61 @@
 import { GameResult } from '../enums/GameResult';
+import { Players } from '../enums/Players';
+import { newTable } from '../helpers/TableHelper';
 import GameBoard from './GameBoard';
 
 var assertGameResult = (board, expectedResult) => {
   var game = new GameBoard();
   game.setBoard(board)
-  expect(game.getGameResult('X')).toBe(expectedResult);
+  expect(game.getGameResult()).toBe(expectedResult);
 }
 
-test('GameResult is win for winning board', () =>
-  assertGameResult([
-    ['O', 'X', 'X'],
-    ['X', 'O', 'X'],
-    ['O', 'O', 'X']],
-  GameResult.Win))
+test('GameResult is win for winning board', () => {
+  var table = newTable();
+  table[0][0] = Players.Player2;
+  table[0][1] = Players.Player1;
+  table[0][2] = Players.Player1;
 
-test('GameResult is loss for losing board', () => 
-  assertGameResult([
-    ['O', 'O', 'X'],
-    ['', 'X', 'O'],
-    ['O', 'O', 'O']], 
-    GameResult.Loss))
+  table[1][0] = Players.Player1;
+  table[1][1] = Players.Player2;
+  table[1][2] = Players.Player1;
 
-test('GameResult is draw for full board', () => 
-  assertGameResult([
-    ['X', 'O', 'X'],
-    ['X', 'O', 'O'],
-    ['O', 'X', 'X']], 
-    GameResult.Draw))
+  table[2][0] = Players.Player2;
+  table[2][1] = Players.Player2;
+  table[2][2] = Players.Player1;
+
+  assertGameResult(table, GameResult.Win)
+})
+
+test('GameResult is loss for losing board', () => {
+  var table = newTable();
+  table[0][0] = Players.Player2;
+  table[0][1] = Players.Player2;
+  table[0][2] = Players.Player1;
+
+  table[1][0] = Players.None;
+  table[1][1] = Players.Player1;
+  table[1][2] = Players.Player2;
+
+  table[2][0] = Players.Player2;
+  table[2][1] = Players.Player2;
+  table[2][2] = Players.Player2;
+
+  assertGameResult(table, GameResult.Loss);
+})
+
+test('GameResult is draw for full board', () => {
+  var table = newTable();
+  table[0][0] = Players.Player1;
+  table[0][1] = Players.Player2;
+  table[0][2] = Players.Player1;
+
+  table[1][0] = Players.Player1;
+  table[1][1] = Players.Player2;
+  table[1][2] = Players.Player2;
+
+  table[2][0] = Players.Player2;
+  table[2][1] = Players.Player1;
+  table[2][2] = Players.Player1;
+
+  assertGameResult(table, GameResult.Draw)
+})

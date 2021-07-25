@@ -1,33 +1,19 @@
+import { Players } from '../enums/Players';
 import Cell from '../models/Cell';
-import ComputerPlayer from '../players/ComputerPlayer';
 import GameBoard from './GameBoard';
 
-const assertTokenPlacement = (board, player, cell) => {
-  board.placeToken(player.getToken(), cell);
+test('Player 1 can move a piece', () => {
+  var board = new GameBoard(3, 'X', 'O');
+  var cell = new Cell(0, 0);
+  board.movePlayer1(cell)
   var actual = board.getToken(cell);
-  expect(actual).toBe(player.getToken());
-}
+  expect(actual).toBe(Players.Player1);
+})
 
-test('Game board accepts token placements', () => 
-  assertTokenPlacement(
-    new GameBoard(),
-    new ComputerPlayer(),
-    new Cell(0, 0)))
-
-test('Game board accepts token placements for Os', () =>
-  assertTokenPlacement(
-    new GameBoard(),
-    new ComputerPlayer('O'),
-    new Cell(1, 1)))
-
-test('Game board accepts token placements from multiple players', () => {
-  var board = new GameBoard();
-  assertTokenPlacement(
-    board,
-    new ComputerPlayer('X'),
-    new Cell(0, 0))
-  assertTokenPlacement(
-    board,
-    new ComputerPlayer('O'),
-    new Cell(1, 1))
+test('Player 2 can move a piece', () => {
+  var board = new GameBoard(3, 'X', 'O');
+  var cell = new Cell(0, 0);
+  board.movePlayer2(cell)
+  var actual = board.getToken(cell);
+  expect(actual).toBe(Players.Player2);
 })
