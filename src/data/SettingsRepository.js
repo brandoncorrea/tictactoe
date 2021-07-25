@@ -23,14 +23,28 @@ export default class SettingsRepository {
     setItem(StorageNames.FirstPlayer, player);
 
   // Getters
-  getUserIcon = () => 
-    getItem(StorageNames.UserIcon) || 
-    (getItem(StorageNames.ComputerIcon) !== PlayerIcon.X && PlayerIcon.X) ||
-    PlayerIcon.O;
-  getComputerIcon = () => 
-    getItem(StorageNames.ComputerIcon) || 
-    (getItem(StorageNames.UserIcon) !== PlayerIcon.X && PlayerIcon.X) ||
-    PlayerIcon.O;
+  getUserIcon = () => {
+    var userIcon = getItem(StorageNames.UserIcon);
+    if (userIcon) 
+      return userIcon;
+
+    var computerIcon = getItem(StorageNames.ComputerIcon);
+    if (computerIcon && computerIcon !== PlayerIcon.O)
+      return PlayerIcon.O;
+    return PlayerIcon.X;
+  }
+
+  getComputerIcon = () => {
+    var computerIcon = getItem(StorageNames.ComputerIcon);
+    if (computerIcon) 
+      return computerIcon;
+
+    var userIcon = getItem(StorageNames.UserIcon);
+    if (userIcon && userIcon !== PlayerIcon.X)
+      return PlayerIcon.X;
+    return PlayerIcon.O;
+  }
+
   getFirstPlayer = () =>
     getNumber(StorageNames.FirstPlayer) || 
     FirstPlayer.Computer;
