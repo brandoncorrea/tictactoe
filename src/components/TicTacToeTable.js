@@ -24,7 +24,6 @@ export default class TicTacToeTable extends Component {
       <Table fixed unstackable celled style={this.state.style}>
         <Table.Body>
           {
-            
             Array.from(Array(this.state.table.length).keys()).map(row =>
               <TicTacToeRow
                 key={Guid.newGuid()}

@@ -1,5 +1,4 @@
 import { GameResult } from '../enums/GameResult';
-import Cell from '../models/Cell';
 import { copyArray_2d } from '../helpers/ArrayHelper';
 
 // True if the token has the row index
