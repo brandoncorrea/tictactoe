@@ -29,9 +29,10 @@ export default class TicTacToeMinimax {
     var game = new GameBoard();
     game.setBoard(table);
 
-    if (game.playerWon(this.maximizingToken))
+    var result = game.getGameResult();
+    if (result === GameResult.Win)
       return 1;
-    else if (game.getGameResult() === GameResult.Draw)
+    else if (result === GameResult.Draw)
       return 0;
     else
       return -1;
