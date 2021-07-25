@@ -1,8 +1,6 @@
 import { GameResult } from '../enums/GameResult';
-
-// Clones a 2d array
-const copyArray_2d = arr =>
-  Array.from(arr, i => Array.from(i));
+import Cell from '../models/Cell';
+import { copyArray_2d } from '../helpers/ArrayHelper';
 
 // True if the token has the row index
 const hasRow = (token, table, row) => {
