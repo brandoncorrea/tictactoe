@@ -2,6 +2,9 @@ import { Component } from "react";
 import { Form, Input } from "semantic-ui-react";
 import SettingsRepository from "../data/SettingsRepository";
 
+const MIN_SIZE = 1;
+const MAX_SIZE = 5;
+
 export default class TableSizeSetting extends Component {
   settings = new SettingsRepository();
 
@@ -20,18 +23,17 @@ export default class TableSizeSetting extends Component {
       this.setState({ value: target.value });
       return;
     }
-    else if (target.value.length > 2 || isNaN(target.value))
+    else if (isNaN(target.value) || target.value.length > 1)
       return;
 
     var value = Number(target.value);
     var error = null
-    if (value < 1 || value > 10)
+    if (value < MIN_SIZE || value > MAX_SIZE)
       error = {
-        content: 'Size must be between 1 and 10.',
+        content: `Size must be between ${MIN_SIZE} and ${MAX_SIZE}.`,
         pointing: 'above',
       };
-
-    if (!error)
+    else
       this.settings.setTableSize(value);
     this.setState({ value, error });
   }
