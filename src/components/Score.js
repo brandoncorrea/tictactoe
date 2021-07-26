@@ -1,15 +1,33 @@
 import { Component } from "react";
-import { Statistic } from "semantic-ui-react";
-import ScoreRepository from "../data/ScoreRepository";
+import { Header, Statistic } from "semantic-ui-react";
+import ScoreRepositoryPvE from "../data/ScoreRepositoryPvE";
+import ScoreRepositoryPvP from "../data/ScoreRepositoryPvP";
 
 export default class Score extends Component {
-  score = new ScoreRepository();
-  items = [
-    { key: 'wins', label: 'Wins', value: this.score.getWins().toLocaleString() },
-    { key: 'draws', label: 'Draws', value: this.score.getDraws().toLocaleString() },
-    { key: 'losses', label: 'Losses', value: this.score.getLosses().toLocaleString() },
+
+  getScoreItems = repo => [
+    { key: 'wins', label: 'Wins', value: repo.getWins().toLocaleString() },
+    { key: 'draws', label: 'Draws', value: repo.getDraws().toLocaleString() },
+    { key: 'losses', label: 'Losses', value: repo.getLosses().toLocaleString() },
   ]
 
   render = () => 
-    <Statistic.Group size='huge' horizontal items={this.items}/>
+  <>
+    <Header 
+      as='h2' 
+      content='Player vs Computer' 
+      textAlign='left' />
+    <Statistic.Group 
+      horizontal
+      size='huge' 
+      items={this.getScoreItems(new ScoreRepositoryPvE())}/>
+    <Header 
+      as='h2' 
+      content='Player vs Player' 
+      textAlign='left' />
+    <Statistic.Group 
+      horizontal
+      size='huge' 
+      items={this.getScoreItems(new ScoreRepositoryPvP())}/>
+  </>
 }

@@ -1,16 +1,18 @@
 import { Component } from "react";
 import { Button, Container } from "semantic-ui-react";
 import TicTacToeMinimax from "../algorithms/TicTacToeMinimax";
-import ScoreRepository from "../data/ScoreRepository";
 import SettingsRepository from "../data/SettingsRepository";
 import { Players } from "../enums/Players";
 import { GameMode } from "../enums/GameMode";
 import { GameResult } from "../enums/GameResult";
 import TicTacToeTable from "./TicTacToeTable";
+import ScoreRepositoryPvP from "../data/ScoreRepositoryPvP";
+import ScoreRepositoryPvE from "../data/ScoreRepositoryPvE";
 
 export default class Game extends Component {
   settings = new SettingsRepository();
-  score = new ScoreRepository();
+  scorePvp = new ScoreRepositoryPvP();
+  scorePve = new ScoreRepositoryPvE();
 
   constructor(props) {
     super(props);
@@ -46,14 +48,14 @@ export default class Game extends Component {
   }
 
   // Updates the score repository with the result of the game
-  updateScore() {
+  updateScore(repo) {
     var result = this.state.game.getGameResult();
     if (result === GameResult.Draw)
-      this.score.addDraw();
+      repo.addDraw();
     else if (result === GameResult.Loss)
-      this.score.addLoss();
+      repo.addLoss();
     else if (result === GameResult.Win)
-      this.score.addWin();
+      repo.addWin();
   }
 
   // When GameMode is PvE, use this
@@ -69,7 +71,7 @@ export default class Game extends Component {
       this.playComputerTurn()
       
     this.setState({ });
-    this.updateScore();
+    this.updateScore(this.scorePve);
   }
 
   // When GameMode is PvP, use this
@@ -89,7 +91,7 @@ export default class Game extends Component {
         : Players.Player1
     });
 
-    this.updateScore();
+    this.updateScore(this.scorePvp);
   }
 
   onResetClicked() {
