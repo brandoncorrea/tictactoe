@@ -1,3 +1,4 @@
+import Settings from '../components/Settings';
 import { PlayerIcon } from '../enums/PlayerIcon';
 import { StorageNames } from '../enums/StorageNames';
 import SettingsRepository from './SettingsRepository'
@@ -53,4 +54,14 @@ test('Player 1 Icon defaults to X when neither Player 1 or 2 icons exist', () =>
   var settings = new SettingsRepository();
   var player1 = settings.getIconPlayer1();
   expect(player1).toBe(PlayerIcon.X);
+})
+
+test('Player 1 Icon can be set to something other than X and O', () => {
+  var settings = new SettingsRepository();
+  settings.setIconPlayer1('123');
+  settings.setIconPlayer2('321');
+  var player1 = settings.getIconPlayer1();
+  var player2 = settings.getIconPlayer2();
+  expect(player1).toBe('123');
+  expect(player2).toBe('321');
 })

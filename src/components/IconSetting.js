@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Form, Dropdown } from 'semantic-ui-react';
+import { Form, Input } from 'semantic-ui-react';
 import SettingsRepository from "../data/SettingsRepository";
 import { PlayerIcon } from "../enums/PlayerIcon";
 
@@ -14,28 +14,51 @@ export default class IconSetting extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: this.settings.getIconPlayer1()
+      player1: this.settings.getIconPlayer1(),
+      player2: this.settings.getIconPlayer2()
     }
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleChangePlayer1 = this.handleChangePlayer1.bind(this);
+    this.handleChangePlayer2 = this.handleChangePlayer2.bind(this);
   }
 
-  handleChange(e, target) {
-    this.settings.setIconPlayer1(target.value);
-    this.setState({ value: this.settings.getIconPlayer1() });
+  handleChangePlayer1(e, target) {
+    if (target.value.length > 2)
+      return
+
+    // Only save items with a value
+    if (target.value.length > 0)
+      this.settings.setIconPlayer1(target.value);
+    this.setState({ player1: target.value });
+  }
+
+  handleChangePlayer2(e, target) {
+    if (target.value.length > 2)
+      return
+
+    // Only save items with a value
+    if (target.value.length > 0)
+      this.settings.setIconPlayer2(target.value);
+    this.setState({ player2: target.value });
   }
 
   render = () =>
-    <Form.Group inline>
+    <Form.Group>
       <Form.Field>
-        <label>Choose an Icon</label>
-        <Dropdown selection
-          options={this.options}
-          value={this.state.value}
-          onChange={this.handleChange}/>
+        <label>Your Icon</label>
+        <Input 
+          value={this.state.player1}
+          onChange={this.handleChangePlayer1} 
+          size={2}
+          />
       </Form.Field>
       <Form.Field>
-        <label>Opponent's icon is {this.settings.getIconPlayer2()}</label>
+        <label>Opponent Icon</label>
+        <Input 
+          value={this.state.player2}
+          onChange={this.handleChangePlayer2} 
+          size={2}
+          />
       </Form.Field>
     </Form.Group>
 }

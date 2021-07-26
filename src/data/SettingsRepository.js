@@ -7,7 +7,7 @@ import { getItem, setItem, getNumber } from '../helpers/LocalStorageHelper';
 // Sets a storage's icon value and updates an opposing storage if the icons are the same
 const setIcon = (icon, destinationStorageName, verifyStorageName) => {
   setItem(destinationStorageName, icon);
-  if (icon !== getItem(destinationStorageName)) return;
+  if (icon !== getItem(verifyStorageName)) return;
   if (icon === PlayerIcon.X)
     setItem(verifyStorageName, PlayerIcon.O);
   else
