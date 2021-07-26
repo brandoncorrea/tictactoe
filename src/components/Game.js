@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Container } from "semantic-ui-react";
+import { Button, Container } from "semantic-ui-react";
 import TicTacToeMinimax from "../algorithms/TicTacToeMinimax";
 import ScoreRepository from "../data/ScoreRepository";
 import SettingsRepository from "../data/SettingsRepository";
@@ -96,5 +96,14 @@ export default class Game extends Component {
       <TicTacToeTable 
         table={this.state.game.board}
         onCellClick={this.state.onCellClick} />
+      
+      <Button.Group fluid>
+        <Button 
+          content='Reset'
+          onClick={() => {
+            this.state.game.reset();
+            this.setState({ });
+          }} />
+      </Button.Group>
     </Container>
 } 
