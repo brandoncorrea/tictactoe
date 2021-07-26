@@ -50,7 +50,15 @@ export default class GameBoard {
     if (size === null || size === undefined)
       size = this.board.length;
     verifySize(size);
-    this.board = newTable(size);
+
+    while (this.board.length)
+      this.board.pop();
+    for (var r = 0; r < size; r++) {
+      var row = [];
+      for (var c = 0; c < size; c++)
+        row.push(Players.None);
+      this.board.push(row);
+    }
   }
 
   // Returns the token from a given cell
