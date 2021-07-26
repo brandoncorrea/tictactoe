@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Button, Container } from "semantic-ui-react";
+import { Button, Container, Modal, Header } from "semantic-ui-react";
 import TicTacToeMinimax from "../algorithms/TicTacToeMinimax";
 import SettingsRepository from "../data/SettingsRepository";
 import { Players } from "../enums/Players";
@@ -18,7 +18,8 @@ export default class Game extends Component {
     super(props);
     this.state = {
       game: props.game,
-      nextPlayer: this.settings.getIconPlayer1()
+      nextPlayer: this.settings.getIconPlayer1(),
+      message: ''
     }
 
     // Play computer's turn if they go first
@@ -50,12 +51,21 @@ export default class Game extends Component {
   // Updates the score repository with the result of the game
   updateScore(repo) {
     var result = this.state.game.getGameResult();
-    if (result === GameResult.Draw)
+    var message = '';
+    if (result === GameResult.Draw) {
       repo.addDraw();
-    else if (result === GameResult.Loss)
+      message = 'Draw!';
+    }
+    else if (result === GameResult.Loss){
+      message = `Opponent Won! ${this.settings.getIconPlayer2()}`;
       repo.addLoss();
-    else if (result === GameResult.Win)
+    }
+    else if (result === GameResult.Win){
+      message = `You Won! ${this.settings.getIconPlayer1()}`;  
       repo.addWin();
+    }
+
+    this.setState({ message });
   }
 
   // When GameMode is PvE, use this
@@ -110,5 +120,13 @@ export default class Game extends Component {
           content='Reset'
           onClick={this.onResetClicked} />
       </Button.Group>
+
+      <Modal
+        basic
+        onClose={() => this.setState({ message: '' })}
+        open={this.state.message.length > 0}
+        size='small' >
+        <Header as='h2' content={this.state.message} />
+      </Modal>
     </Container>
 } 
