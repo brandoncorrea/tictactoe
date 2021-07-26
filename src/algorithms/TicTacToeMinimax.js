@@ -1,13 +1,9 @@
-import { GameResult } from "../enums/GameResult";
 import { Players } from "../enums/Players";
-import GameBoard from "../game/GameBoard";
-import { copyArray_2d } from '../helpers/ArrayHelper';
+import { hasBottomLeftDiagonal, hasCol, hasRow, hasTopLeftDiagonal } from "../helpers/TableHelper";
 import Cell from "../models/Cell";
 
-const min = (left, right) =>
-  left > right ? right : left;
-const max = (left, right) =>
-  left > right ? left : right;
+const MAX_EVALUATION = 1;
+const MIN_EVALUATION = -1;
 
 export default class TicTacToeMinimax {
 
@@ -16,81 +12,127 @@ export default class TicTacToeMinimax {
     this.minimizingToken = minimizingToken;
   }
 
-  getChildren(table) {
-    var cells = [];
+  // True if the table is empty
+  isTableEmpty = table =>
+    table.every(row => row.every(col => col === Players.None));
+  // True if there is an empty cell
+  hasEmptyCells = table =>
+    table.some(row => row.some(col => col === Players.None));
+
+  // Prevent unnecessary reading of all cells
+  *getChildren(table) {
     for (var r = 0; r < table.length; r++) 
       for (var c = 0; c < table.length; c++) 
         if (table[r][c] === Players.None) 
-          cells.push(new Cell(r, c));
-    return cells;
+          yield new Cell(r, c);
   }
 
+  // Win = 1, Draw = 0, Loss = -1, Game Not Over = undefined
   evaluatePosition(table) {
-    var game = new GameBoard();
-    game.setBoard(table);
+    // Check rows and columns
+    for (var i = 0; i < table.length; i++) {
+      // If the cell is empty, then neither player owns the row or column
+      if (table[i][i] === Players.None)
+        continue;
+      if (hasRow(this.minimizingToken, table, i) || 
+          hasCol(this.minimizingToken, table, i))
+        return MIN_EVALUATION;
+      if (hasRow(this.maximizingToken, table, i) || 
+          hasCol(this.maximizingToken, table, i))
+        return MAX_EVALUATION;
+    }
 
-    if (game.playerWon(this.maximizingToken))
-      return 1;
-    else if (game.playerWon(this.minimizingToken))
-      return -1;
-    else 
+    // Check diagonals
+    if (hasTopLeftDiagonal(this.minimizingToken, table) ||
+        hasBottomLeftDiagonal(this.minimizingToken, table))
+      return MIN_EVALUATION;
+    if (hasTopLeftDiagonal(this.maximizingToken, table) ||
+        hasBottomLeftDiagonal(this.maximizingToken, table))
+      return MAX_EVALUATION;
+    
+    // If table is full return a draw
+    if (!this.hasEmptyCells(table))
       return 0;
+  
+    // Game is incomplete
+    return undefined;
   }
 
-  isGameOver(table) {
-    var game = new GameBoard();
-    game.setBoard(table);
-    return game.getGameResult() !== GameResult.None;
-  }
-
+  // Returns the next best cell to play for the maximizing player given a table
   getNextBestCell = table => {
-    var maxEval = Number.NEGATIVE_INFINITY;
-    var bestCell = null;
+    // When board is empty, don't search the board - always return a corner
+    if (this.isTableEmpty(table))
+      return new Cell(0, 0);
 
-    this.getChildren(table).forEach(cell => {
-      var evaluation = this.minimax(table, cell, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY, true);
-      if (evaluation > maxEval) {
-        maxEval = evaluation;
-        bestCell = cell;
+    var maxEval = MIN_EVALUATION;
+    var children = this.getChildren(table);
+    var next = children.next();
+    var bestCell = next.value;
+
+    while(!next.done) {
+      var minimax = this.minimax(table, next.value, maxEval, MAX_EVALUATION, true);
+
+      // This move will win - Return the cell
+      if (minimax === MAX_EVALUATION) 
+        return next.value;
+      if (minimax > maxEval) {
+        maxEval = minimax;
+        bestCell = next.value;
       }
-    })
+      
+      next = children.next();
+    }
 
     return bestCell;
   }
 
+  // Evaluates the numeric value of a given play
   minimax(table, cell, alpha, beta, maximizingPlayer) {
-    var cloneTable = copyArray_2d(table);
-    cloneTable[cell.row][cell.col] = maximizingPlayer 
+    table[cell.row][cell.col] = maximizingPlayer 
       ? this.maximizingToken 
       : this.minimizingToken;
+    var minimax = this.recurse(table, alpha, beta, maximizingPlayer);
+    table[cell.row][cell.col] = Players.None;
+    return minimax;
+  }
 
-    if (this.isGameOver(cloneTable))
-      return this.evaluatePosition(cloneTable);
-    
-    var children = this.getChildren(cloneTable);
-    
+  // Returns the greatest value of all the next plays in a given table
+  recurse(table, alpha, beta, maximizingPlayer) {
+    // If the game is over, return the evaluation of the current position
+    var evaluation = this.evaluatePosition(table);
+    if (evaluation !== undefined)
+      return evaluation;
+
+    // Iterators
+    var children = this.getChildren(table);
+    var next = children.next();
+
     if (maximizingPlayer) {
-      var maxEval = Number.POSITIVE_INFINITY;
+      // Find min evaluation for each play
+      while(!next.done) {
+        var minimax = this.minimax(table, next.value, alpha, beta, false);
+        if (minimax < beta)
+          beta = minimax;
+
+        // Exit if caller has a better value
+        if (beta <= alpha) break;
+        next = children.next();
+      }
       
-      children.forEach(child => {
-        var minimax = this.minimax(cloneTable, child, alpha, beta, false);
-        maxEval = min(maxEval, minimax);
-        beta = min(beta, minimax);
-        if (beta <= alpha) return maxEval;
-      })
-
-      return maxEval;
+      return beta
     } else {
-      var minEval = Number.NEGATIVE_INFINITY;
+      // Find max evaluation for each play
+      while(!next.done) {
+        var minimax = this.minimax(table, next.value, alpha, beta, true);
+        if (minimax > alpha)
+          alpha = minimax;
 
-      children.forEach(child => {
-        var minimax = this.minimax(cloneTable, child, alpha, beta, true);
-        minEval = max(minEval, minimax);
-        alpha = max(alpha, minimax)
-        if (beta <= alpha) return maxEval;
-      })
+        // Exit if caller has a better value
+        if (beta <= alpha) break;
+        next = children.next();
+      }
 
-      return minEval
+      return alpha
     }
   }
 }
