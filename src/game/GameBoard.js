@@ -6,7 +6,7 @@ import { hasCol, hasRow, hasBottomLeftDiagonal, hasTopLeftDiagonal, newTable } f
 // Validate cell is empty
 const verifyCellEmpty = (board, cell) => {
   if (board[cell.row][cell.col] !== Players.None)
-      throw Error("Cannot move to an occupied cell.");
+    throw Error("Cannot move to an occupied cell.");
 }
 
 // Validate new board lengths and types
@@ -33,26 +33,24 @@ const verifySize = size => {
 }
 
 export default class GameBoard {
+  // Places the player 1 flag in the cell
   movePlayer1 = cell => {
     verifyCellEmpty(this.board, cell);
     this.board[cell.row][cell.col] = Players.Player1;
   }
+
+  // Places the player 2 flag in the cell
   movePlayer2 = cell => {
     verifyCellEmpty(this.board, cell);
     this.board[cell.row][cell.col] = Players.Player2;
   }
 
+  // Resets the game board
   reset(size) {
     if (size === null || size === undefined)
       size = this.board.length;
     verifySize(size);
-    this.board = [];
-    for (var r = 0; r < size; r++) {
-      var row = [];
-      for (var c = 0; c < size; c++)
-        row.push(Players.None);
-      this.board.push(row);
-    }
+    this.board = newTable(size);
   }
 
   // Returns the token from a given cell
@@ -82,19 +80,15 @@ export default class GameBoard {
 
   // True if the board has any empty cells
   hasEmptyCells = () =>
-    this.board.some(row => row.some(token => token === Players.None));
+    this.board.some(row => 
+      row.some(token => token === Players.None));
   
   // Returns the game result for the given token
-  getGameResult = () => {
-    if (this.playerWon(Players.Player1))
-      return GameResult.Win;
-    else if (this.playerWon(Players.Player2))
-      return GameResult.Loss;
-    else if (this.hasEmptyCells())
-      return GameResult.None;
-    else
-      return GameResult.Draw;
-  }
+  getGameResult = () => 
+    this.playerWon(Players.Player1) ? GameResult.Win
+    : this.playerWon(Players.Player2) ? GameResult.Loss
+    : this.hasEmptyCells() ? GameResult.None
+    : GameResult.Draw;
   
   // Assigns a table to the board property
   setBoard = board => {
@@ -110,12 +104,9 @@ export default class GameBoard {
 
   // Initializes the board with a size
   constructor(size) {
-    if (size === undefined 
-      || size === null)
+    if (size === undefined || size === null)
       size = 3;
     verifySize(size);
-
-    // Create 2D array based on the given size
     this.board = newTable(size);
   }
 }
