@@ -3,6 +3,7 @@ import { Container } from "semantic-ui-react";
 import FirstPlayerSetting from "./FirstPlayerSetting";
 import IconSetting from "./IconSetting";
 import GameModeSetting from './GameModeSetting'
+import TableSizeSetting from "./TableSizeSetting";
 
 export default class Settings extends Component {
 
@@ -11,6 +12,7 @@ export default class Settings extends Component {
       <GameModeSetting />
       <FirstPlayerSetting />
       <IconSetting />
+      <TableSizeSetting />
     </Container>
 
 }

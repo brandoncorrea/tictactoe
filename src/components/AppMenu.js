@@ -14,7 +14,7 @@ export default class AppMenu extends Component {
     super(props);
     this.state = {
       activeItem: MenuOptions.Score,
-      game: new GameBoard()
+      game: new GameBoard(this.settings.getTableSize())
     }
   }
 

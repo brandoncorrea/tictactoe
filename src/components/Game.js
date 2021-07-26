@@ -31,6 +31,7 @@ export default class Game extends Component {
     else
       this.state.onCellClick = this.onCellClickPvP;
     this.state.onCellClick = this.state.onCellClick.bind(this);
+    this.onResetClicked = this.onResetClicked.bind(this);
   }
 
   isGameOver = () =>
@@ -91,6 +92,11 @@ export default class Game extends Component {
     this.updateScore();
   }
 
+  onResetClicked() {
+    this.state.game.reset(this.settings.getTableSize());
+    this.setState({ });
+  }
+
   render = () => 
     <Container>
       <TicTacToeTable 
@@ -100,10 +106,7 @@ export default class Game extends Component {
       <Button.Group fluid>
         <Button 
           content='Reset'
-          onClick={() => {
-            this.state.game.reset();
-            this.setState({ });
-          }} />
+          onClick={this.onResetClicked} />
       </Button.Group>
     </Container>
 } 
