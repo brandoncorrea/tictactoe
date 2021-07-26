@@ -22,6 +22,11 @@ export default class Game extends Component {
       message: ''
     }
 
+    this.initializeGame();
+    this.onResetClicked = this.onResetClicked.bind(this);
+  }
+
+  initializeGame() {
     // Play computer's turn if they go first
     if (this.settings.getGameMode() === GameMode.PvE && 
       this.settings.getFirstPlayer() === Players.Player2 &&
@@ -34,7 +39,6 @@ export default class Game extends Component {
     else
       this.state.onCellClick = this.onCellClickPvP;
     this.state.onCellClick = this.state.onCellClick.bind(this);
-    this.onResetClicked = this.onResetClicked.bind(this);
   }
 
   isGameOver = () =>
@@ -106,6 +110,7 @@ export default class Game extends Component {
 
   onResetClicked() {
     this.state.game.reset(this.settings.getTableSize());
+    this.initializeGame();
     this.setState({ });
   }
 
