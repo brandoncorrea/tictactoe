@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Form, Radio } from "semantic-ui-react";
+import { Form, Header, Radio } from "semantic-ui-react";
 import SettingsRepository from "../data/SettingsRepository";
 import { GameMode } from "../enums/GameMode";
 
@@ -20,21 +20,23 @@ export default class GameModeSetting extends Component {
   }
 
   render = () => 
-    <Form.Group inline>
-      <label>Game Mode:</label>
-      <Form.Field
-        control={Radio}
-        label='Player vs Computer'
-        value={GameMode.PvE}
-        checked={this.state.value === GameMode.PvE}
-        onChange={this.handleChange}
-        />
-      <Form.Field
-        control={Radio}
-        label='Player vs Player'
-        value={GameMode.PvP}
-        checked={this.state.value === GameMode.PvP}
-        onChange={this.handleChange}
-        />
-    </Form.Group>
+    <Form>
+      <Header as='h3' content='Game Mode' />
+      <Form.Group widths='equal'>
+        <Form.Field
+          control={Radio}
+          label='Player vs Computer'
+          value={GameMode.PvE}
+          checked={this.state.value === GameMode.PvE}
+          onChange={this.handleChange}
+          />
+        <Form.Field
+          control={Radio}
+          label='Player vs Player'
+          value={GameMode.PvP}
+          checked={this.state.value === GameMode.PvP}
+          onChange={this.handleChange}
+          />
+      </Form.Group>
+    </Form>
 }

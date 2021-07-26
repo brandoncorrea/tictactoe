@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Form, Input } from 'semantic-ui-react';
+import { Form, Header, Input } from 'semantic-ui-react';
 import SettingsRepository from "../data/SettingsRepository";
 import { PlayerIcon } from "../enums/PlayerIcon";
 
@@ -43,22 +43,23 @@ export default class IconSetting extends Component {
   }
 
   render = () =>
-    <Form.Group>
-      <Form.Field>
-        <label>Your Icon</label>
-        <Input 
-          value={this.state.player1}
-          onChange={this.handleChangePlayer1} 
-          size={2}
-          />
-      </Form.Field>
-      <Form.Field>
-        <label>Opponent Icon</label>
-        <Input 
-          value={this.state.player2}
-          onChange={this.handleChangePlayer2} 
-          size={2}
-          />
-      </Form.Field>
-    </Form.Group>
+    <Form>
+      <Header as='h3' content='Icons' />
+      <Form.Group widths='equal'>
+        <Form.Field>
+          <label>Your Icon</label>
+          <Input 
+            value={this.state.player1}
+            onChange={this.handleChangePlayer1} 
+            />
+        </Form.Field>
+        <Form.Field>
+          <label>Opponent Icon</label>
+          <Input 
+            value={this.state.player2}
+            onChange={this.handleChangePlayer2} 
+            />
+        </Form.Field>
+      </Form.Group>
+    </Form>
 }
