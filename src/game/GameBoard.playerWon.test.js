@@ -10,8 +10,8 @@ const assertPlayerWins = (board, player, tokenWins) => {
 
 test('Returns false for new game', () => {
   var game = new GameBoard();
-  expect(game.playerWon(Players.Player1, game)).toBeFalsy();
-  expect(game.playerWon(Players.Player2, game)).toBeFalsy();
+  expect(game.playerWon(Players.Player1)).toBeFalsy();
+  expect(game.playerWon(Players.Player2)).toBeFalsy();
 })
 
 test('Returns false for one cell in row', () => {

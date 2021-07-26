@@ -12,9 +12,9 @@ export default class AppMenu extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       activeItem: MenuOptions.Score,
-      game: new GameBoard(3, this.settings.getIconPlayer1(), this.settings.getIconPlayer2())
+      game: new GameBoard()
     }
   }
 

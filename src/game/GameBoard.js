@@ -1,13 +1,59 @@
 import { GameResult } from '../enums/GameResult';
 import { Players } from '../enums/Players';
 import { copyArray_2d } from '../helpers/ArrayHelper';
-import { hasCol, hasRow, hasBottomLeftDiagonal, hasTopLeftDiagonal } from '../helpers/TableHelper';
+import { hasCol, hasRow, hasBottomLeftDiagonal, hasTopLeftDiagonal, newTable } from '../helpers/TableHelper';
+
+// Validate cell is empty
+const verifyCellEmpty = (board, cell) => {
+  if (board[cell.row][cell.col] !== Players.None)
+      throw Error("Cannot move to an occupied cell.");
+}
+
+// Validate new board lengths and types
+const verifyBoard = board => {
+  if (!board)
+    throw new Error("Game board must have a value.");
+  if (board.length < 1)
+    throw new Error("Game board cannot be empty.");
+  
+  for (var r = 0; r < board.length; r++) {
+    if (board[r].length !== board.length)
+      throw new Error("Game board must have equally sized rows and columns.");
+    for (var c = 0; c < board[r].length; c++)
+      if (board[r][c] && typeof board[r][c] !== "number")
+        throw new Error("Game board must only contain numeric values.");
+  }
+}
+
+const verifySize = size => {
+  if (size < 1)
+    throw new Error("Size cannot be less than 1.");
+  if (isNaN(size))
+    throw new Error("Size must be numeric.");
+}
 
 export default class GameBoard {
-  movePlayer1 = cell => 
+  movePlayer1 = cell => {
+    verifyCellEmpty(this.board, cell);
     this.board[cell.row][cell.col] = Players.Player1;
-  movePlayer2 = cell => 
+  }
+  movePlayer2 = cell => {
+    verifyCellEmpty(this.board, cell);
     this.board[cell.row][cell.col] = Players.Player2;
+  }
+
+  reset(size) {
+    if (size === null || size === undefined)
+      size = this.board.length;
+    verifySize(size);
+    this.board = [];
+    for (var r = 0; r < size; r++) {
+      var row = [];
+      for (var c = 0; c < size; c++)
+        row.push(Players.None);
+      this.board.push(row);
+    }
+  }
 
   // Returns the token from a given cell
   getToken = cell => 
@@ -52,51 +98,24 @@ export default class GameBoard {
   
   // Assigns a table to the board property
   setBoard = board => {
-    if (!board)
-      throw new Error("Game board must have a value.");
-    if (board.length < 1)
-      throw new Error("Game board cannot be empty.");
-
-    // Remove object reference on board
-    var newBoard = copyArray_2d(board);
-
-    // Validate new board
-    for (var r = 0; r < newBoard.length; r++) {
-      if (newBoard[r].length !== newBoard.length)
-        throw new Error("Game board must have equally sized rows and columns.");
-
-      // Initialize missing values with an empty token
-      for (var c = 0; c < newBoard[r].length; c++) {
-        if (!newBoard[r][c])
-          newBoard[r][c] = Players.None;
-        // Accept only string values
-        else if (typeof newBoard[r][c] !== "number")
-          throw new Error("Game board must only contain numeric values.");
-      }
-    }
+    verifyBoard(board);
+    this.board = copyArray_2d(board);
     
-    this.board = newBoard;
+    // Set missing values
+    for (var r = 0; r < this.board.length; r++)
+      for (var c = 0; c < this.board[r].length; c++)
+        if (!this.board[r][c])
+          this.board[r][c] = Players.None;
   }
 
   // Initializes the board with a size
-  constructor(size, playerToken1, playerToken2) {
-    this.playerToken1 = playerToken1;
-    this.playerToken2 = playerToken2;
-
-    if (size === 0)
-      throw new Error("Size cannot be less than 1.");
-    if (!size)
+  constructor(size) {
+    if (size === undefined 
+      || size === null)
       size = 3;
-    if (isNaN(size))
-      throw new Error("Size must be numeric.");
+    verifySize(size);
 
     // Create 2D array based on the given size
-    this.board = [];
-    for (var r = 0; r < size; r++) {
-      var row = [];
-      for (var c = 0; c < size; c++)
-        row.push(Players.None);
-      this.board.push(row);
-    }
+    this.board = newTable(size);
   }
 }
