@@ -46,20 +46,20 @@ export default class IconSetting extends Component {
     <Form>
       <Header as='h3' content='Icons' />
       <Form.Group widths='equal'>
-        <Form.Field>
-          <label>Your Icon</label>
-          <Input 
-            value={this.state.player1}
-            onChange={this.handleChangePlayer1} 
-            />
-        </Form.Field>
-        <Form.Field>
-          <label>Opponent Icon</label>
-          <Input 
-            value={this.state.player2}
-            onChange={this.handleChangePlayer2} 
-            />
-        </Form.Field>
+        <Form.Field 
+          control={Input}
+          label='Your Icon'
+          value={this.state.player1}
+          onChange={this.handleChangePlayer1} 
+          size='massive'
+          />
+        <Form.Field 
+          control={Input}
+          label='Opponent Icon'
+          value={this.state.player2}
+          onChange={this.handleChangePlayer2}  
+          size='massive'
+          />
       </Form.Group>
     </Form>
 }

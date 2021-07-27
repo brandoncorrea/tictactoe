@@ -43,6 +43,7 @@ export default class TableSizeSetting extends Component {
       <Form.Field
         control={Input}
         label='Table Size'
+        size='massive'
         onChange={this.handleChange}
         value={this.state.value}
         error={this.state.error}
