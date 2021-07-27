@@ -1,7 +1,6 @@
 import { Component } from "react";
 import { Form, Header, Input } from 'semantic-ui-react';
 import SettingsRepository from "../data/SettingsRepository";
-import { PlayerIcon } from "../enums/PlayerIcon";
 
 export default class IconSetting extends Component {
   settings = new SettingsRepository();
