@@ -61,13 +61,13 @@ export default class TicTacToeMinimax {
     var bestCell = next.value;
 
     while(!next.done) {
-      var minimax = this.minimax(table, next.value, maxEval, MAX_EVALUATION, true);
+      var evaluation = this.minimax(table, next.value, maxEval, MAX_EVALUATION, true);
 
       // This move will win - Return the cell
-      if (minimax === MAX_EVALUATION) 
+      if (evaluation === MAX_EVALUATION) 
         return next.value;
-      if (minimax > maxEval) {
-        maxEval = minimax;
+      if (evaluation > maxEval) {
+        maxEval = evaluation;
         bestCell = next.value;
       }
       
@@ -101,9 +101,9 @@ export default class TicTacToeMinimax {
     if (maximizingPlayer) {
       // Find min evaluation for each play
       while(!next.done) {
-        var minimax = this.minimax(table, next.value, alpha, beta, false);
-        if (minimax < beta)
-          beta = minimax;
+        var minEval = this.minimax(table, next.value, alpha, beta, false);
+        if (minEval < beta)
+          beta = minEval;
 
         // Exit if caller has a better value
         if (beta <= alpha) break;
@@ -114,9 +114,9 @@ export default class TicTacToeMinimax {
     } else {
       // Find max evaluation for each play
       while(!next.done) {
-        var minimax = this.minimax(table, next.value, alpha, beta, true);
-        if (minimax > alpha)
-          alpha = minimax;
+        var maxEval = this.minimax(table, next.value, alpha, beta, true);
+        if (maxEval > alpha)
+          alpha = maxEval;
 
         // Exit if caller has a better value
         if (beta <= alpha) break;

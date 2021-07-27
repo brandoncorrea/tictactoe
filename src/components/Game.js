@@ -19,11 +19,14 @@ export default class Game extends Component {
     this.state = {
       game: props.game,
       nextPlayer: this.settings.getIconPlayer1(),
-      message: ''
+      message: '',
     }
 
     this.initializeGame();
     this.onResetClicked = this.onResetClicked.bind(this);
+    this.onCellClickPvP = this.onCellClickPvP.bind(this);
+    this.onCellClickPvE = this.onCellClickPvE.bind(this);
+    this.onCellClick = this.onCellClick.bind(this);
   }
 
   initializeGame() {
@@ -32,13 +35,6 @@ export default class Game extends Component {
       this.settings.getFirstPlayer() === Players.Player2 &&
       this.state.game.board.every(row => row.every(cell => cell === Players.None)))
         this.playComputerTurn();
-
-    // Initialize onclick events
-    if (this.settings.getGameMode() === GameMode.PvE)
-      this.state.onCellClick = this.onCellClickPvE;
-    else
-      this.state.onCellClick = this.onCellClickPvP;
-    this.state.onCellClick = this.state.onCellClick.bind(this);
   }
 
   isGameOver = () =>
@@ -71,6 +67,12 @@ export default class Game extends Component {
 
     this.setState({ message });
   }
+
+  // Delegate onclick events based on the game mode
+  onCellClick =
+    this.settings.getGameMode() === GameMode.PvE
+    ? this.onCellClickPvE
+    : this.onCellClickPvP
 
   // When GameMode is PvE, use this
   onCellClickPvE(cell) {
@@ -118,7 +120,7 @@ export default class Game extends Component {
     <Container>
       <TicTacToeTable 
         table={this.state.game.board}
-        onCellClick={this.state.onCellClick} />
+        onCellClick={this.onCellClick} />
       
       <Button.Group fluid>
         <Button 
