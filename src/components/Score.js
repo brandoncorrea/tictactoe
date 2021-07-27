@@ -19,7 +19,7 @@ export default class Score extends Component {
       textAlign='left' />
     <Statistic.Group 
       widths='3'
-      size='big' 
+      size='large' 
       items={this.getScoreItems(new ScoreRepositoryPvE())}/>
     <Divider />
     <Header 
@@ -28,7 +28,7 @@ export default class Score extends Component {
       textAlign='left' />
     <Statistic.Group 
       widths='3'
-      size='big' 
+      size='large' 
       items={this.getScoreItems(new ScoreRepositoryPvP())}/>
   </Segment>
 }

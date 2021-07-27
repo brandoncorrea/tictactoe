@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Container, Divider, Segment } from "semantic-ui-react";
+import { Divider, Segment } from "semantic-ui-react";
 import FirstPlayerSetting from "./FirstPlayerSetting";
 import IconSetting from "./IconSetting";
 import GameModeSetting from './GameModeSetting'

@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Button, Container, Modal, Header, Divider, Segment } from "semantic-ui-react";
+import { Button, Modal, Header, Divider, Segment } from "semantic-ui-react";
 import TicTacToeMinimax from "../algorithms/TicTacToeMinimax";
 import SettingsRepository from "../data/SettingsRepository";
 import { Players } from "../enums/Players";
