@@ -135,7 +135,9 @@ export default class Game extends Component {
   onResetClicked() {
     this.state.game.reset(this.settings.getTableSize());
     this.initializeGame();
-    this.setState({ });
+    this.setState({ 
+      nextPlayer: this.getNextPlayer(this.state.game.board)
+    });
   }
 
   render = () => 
