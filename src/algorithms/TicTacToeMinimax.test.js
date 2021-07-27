@@ -42,7 +42,6 @@ test('Returns winning cell', () => {
   
   assertReturnsCell(table, new Cell(2, 1))
 })
-  
 
 test('Returns blocking cell', () => {
   var table = newTable()
@@ -54,3 +53,6 @@ test('Returns blocking cell', () => {
 
 test('Returns first cell on empty table', () =>
   assertReturnsCell(newTable(), new Cell(0, 0)))
+
+test('Returns first cell on empty 4x4', () =>
+  assertReturnsCell(newTable(4), new Cell(0, 0)))
