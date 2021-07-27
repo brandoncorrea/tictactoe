@@ -1,15 +1,9 @@
 import { Component } from "react";
 import { Form, Header, Input } from 'semantic-ui-react';
 import SettingsRepository from "../data/SettingsRepository";
-import { PlayerIcon } from "../enums/PlayerIcon";
-
 
 export default class IconSetting extends Component {
   settings = new SettingsRepository();
-  options = [
-    { key: PlayerIcon.X, text: PlayerIcon.X, value: PlayerIcon.X },
-    { key: PlayerIcon.O, text: PlayerIcon.O, value: PlayerIcon.O },
-  ]
 
   constructor(props) {
     super(props);

@@ -4,7 +4,7 @@ import { newTable } from "../helpers/TableHelper";
 
 const assertPlayerWins = (board, player, tokenWins) => {
   var game = new GameBoard();
-  game.setBoard(board);
+  game.board = board;
   expect(game.playerWon(player)).toBe(tokenWins);
 }
 

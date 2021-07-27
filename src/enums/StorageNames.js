@@ -1,3 +1,4 @@
+// LocalStorage key names
 export const StorageNames = {
   IconPlayer1: 'iconPlayer1',
   IconPlayer2: 'iconPlayer2',

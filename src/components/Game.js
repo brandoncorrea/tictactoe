@@ -47,7 +47,7 @@ export default class Game extends Component {
   // Uses minimax to determine the computer's move and plays that cell
   playComputerTurn() {
     var minimax = new TicTacToeMinimax(Players.Player2, Players.Player1);
-    var cell = minimax.getNextBestCell(this.state.game.getTable());
+    var cell = minimax.getNextBestCell(this.state.game.board);
     this.state.game.movePlayer2(cell);
     this.setState({ });
   }

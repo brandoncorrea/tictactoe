@@ -1,4 +1,5 @@
 import { Players } from "../enums/Players";
+import Cell from '../models/Cell';
 
 // True if the player has the row index
 export const hasRow = (player, table, row) => {
@@ -26,13 +27,9 @@ export const hasTopLeftDiagonal = (player, table) => {
 
 // True if the player has the bottom-left diagonal
 export const hasBottomLeftDiagonal = (player, table) => {
-  var r = 0;
-  var c = table.length - 1;
-
-  for ( ; r < table.length && c >= 0; r++, c--)
-    if (table[r][c] !== player)
+  for (var i = 0; i < table.length; i++)
+    if (table[table.length - i - 1][i] !== player)
       return false;
-
   return true;
 }
 
@@ -49,4 +46,27 @@ export const newTable = size => {
   }
 
   return table;
+}
+
+// True if there are no empty cells
+export const isTableFull = table => 
+  table.every(row => row.every(col => col !== Players.None));
+
+// True if the table is empty
+export const isTableEmpty = table => 
+  table.every(row => row.every(col => col === Players.None));
+
+// Sets all cells to a specified value
+export const fillTable = (table, value) => {
+  for (var r = 0; r < table.length; r++)
+    for (var c = 0; c < table.length; c++)
+      table[r][c] = value;
+}
+
+// Returns an enumerator for empty cells in a table
+export function *enumerateEmptyCells(table) {
+  for (var r = 0; r < table.length; r++) 
+    for (var c = 0; c < table.length; c++) 
+      if (table[r][c] === Players.None) 
+        yield new Cell(r, c);
 }

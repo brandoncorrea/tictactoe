@@ -1,5 +1,12 @@
 import { Players } from "../enums/Players";
-import { hasBottomLeftDiagonal, hasCol, hasRow, hasTopLeftDiagonal } from "../helpers/TableHelper";
+import { 
+  hasBottomLeftDiagonal, 
+  hasCol, 
+  hasRow, 
+  hasTopLeftDiagonal, 
+  isTableEmpty, 
+  isTableFull,
+  enumerateEmptyCells } from "../helpers/TableHelper";
 import Cell from "../models/Cell";
 
 const MAX_EVALUATION = 1;
@@ -10,21 +17,6 @@ export default class TicTacToeMinimax {
   constructor(maximizingToken, minimizingToken) {
     this.maximizingToken = maximizingToken;
     this.minimizingToken = minimizingToken;
-  }
-
-  // True if the table is empty
-  isTableEmpty = table =>
-    table.every(row => row.every(col => col === Players.None));
-  // True if there is an empty cell
-  hasEmptyCells = table =>
-    table.some(row => row.some(col => col === Players.None));
-
-  // Prevent unnecessary reading of all cells
-  *getChildren(table) {
-    for (var r = 0; r < table.length; r++) 
-      for (var c = 0; c < table.length; c++) 
-        if (table[r][c] === Players.None) 
-          yield new Cell(r, c);
   }
 
   // Win = 1, Draw = 0, Loss = -1, Game Not Over = undefined
@@ -50,9 +42,8 @@ export default class TicTacToeMinimax {
         hasBottomLeftDiagonal(this.maximizingToken, table))
       return MAX_EVALUATION;
     
-    // If table is full return a draw
-    if (!this.hasEmptyCells(table))
-      return 0;
+    if (isTableFull(table))
+      return 0; // Draw
   
     // Game is incomplete
     return undefined;
@@ -61,11 +52,11 @@ export default class TicTacToeMinimax {
   // Returns the next best cell to play for the maximizing player given a table
   getNextBestCell = table => {
     // When board is empty, don't search the board - always return a corner
-    if (this.isTableEmpty(table))
+    if (isTableEmpty(table))
       return new Cell(0, 0);
 
     var maxEval = MIN_EVALUATION;
-    var children = this.getChildren(table);
+    var children = enumerateEmptyCells(table);
     var next = children.next();
     var bestCell = next.value;
 
@@ -104,7 +95,7 @@ export default class TicTacToeMinimax {
       return evaluation;
 
     // Iterators
-    var children = this.getChildren(table);
+    var children = enumerateEmptyCells(table);
     var next = children.next();
 
     if (maximizingPlayer) {

@@ -5,7 +5,7 @@ import GameBoard from './GameBoard';
 
 var assertGameResult = (board, expectedResult) => {
   var game = new GameBoard();
-  game.setBoard(board)
+  game.board = board;
   expect(game.getGameResult()).toBe(expectedResult);
 }
 
