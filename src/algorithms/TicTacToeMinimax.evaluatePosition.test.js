@@ -1,4 +1,3 @@
-import { GameResult } from "../enums/GameResult";
 import { Players } from "../enums/Players";
 import { newTable } from "../helpers/TableHelper";
 import TicTacToeMinimax from "./TicTacToeMinimax"

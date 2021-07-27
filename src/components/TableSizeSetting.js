@@ -3,7 +3,7 @@ import { Form, Input } from "semantic-ui-react";
 import SettingsRepository from "../data/SettingsRepository";
 
 const MIN_SIZE = 1;
-const MAX_SIZE = 5;
+const MAX_SIZE = 4;
 
 export default class TableSizeSetting extends Component {
   settings = new SettingsRepository();
