@@ -1,6 +1,7 @@
 import { Component } from "react";
 import { Form, Header, Input } from 'semantic-ui-react';
 import SettingsRepository from "../data/SettingsRepository";
+import { PlayerIcon } from "../enums/PlayerIcon";
 
 export default class IconSetting extends Component {
   settings = new SettingsRepository();
@@ -23,7 +24,10 @@ export default class IconSetting extends Component {
     // Only save items with a value
     if (target.value.length > 0)
       this.settings.setIconPlayer1(target.value);
-    this.setState({ player1: target.value });
+    this.setState({ 
+      player1: target.value,
+      player2: this.settings.getIconPlayer2() 
+    });
   }
 
   handleChangePlayer2(e, target) {
@@ -33,7 +37,10 @@ export default class IconSetting extends Component {
     // Only save items with a value
     if (target.value.length > 0)
       this.settings.setIconPlayer2(target.value);
-    this.setState({ player2: target.value });
+    this.setState({ 
+      player1: this.settings.getIconPlayer1(), 
+      player2: target.value 
+    });
   }
 
   render = () =>
