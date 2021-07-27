@@ -95,14 +95,17 @@ export default class Game extends Component {
   }
 
   // Delegate onclick events based on the game mode
-  onCellClick =
-    this.settings.getGameMode() === GameMode.PvE
-    ? this.onCellClickPvE
-    : this.onCellClickPvP
+  onCellClick = cell => {
+    if (this.isGameOver() || this.state.game.getToken(cell))
+      return;
+    if (this.settings.getGameMode() === GameMode.PvE)
+      this.onCellClickPvE(cell);
+    else
+      this.onCellClickPvP(cell);
+  }
 
   // When GameMode is PvE, use this
   onCellClickPvE(cell) {
-    if (this.isGameOver() || this.state.game.getToken(cell)) return;
     this.state.game.movePlayer1(cell);
     this.setState({ nextPlayer: Players.Player2 });
     if (!this.isGameOver())
@@ -112,8 +115,6 @@ export default class Game extends Component {
 
   // When GameMode is PvP, use this
   onCellClickPvP(cell) {
-    if (this.isGameOver() || this.state.game.getToken(cell)) return;
-
     // Play user's turn
     if (this.state.nextPlayer === Players.Player1)
       this.state.game.movePlayer1(cell);
