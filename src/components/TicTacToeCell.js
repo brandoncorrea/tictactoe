@@ -12,6 +12,7 @@ export default class TicTacToeCell extends Component {
       style: {
         cursor: 'pointer', 
         height: props.height,
+        width: props.height
       }
     }
 
