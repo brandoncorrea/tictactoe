@@ -1,6 +1,7 @@
 import { StorageNames } from "../enums/StorageNames";
 import ScoreRepository from "./ScoreRepository";
 
+// PvP implementation of ScoreRepository
 export default class ScoreRepositoryPvP extends ScoreRepository {
   constructor() {
     super();

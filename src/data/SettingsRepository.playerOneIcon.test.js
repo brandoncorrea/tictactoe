@@ -1,4 +1,3 @@
-import Settings from '../components/Settings';
 import { PlayerIcon } from '../enums/PlayerIcon';
 import { StorageNames } from '../enums/StorageNames';
 import SettingsRepository from './SettingsRepository'

@@ -1,5 +1,6 @@
 import { setItem, getNumber } from '../helpers/LocalStorageHelper';
 
+// Generic implementation of ScoreRepository
 export default class ScoreRepository {
   // Setters
   setWins = wins => setItem(this.storageNames.wins, wins);

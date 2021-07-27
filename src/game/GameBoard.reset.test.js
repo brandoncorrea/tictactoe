@@ -1,4 +1,5 @@
 import { Players } from "../enums/Players";
+import { fillTable } from "../helpers/TableHelper";
 import GameBoard from "./GameBoard";
 
 const assertReset = (game, size) => {
@@ -17,9 +18,7 @@ const assertReset = (game, size) => {
 
 const newGame = size => {
   var game = new GameBoard(size);
-  for (var r = 0; r < game.board.length; r++)
-    for (var c = 0; c < game.board[r].length; c++)
-      game.board[r][c] = Players.Player1;
+  fillTable(game.board, Players.Player1);
   return game;
 }
 
