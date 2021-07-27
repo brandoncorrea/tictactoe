@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Menu, Segment } from 'semantic-ui-react'
+import { Menu, Container } from 'semantic-ui-react'
 import { MenuOptions } from '../enums/MenuOptions'
 import Settings from './Settings';
 import Score from './Score';
@@ -43,7 +43,7 @@ export default class AppMenu extends Component {
           />
         </Menu>
 
-        <Segment>
+        <Container>
           {
             activeItem === MenuOptions.Game 
               ? <Game game={this.state.game} />
@@ -53,7 +53,7 @@ export default class AppMenu extends Component {
               ? <Score />
             : <></>
           }
-        </Segment>
+        </Container>
       </div>
     )
   }
