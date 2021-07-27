@@ -1,5 +1,5 @@
 import { Component } from "react";
-import { Button, Container, Modal, Header } from "semantic-ui-react";
+import { Button, Container, Modal, Header, Divider, Segment } from "semantic-ui-react";
 import TicTacToeMinimax from "../algorithms/TicTacToeMinimax";
 import SettingsRepository from "../data/SettingsRepository";
 import { Players } from "../enums/Players";
@@ -18,7 +18,9 @@ export default class Game extends Component {
     super(props);
     this.state = {
       game: props.game,
-      nextPlayer: this.settings.getIconPlayer1(),
+      player1: this.settings.getIconPlayer1(),
+      player2: this.settings.getIconPlayer2(),
+      nextPlayer: this.getNextPlayer(props.game.board),
       message: '',
     }
 
@@ -37,6 +39,30 @@ export default class Game extends Component {
         this.playComputerTurn();
   }
 
+  // Returns the player who should go next
+  getNextPlayer(table) {
+    // Count the number of cells each player holds
+    var firstPlayer = this.settings.getFirstPlayer();
+    var secondPlayer = firstPlayer === Players.Player1
+      ? Players.Player2
+      : Players.Player1;
+
+    var firstPlayerFlags = 0;
+    var secondPlayerFlags = 0;
+    table.forEach(row => row.forEach(cell => {
+      if (cell === firstPlayer)
+        firstPlayerFlags++
+      else if (cell === secondPlayer)
+        secondPlayerFlags++
+    }))
+
+    // If the counts are equal, then it is the first players turn
+    return firstPlayerFlags <= secondPlayerFlags 
+      ? firstPlayer
+      : secondPlayer;
+  }
+
+  // True if the game is over
   isGameOver = () =>
     this.state.game.getGameResult() !== GameResult.None
 
@@ -45,7 +71,7 @@ export default class Game extends Component {
     var minimax = new TicTacToeMinimax(Players.Player2, Players.Player1);
     var cell = minimax.getNextBestCell(this.state.game.board);
     this.state.game.movePlayer2(cell);
-    this.setState({ });
+    this.setState({ nextPlayer: Players.Player1 });
   }
 
   // Updates the score repository with the result of the game
@@ -53,8 +79,8 @@ export default class Game extends Component {
     var result = this.state.game.getGameResult();
     var message = '';
     if (result === GameResult.Draw) {
-      repo.addDraw();
       message = 'Draw!';
+      repo.addDraw();
     }
     else if (result === GameResult.Loss){
       message = `Opponent Won! ${this.settings.getIconPlayer2()}`;
@@ -77,16 +103,10 @@ export default class Game extends Component {
   // When GameMode is PvE, use this
   onCellClickPvE(cell) {
     if (this.isGameOver() || this.state.game.getToken(cell)) return;
-
-    // Play user's turn
     this.state.game.movePlayer1(cell);
-    this.setState({ });
-
-    // Play computer's turn
+    this.setState({ nextPlayer: Players.Player2 });
     if (!this.isGameOver())
       this.playComputerTurn()
-      
-    this.setState({ });
     this.updateScore(this.scorePve);
   }
 
@@ -100,16 +120,17 @@ export default class Game extends Component {
     else
       this.state.game.movePlayer2(cell);
     
-    // Switch the turn to the next player
-    this.setState({ 
+    // Toggle between player turns
+    this.setState({
       nextPlayer: this.state.nextPlayer === Players.Player1
-        ? Players.Player2
-        : Players.Player1
-    });
+      ? Players.Player2
+      : Players.Player1
+    })
 
     this.updateScore(this.scorePvp);
   }
 
+  // Resets the game board
   onResetClicked() {
     this.state.game.reset(this.settings.getTableSize());
     this.initializeGame();
@@ -117,23 +138,35 @@ export default class Game extends Component {
   }
 
   render = () => 
-    <Container>
-      <TicTacToeTable 
-        table={this.state.game.board}
-        onCellClick={this.onCellClick} />
-      
-      <Button.Group fluid>
-        <Button 
-          content='Reset'
-          onClick={this.onResetClicked} />
-      </Button.Group>
+    <>
+      <Segment>
+        <Button.Group fluid>
+          <Button 
+            positive={this.state.nextPlayer === Players.Player1} 
+            content={`Player 1: ${this.state.player1}`} />
+          <Button 
+            positive={this.state.nextPlayer === Players.Player2} 
+            content={`Player 2: ${this.state.player2}`} />
+        </Button.Group>
+        <Divider />
+        <TicTacToeTable 
+          table={this.state.game.board}
+          onCellClick={this.onCellClick} />
+        <Divider />
+        <Button.Group fluid>
+          <Button 
+            negative
+            content='Reset'
+            onClick={this.onResetClicked} />
+        </Button.Group>
+      </Segment>
 
       <Modal
         basic
         onClose={() => this.setState({ message: '' })}
         open={this.state.message.length > 0}
         size='small' >
-        <Header as='h2' content={this.state.message} />
+        <Header as='h1' textAlign='center' content={this.state.message} />
       </Modal>
-    </Container>
+    </>
 } 
