@@ -6,14 +6,20 @@ import Score from './Score';
 import Game from './Game';
 import GameBoard from '../game/GameBoard';
 import SettingsRepository from '../data/SettingsRepository';
+import Guid from '../data/Guid';
 
 export default class AppMenu extends Component {
   settings = new SettingsRepository();
+  menuOptions = [
+    MenuOptions.Score,
+    MenuOptions.Game,
+    MenuOptions.Settings
+  ]
 
   constructor(props) {
     super(props);
     this.state = {
-      activeItem: MenuOptions.Score,
+      activeItem: this.menuOptions[0],
       game: new GameBoard(this.settings.getTableSize())
     }
   }
@@ -26,21 +32,15 @@ export default class AppMenu extends Component {
     return (
       <div>
         <Menu pointing secondary>
-          <Menu.Item
-            name={MenuOptions.Score}
-            active={activeItem === MenuOptions.Score}
-            onClick={this.handleItemClick}
-          />
-          <Menu.Item
-            name={MenuOptions.Game}
-            active={activeItem === MenuOptions.Game}
-            onClick={this.handleItemClick}
-          />
-          <Menu.Item
-            name={MenuOptions.Settings}
-            active={activeItem === MenuOptions.Settings}
-            onClick={this.handleItemClick}
-          />
+          {
+            this.menuOptions.map(option => 
+              <Menu.Item
+                key={Guid.newGuid()}
+                name={option}
+                active={activeItem === option}
+                onClick={this.handleItemClick}
+              />)
+          }
         </Menu>
 
         <Container>
