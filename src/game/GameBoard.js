@@ -9,12 +9,13 @@ import {
   isTableFull
 } from '../helpers/TableHelper';
 
-// Validate cell is empty
+// throws if the cell is occupied
 const verifyCellEmpty = (board, cell) => {
   if (board[cell.row][cell.col] !== Players.None)
     throw Error("Cannot move to an occupied cell.");
 }
 
+// Throws an error if the size is invalid
 const verifySize = size => {
   if (size < 1)
     throw new Error("Size cannot be less than 1.");
@@ -35,7 +36,7 @@ export default class GameBoard {
     this.board[cell.row][cell.col] = Players.Player2;
   }
 
-  // Resets the game board
+  // Clears all the cells and resizes the table if needed
   reset(size) {
     if (size === null || size === undefined)
       size = this.board.length;
