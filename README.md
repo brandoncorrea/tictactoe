@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# Tic Tac Toe
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+Plays Tic Tac Toe against a user. The computer will always win or draw, and should choose the most advantageous square when a win cannot be guaranteed. The user can also play against another human player.
 
 ## Available Scripts
 
