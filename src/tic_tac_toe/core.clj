@@ -1,7 +1,8 @@
 (ns tic-tac-toe.core
   (:use [tic-tac-toe.game-board]
         [clojure.string :only [join replace trim split]]
-        [tic-tac-toe.game-board-formatter]))
+        [tic-tac-toe.game-board-formatter]
+        [tic-tac-toe.console-writer]))
 
 (defn parse-input [text]
   (map #(Integer. %) (re-seq #"\d+" text)))
@@ -14,19 +15,16 @@
 
 (defn request-move [board token]
   (loop []
-    (println)
-    (println (str token "'s turn!"))
-    (println (format-board board))
+    (write-message (str token "'s turn!") board)
     (let [move (parse-input (read-line))]
       (if (valid-move? board move)
         (mark-square board move token)
         (recur)))))
 
 (defn -main [& _]
-  (println "Tic-Tac-Toe")
+  (write-header "Tic-Tac-Toe")
   (loop [board (->board (repeat 0))
          [cur-token next-token] [\X \O]]
     (if (game-over? board)
-      (do (println "Game Over!")
-          (println (format-board board)))
+      (write-message "Game Over!" board)
       (recur (request-move board cur-token) [next-token cur-token]))))
