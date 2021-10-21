@@ -13,10 +13,13 @@
               (zero? (nth (nth board row) col)))
          (catch Exception _ false))))
 
-(defn request-move [board token]
+(defn request-move [message board]
+  (write-message message board)
+  (parse-input (read-line)))
+
+(defn update-board [board token]
   (loop []
-    (write-message (str token "'s turn!") board)
-    (let [move (parse-input (read-line))]
+    (let [move (request-move (str token "'s turn!") board)]
       (if (valid-move? board move)
         (mark-square board move token)
         (recur)))))
@@ -27,4 +30,4 @@
          [cur-token next-token] [\X \O]]
     (if (game-over? board)
       (write-message "Game Over!" board)
-      (recur (request-move board cur-token) [next-token cur-token]))))
+      (recur (update-board board cur-token) [next-token cur-token]))))
