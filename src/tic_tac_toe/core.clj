@@ -3,41 +3,41 @@
         [clojure.string :only [join replace trim split]]))
 
 (def new-game (->board (repeat 0)))
-(defn format-board [board] (join "\n" (map str board)))
 
-(defn parse-player-choice [choice]
-  (map #(Integer. %) (filter not-empty (split choice #""))))
+(defn format-cell [item]
+  (if (= 0 item)
+    "_"
+    (format "%s" item)))
 
-(defn valid-move? [board [row col]]
-  (let [size (count board)]
-    (and (<= 0 row)
-         (<= 0 col)
-         (> size row)
-         (> size col)
-         (= 0 (nth (nth board row) col)))))
+(defn format-row [row]
+  (str "[" (join " " (map format-cell row)) "]"))
 
-(defn get-move-player-1 [board]
-  (println (format-board board))
-  (println "Make a move, player 1!")
-  (loop [move (parse-player-choice (read-line))]
-    (if (valid-move? board move)
-      (mark-square board move \X)
-      (do
-        (println "Make a move, player 1!")
-        (recur (parse-player-choice (read-line)))))))
+(defn format-board [board]
+  (join "\n" (map str board)))
 
-(defn play-game []
-  (loop [board new-game
-         player-1-turn? true]
-    (cond
-      (game-over? board)
-      (do (println "Game Over!")
-          (println (format-board board)))
-      player-1-turn? (recur (get-move-player-1 board) (not player-1-turn?))
-      :else (recur (get-move-player-1 board) (not player-1-turn?)))))
+(defn parse-input [text]
+  (map #(Integer. %) (re-seq #"\d+" text)))
+
+(defn valid-move? [board options]
+  (if-let [[row col] options]
+    (try (and (= 2 (count options))
+              (zero? (nth (nth board row) col)))
+         (catch Exception _ false))))
+
+(defn request-move [board token]
+  (loop []
+    (println (format-board board))
+    (println (str token "'s turn!"))
+    (let [move (parse-input (read-line))]
+      (if (valid-move? board move)
+        (mark-square board move token)
+        (recur)))))
 
 (defn -main [& args]
   (println "Tic-Tac-Toe")
-  (println "Player 1: X")
-  (println "Player 2: O")
-  (play-game))
+  (loop [board new-game
+         [cur-token next-token] [\X \O]]
+    (if (game-over? board)
+      (do (println "Game Over!")
+          (println (format-board board)))
+      (recur (request-move board cur-token) [next-token cur-token]))))

@@ -19,7 +19,25 @@
   (it "Formats 3x3 Board"
     (should= "[1 2 3]\n[4 5 6]\n[7 8 9]" (format-board (->board (range 1 10))))))
 
+(describe "format-row"
+  (it "Formats empty row with brackets"
+    (should= "[]" (format-row [])))
+  (it "Formats single-element row"
+    (should= "[1]" (format-row [1])))
+  (it "Formats row with character"
+    (should= "[X]" (format-row [\X])))
+  (it "Formats row with string"
+    (should= "[ABC]" (format-row ["ABC"])))
+  (it "Formats empty cells with underscores"
+    (should= "[X _ O]" (format-row [\X 0 \O]))))
+
 (describe "valid-move?"
+  (it "Empty vector results in false"
+    (should= false (valid-move? empty-board [])))
+  (it "Vector with one element results in false"
+    (should= false (valid-move? empty-board [0])))
+  (it "Vector with three elements results in false"
+    (should= false (valid-move? empty-board [0 0 0])))
   (it "[0 0] results in true"
     (should= true (valid-move? empty-board [0 0])))
   (it "[1 1] results in true"
@@ -43,6 +61,14 @@
   (it "[0 0] results in false when the position is already filled"
     (should= false (valid-move? (->board (concat [1] (repeat 0))) [0 0]))))
 
-(describe "parse-player-choice"
-  (it "Parses a choice? idk man fix this test."
-    ))
+(describe "parse-input"
+  (it "Empty input results in an empty array"
+    (should= [] (parse-input "")))
+  (it "One number results in an array with that number"
+    (should= [1] (parse-input "1")))
+  (it "Two numbers results in an array with both numbers"
+    (should= [1 2] (parse-input "1 2")))
+  (it "Non-numeric characters are ignored"
+    (should= [1 2] (parse-input "1-2")))
+  (it "Two-digit indices are split as two-digit numbers"
+    (should= [10 11] (parse-input "10-11"))))

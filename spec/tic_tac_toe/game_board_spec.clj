@@ -46,4 +46,6 @@
     (it "Board with top-left diagonal filled results in true"
       (should= true (game-over? (->board [1 0 0 0 1 0 0 0 1]))))
     (it "Board with top-right diagonal filled results in true"
-      (should= true (game-over? (->board [0 0 1 0 1 0 1 0 0]))))))
+      (should= true (game-over? (->board [0 0 1 0 1 0 1 0 0]))))
+    (it "Full game board results in true in a draw"
+      (should= true (game-over? (->board (range 1 10)))))))

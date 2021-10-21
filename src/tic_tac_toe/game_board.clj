@@ -26,4 +26,5 @@
   (or (some completed? board)
       (some completed? (columns board))
       (completed? (top-left-diagonal board))
-      (completed? (top-right-diagonal board))))
+      (completed? (top-right-diagonal board))
+      (every? #(not= 0 %) (flatten board))))
