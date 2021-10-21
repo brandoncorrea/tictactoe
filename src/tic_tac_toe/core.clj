@@ -2,7 +2,7 @@
   (:use [tic-tac-toe.game-board]
         [clojure.string :only [join replace trim split]]
         [tic-tac-toe.game-board-formatter]
-        [tic-tac-toe.console-writer]))
+        [tic-tac-toe.console-io]))
 
 (defn parse-input [text]
   (map #(Integer. %) (re-seq #"\d+" text)))
@@ -13,19 +13,16 @@
               (zero? (nth (nth board row) col)))
          (catch Exception _ false))))
 
-(defn request-move [message board]
-  (write-message message board)
-  (parse-input (read-line)))
-
 (defn update-board [board token]
   (loop []
-    (let [move (request-move (str token "'s turn!") board)]
+    (let [move (parse-input (request-move token board))]
       (if (valid-move? board move)
         (mark-square board move token)
         (recur)))))
 
 (defn -main [& _]
   (write-header "Tic-Tac-Toe")
+  (write-message "Enter the 0-based index for the row and column (ex: 0 2)")
   (loop [board (->board (repeat 0))
          [cur-token next-token] [\X \O]]
     (if (game-over? board)
