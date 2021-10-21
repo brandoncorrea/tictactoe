@@ -10,4 +10,4 @@
   (str "[" (join " " (map token->str row)) "]"))
 
 (defn format-board [board]
-  (join "\n" (map str board)))
+  (join "\n" (map format-row board)))

@@ -15,7 +15,13 @@
   (it "Formats 2D vector with two rows"
     (should= "[1 2]\n[3 4]" (format-board [[1 2] [3 4]])))
   (it "Formats 3x3 Board"
-    (should= "[1 2 3]\n[4 5 6]\n[7 8 9]" (format-board (->board (range 1 10))))))
+    (should= "[1 2 3]\n[4 5 6]\n[7 8 9]" (format-board (->board (range 1 10)))))
+  (it "Empty cells results in underscore icons"
+    (should= "[_ _ _]" (format-board [[0 0 0]])))
+  (it "Characters don't include backslashes"
+    (should= "[X O Y]" (format-board [[\X \O \Y]])))
+  (it "Strings don't include quotation marks"
+    (should= "[A B C]" (format-board [["A" "B" "C"]]))))
 
 (describe "format-row"
   (it "Formats empty row with brackets"
