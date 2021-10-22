@@ -2,6 +2,9 @@
   (:use [tic-tac-toe.game-board-formatter]))
 
 (def ^:private horizontal-line (apply str (repeat 15 "-")))
+(defn- print-board [board]
+  (println)
+  (println (format-board board)))
 
 (defn write-header [message]
   (println horizontal-line)
@@ -10,15 +13,18 @@
 
 (defn write-message
   ([message]
-   (println)
    (println message))
   ([message board]
-   (println)
-   (println (format-board board))
+   (print-board board)
    (println message)))
 
+(defn show-results [results board]
+  (if (:draw results)
+    (write-message "Game Over! Game was a Draw." board)
+    (write-message (str "Game Over! " (:winner results) " wins!") board)))
+
 (defn request-move [token board]
-  (println (format-board board))
+  (print-board board)
   (print (str token "'s move! > "))
   (flush)
   (read-line))

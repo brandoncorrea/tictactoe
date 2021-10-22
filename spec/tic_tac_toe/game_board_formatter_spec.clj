@@ -17,7 +17,7 @@
   (it "Formats 3x3 Board"
     (should= "[1 2 3]\n[4 5 6]\n[7 8 9]" (format-board (->board (range 1 10)))))
   (it "Empty cells results in underscore icons"
-    (should= "[_ _ _]" (format-board [[0 0 0]])))
+    (should= "[_ _ _]" (format-board [[nil nil nil]])))
   (it "Characters don't include backslashes"
     (should= "[X O Y]" (format-board [[\X \O \Y]])))
   (it "Strings don't include quotation marks"
@@ -33,4 +33,4 @@
   (it "Formats row with string"
     (should= "[ABC]" (format-row ["ABC"])))
   (it "Formats empty cells with underscores"
-    (should= "[X _ O]" (format-row [\X 0 \O]))))
+    (should= "[X _ O]" (format-row [\X nil \O]))))

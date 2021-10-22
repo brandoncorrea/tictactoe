@@ -2,9 +2,9 @@
   (:use [clojure.string :only [join]]))
 
 (defn- token->str [token]
-  (if (= 0 token)
-    "_"
-    (format "%s" token)))
+  (if token
+    (format "%s" token)
+    "_"))
 
 (defn format-row [row]
   (str "[" (join " " (map token->str row)) "]"))

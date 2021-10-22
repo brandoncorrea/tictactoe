@@ -3,7 +3,7 @@
             [tic-tac-toe.core :refer :all]
             [tic-tac-toe.game-board :refer :all]))
 
-(def empty-board (->board (repeat 0)))
+(def empty-board (->board (repeat nil)))
 
 (describe "valid-move?"
   (it "Empty vector results in false"
@@ -33,7 +33,7 @@
   (it "[0 0] results in false for empty vector"
     (should= false (valid-move? [] [0 0])))
   (it "[0 0] results in false when the position is already filled"
-    (should= false (valid-move? (->board (concat [1] (repeat 0))) [0 0]))))
+    (should= false (valid-move? (->board (concat [1] (repeat nil))) [0 0]))))
 
 (describe "parse-input"
   (it "Empty input results in an empty array"
@@ -43,6 +43,10 @@
   (it "Two numbers results in an array with both numbers"
     (should= [1 2] (parse-input "1 2")))
   (it "Non-numeric characters are ignored"
-    (should= [1 2] (parse-input "1-2")))
+    (should= [1 2] (parse-input "1a2")))
   (it "Two-digit indices are split as two-digit numbers"
-    (should= [10 11] (parse-input "10-11"))))
+    (should= [10 11] (parse-input "10_11")))
+  (it "Negative numbers are parsed as negative"
+    (should= [-1 2] (parse-input "-1 2")))
+  (it "Numbers joined by dashes are treated as negative numbers"
+    (should= [1 -2 -3] (parse-input "1-2-3"))))

@@ -2,12 +2,14 @@
   (:require [speclj.core :refer :all]
             [tic-tac-toe.game-board :refer :all]))
 
-(def empty-board [[0 0 0] [0 0 0] [0 0 0]])
+(def empty-board [[nil nil nil] [nil nil nil] [nil nil nil]])
+(def game-over-win {:draw false :winner 1})
+(def game-over-draw {:draw true :winner nil})
 
 (describe "game-board"
   (describe "->board"
     (it "Partitions 3x3 empty board"
-      (should= empty-board (->board (repeat 0))))
+      (should= empty-board (->board (repeat nil))))
     (it "Partitions 3x3 board with all 1s"
       (should= [[1 1 1] [1 1 1] [1 1 1]]
                (->board (repeat 1))))
@@ -18,34 +20,34 @@
 
   (describe "mark-square"
     (it "Player 1 marks the first square"
-      (should= [[1 0 0] [0 0 0] [0 0 0]]
+      (should= (->board (concat [1] (repeat nil)))
                (mark-square empty-board [0 0] 1)))
     (it "Player 2 marks the second square"
-      (should= [[0 2 0] [0 0 0] [0 0 0]]
+      (should= (->board (concat [nil 2] (repeat nil)))
                (mark-square empty-board [0 1] 2))))
 
   (describe "game-over?"
-    (it "Empty game board results in false"
-      (should= false (game-over? empty-board)))
-    (it "Board with one filled square results in false"
-      (should= false (game-over? (->board (concat [1] (repeat 0))))))
-    (it "Board with first three items as 1 results in true"
-      (should= true (game-over? (->board (concat [1 1 1] (repeat 0))))))
-    (it "Board with middle three items as 1 results in true"
-      (should= true (game-over? (->board [0 0 0 1 1 1 0 0 0]))))
-    (it "Board with last three items as 1 results in true"
-      (should= true (game-over? (->board [0 0 0 0 0 0 1 1 1]))))
-    (it "Board with first row filled with different values results in false"
-      (should= false (game-over? (->board (concat [1 2 1] (repeat 0))))))
-    (it "Board with first column filled results in true"
-      (should= true (game-over? (->board [1 0 0 1 0 0 1 0 0]))))
-    (it "Board with second column filled results in true"
-      (should= true (game-over? (->board [0 1 0 0 1 0 0 1 0]))))
-    (it "Board with last column filled results in true"
-      (should= true (game-over? (->board [0 0 1 0 0 1 0 0 1]))))
-    (it "Board with top-left diagonal filled results in true"
-      (should= true (game-over? (->board [1 0 0 0 1 0 0 0 1]))))
-    (it "Board with top-right diagonal filled results in true"
-      (should= true (game-over? (->board [0 0 1 0 1 0 1 0 0]))))
-    (it "Full game board results in true in a draw"
-      (should= true (game-over? (->board (range 1 10)))))))
+    (it "Empty game board results in nil"
+      (should= nil (game-over? empty-board)))
+    (it "Board with one filled square results in nil"
+      (should= nil (game-over? (->board (concat [1] (repeat nil))))))
+    (it "Board with first three items as 1 results in a win"
+      (should= game-over-win (game-over? (->board (concat [1 1 1] (repeat 0))))))
+    (it "Board with middle three items as 1 results in a win"
+      (should= game-over-win (game-over? (->board [nil nil nil 1 1 1 nil nil nil]))))
+    (it "Board with last three items as 1 results in a win"
+      (should= game-over-win (game-over? (->board (concat (repeat 6 nil) [1 1 1])))))
+    (it "Board with first row filled with different values results in nil"
+      (should= nil (game-over? (->board (concat [1 2 1] (repeat nil))))))
+    (it "Board with first column filled results in a win"
+      (should= game-over-win (game-over? (->board [1 nil nil 1 nil nil 1 nil nil]))))
+    (it "Board with second column filled results in a win"
+      (should= game-over-win (game-over? (->board [nil 1 nil nil 1 nil nil 1 nil]))))
+    (it "Board with last column filled results in a win"
+      (should= game-over-win (game-over? (->board [nil nil 1 nil nil 1 nil nil 1]))))
+    (it "Board with top-left diagonal filled results in a win"
+      (should= game-over-win (game-over? (->board [1 nil nil nil 1 nil nil nil 1]))))
+    (it "Board with top-right diagonal filled results in a win"
+      (should= game-over-win (game-over? (->board [nil nil 1 nil 1 nil 1 nil nil]))))
+    (it "Full game board results in a draw"
+      (should= game-over-draw (game-over? (->board (range 1 10)))))))

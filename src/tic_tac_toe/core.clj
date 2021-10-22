@@ -5,13 +5,12 @@
         [tic-tac-toe.console-io]))
 
 (defn parse-input [text]
-  (map #(Integer. %) (re-seq #"\d+" text)))
+  (map #(Integer. %) (re-seq #"-?\d+" text)))
 
-(defn valid-move? [board options]
-  (if-let [[row col] options]
-    (try (and (= 2 (count options))
-              (zero? (nth (nth board row) col)))
-         (catch Exception _ false))))
+(defn valid-move? [board [row col & rest]]
+  (try (and (empty? rest)
+            (nil? (nth (nth board row) col)))
+       (catch Exception _ false)))
 
 (defn update-board [board token]
   (loop []
@@ -22,9 +21,10 @@
 
 (defn -main [& _]
   (write-header "Tic-Tac-Toe")
-  (write-message "Enter the 0-based index for the row and column (ex: 0 2)")
-  (loop [board (->board (repeat 0))
+  (write-message "Enter the 0-based index for the row and column")
+  (write-message "Example: 0 2 for Row 1, Column 3")
+  (loop [board (->board (repeat nil))
          [cur-token next-token] [\X \O]]
-    (if (game-over? board)
-      (write-message "Game Over!" board)
+    (if-let [results (game-over? board)]
+      (show-results results board)
       (recur (update-board board cur-token) [next-token cur-token]))))
