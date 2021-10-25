@@ -25,6 +25,6 @@
   (write-message "Example: 0 2 for Row 1, Column 3")
   (loop [board (->board (repeat nil))
          [cur-token next-token] [\X \O]]
-    (if-let [results (game-over? board)]
+    (if-let [results (game-results board)]
       (show-results results board)
       (recur (update-board board cur-token) [next-token cur-token]))))

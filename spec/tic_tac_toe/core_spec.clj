@@ -4,36 +4,26 @@
             [tic-tac-toe.game-board :refer :all]))
 
 (def empty-board (->board (repeat nil)))
+(def invalid-moves
+  [[] [0] [0 0 0] [3 2] [3 3] [2 3] [4 2] [2 4] [-1 0] [0 -1]])
+
+(def valid-moves
+  [[0 0] [1 1] [0 1] [1 0]])
 
 (describe "valid-move?"
-  (it "Empty vector results in false"
-    (should= false (valid-move? empty-board [])))
-  (it "Vector with one element results in false"
-    (should= false (valid-move? empty-board [0])))
-  (it "Vector with three elements results in false"
-    (should= false (valid-move? empty-board [0 0 0])))
-  (it "[0 0] results in true"
-    (should= true (valid-move? empty-board [0 0])))
-  (it "[1 1] results in true"
-    (should= true (valid-move? empty-board [1 1])))
-  (it "[3 2] results in false"
-    (should= false (valid-move? empty-board [3 2])))
-  (it "[3 3] results in false"
-    (should= false (valid-move? empty-board [3 3])))
-  (it "[2 3] results in false"
-    (should= false (valid-move? empty-board [2 3])))
-  (it "[4 2] results in false"
-    (should= false (valid-move? empty-board [4 2])))
-  (it "[2 4] results in false"
-    (should= false (valid-move? empty-board [2 4])))
-  (it "[-1 0] results in false"
-    (should= false (valid-move? empty-board [-1 0])))
-  (it "[0 -1] results in false"
-    (should= false (valid-move? empty-board [0 -1])))
+  (it "Invalid moves result in false"
+    (loop [[move & rest-moves] invalid-moves]
+      (when move
+        (should-not (valid-move? empty-board move))
+        (recur rest-moves))))
+  (it "Valid positions result in true for empty spaces and false for occupied spaces"
+    (loop [[move & rest-moves] valid-moves]
+      (when move
+        (should (valid-move? empty-board move))
+        (should-not (valid-move? (assoc-in empty-board move 1) move))
+        (recur rest-moves))))
   (it "[0 0] results in false for empty vector"
-    (should= false (valid-move? [] [0 0])))
-  (it "[0 0] results in false when the position is already filled"
-    (should= false (valid-move? (->board (concat [1] (repeat nil))) [0 0]))))
+    (should-not (valid-move? [] [0 0]))))
 
 (describe "parse-input"
   (it "Empty input results in an empty array"

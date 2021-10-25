@@ -26,28 +26,28 @@
       (should= (->board (concat [nil 2] (repeat nil)))
                (mark-square empty-board [0 1] 2))))
 
-  (describe "game-over?"
+  (describe "game-results"
     (it "Empty game board results in nil"
-      (should= nil (game-over? empty-board)))
+      (should= nil (game-results empty-board)))
     (it "Board with one filled square results in nil"
-      (should= nil (game-over? (->board (concat [1] (repeat nil))))))
+      (should= nil (game-results (->board (concat [1] (repeat nil))))))
     (it "Board with first three items as 1 results in a win"
-      (should= game-over-win (game-over? (->board (concat [1 1 1] (repeat 0))))))
+      (should= game-over-win (game-results (->board (concat [1 1 1] (repeat 0))))))
     (it "Board with middle three items as 1 results in a win"
-      (should= game-over-win (game-over? (->board [nil nil nil 1 1 1 nil nil nil]))))
+      (should= game-over-win (game-results (->board [nil nil nil 1 1 1 nil nil nil]))))
     (it "Board with last three items as 1 results in a win"
-      (should= game-over-win (game-over? (->board (concat (repeat 6 nil) [1 1 1])))))
+      (should= game-over-win (game-results (->board (concat (repeat 6 nil) [1 1 1])))))
     (it "Board with first row filled with different values results in nil"
-      (should= nil (game-over? (->board (concat [1 2 1] (repeat nil))))))
+      (should= nil (game-results (->board (concat [1 2 1] (repeat nil))))))
     (it "Board with first column filled results in a win"
-      (should= game-over-win (game-over? (->board [1 nil nil 1 nil nil 1 nil nil]))))
+      (should= game-over-win (game-results (->board [1 nil nil 1 nil nil 1 nil nil]))))
     (it "Board with second column filled results in a win"
-      (should= game-over-win (game-over? (->board [nil 1 nil nil 1 nil nil 1 nil]))))
+      (should= game-over-win (game-results (->board [nil 1 nil nil 1 nil nil 1 nil]))))
     (it "Board with last column filled results in a win"
-      (should= game-over-win (game-over? (->board [nil nil 1 nil nil 1 nil nil 1]))))
+      (should= game-over-win (game-results (->board [nil nil 1 nil nil 1 nil nil 1]))))
     (it "Board with top-left diagonal filled results in a win"
-      (should= game-over-win (game-over? (->board [1 nil nil nil 1 nil nil nil 1]))))
+      (should= game-over-win (game-results (->board [1 nil nil nil 1 nil nil nil 1]))))
     (it "Board with top-right diagonal filled results in a win"
-      (should= game-over-win (game-over? (->board [nil nil 1 nil 1 nil 1 nil nil]))))
+      (should= game-over-win (game-results (->board [nil nil 1 nil 1 nil 1 nil nil]))))
     (it "Full game board results in a draw"
-      (should= game-over-draw (game-over? (->board (range 1 10)))))))
+      (should= game-over-draw (game-results (->board (range 1 10)))))))

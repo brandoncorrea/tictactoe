@@ -13,14 +13,14 @@
   (every? identity (flatten board)))
 
 (defn- completed? [[first & rest]]
-  (and (every? #(= first %) rest)
+  (and (every? (partial = first) rest)
        first))
 
 (defn ->board [cells]
   (vec (map vec (take 3 (partition 3 cells)))))
 
 (defn mark-square [board position token]
-  (update-in board position (fn [_] token)))
+  (assoc-in board position token))
 
 (defn- winning-token [board]
   (or (some completed? board)
@@ -28,8 +28,8 @@
       (completed? (top-left-diagonal board))
       (completed? (top-right-diagonal board))))
 
-(defn game-over? [board]
+(defn game-results [board]
   (if-let [winner (winning-token board)]
     {:draw false :winner winner}
-    (if (full-board? board)
+    (when (full-board? board)
       {:draw true :winner nil})))
