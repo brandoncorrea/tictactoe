@@ -6,6 +6,9 @@
   (println)
   (println (format-board board)))
 
+(defn parse-input [text]
+  (map #(Integer. %) (re-seq #"-?\d+" text)))
+
 (defn write-header [message]
   (println horizontal-line)
   (println message)
@@ -27,4 +30,4 @@
   (print-board board)
   (print (str token "'s move! > "))
   (flush)
-  (read-line))
+  (parse-input (read-line)))
