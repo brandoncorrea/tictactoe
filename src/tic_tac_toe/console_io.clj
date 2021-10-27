@@ -1,5 +1,5 @@
 (ns tic-tac-toe.console-io
-  (:use [tic-tac-toe.game-board-formatter]))
+  (:use [tic-tac-toe.game-board-formatter :only [format-board]]))
 
 (def ^:private horizontal-line (apply str (repeat 15 "-")))
 (defn- print-board [board]
