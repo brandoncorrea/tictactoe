@@ -3,9 +3,9 @@
             [tic-tac-toe.game-board :refer :all]))
 
 (def empty-board
-  {0 {0 nil 1 nil 2 nil}
-   1 {0 nil 1 nil 2 nil}
-   2 {0 nil 1 nil 2 nil}})
+  {[0 0] nil [0 1] nil [0 2] nil
+   [1 0] nil [1 1] nil [1 2] nil
+   [2 0] nil [2 1] nil [2 2] nil})
 
 (def win-result {:draw false :game-over true :winner 1})
 (def draw-result {:draw true :game-over true :winner nil})
@@ -21,42 +21,37 @@
     (it "Partitions 3x3 empty board"
       (should= empty-board (->board (repeat nil))))
     (it "Partitions 3x3 board with all 1s"
-      (should= {0 {0 1 1 1 2 1}
-                1 {0 1 1 1 2 1}
-                2 {0 1 1 1 2 1}}
+      (should= {[0 0] 1 [0 1] 1 [0 2] 1
+                [1 0] 1 [1 1] 1 [1 2] 1
+                [2 0] 1 [2 1] 1 [2 2] 1}
                (->board (repeat 1))))
     (it "No cells results in an empty map"
       (should= empty-board (->board [])))
     (it "Can be initialized with one cell"
-      (should= (assoc-in empty-board [0 0] 1) (->board [1])))
+      (should= (assoc empty-board [0 0] 1) (->board [1])))
     (it "Can be initialized with two cells"
-      (should= (merge empty-board {0 {0 1 1 2 2 nil}})
+      (should= (merge empty-board {[0 0] 1 [0 1] 2})
                (->board [1 2])))
     (it "Can be initialized with three cells"
-      (should= (merge empty-board {0 {0 1 1 2 2 3}})
+      (should= (merge empty-board {[0 0] 1 [0 1] 2 [0 2] 3})
                (->board [1 2 3])))
     (it "Can be initialized with four cells"
-      (should= (merge empty-board {0 {0 1 1 2 2 3}
-                                   1 {0 4 1 nil 2 nil}})
+      (should= (merge empty-board {[0 0] 1 [0 1] 2 [0 2] 3 [1 0] 4})
                (->board (range 1 5))))
     (it "Can be initialized with five cells"
-      (should= (merge empty-board {0 {0 1 1 2 2 3}
-                                   1 {0 4 1 5 2 nil}})
+      (should= (merge empty-board {[0 0] 1 [0 1] 2 [0 2] 3 [1 0] 4 [1 1] 5})
                (->board (range 1 6))))
     (it "Can be initialized with six cells"
-      (should= (merge empty-board {0 {0 1 1 2 2 3}
-                                   1 {0 4 1 5 2 6}})
+      (should= (merge empty-board {[0 0] 1 [0 1] 2 [0 2] 3 [1 0] 4 [1 1] 5 [1 2] 6})
                (->board (range 1 7))))
     (it "Can be initialized with full board"
-      (should= {0 {0 1 1 2 2 3}
-                1 {0 4 1 5 2 6}
-                2 {0 7 1 8 2 9}}
+      (should= {[0 0] 1 [0 1] 2 [0 2] 3 [1 0] 4 [1 1] 5 [1 2] 6 [2 0] 7 [2 1] 8 [2 2] 9}
                (->board (range 1 10))))
     (it "Can initialize 4x4 board"
-      (should= {0 {0 1 1 2 2 3 3 nil}
-                1 {0 nil 1 nil 2 nil 3 nil}
-                2 {0 nil 1 nil 2 nil 3 nil}
-                3 {0 nil 1 nil 2 nil 3 nil}}
+      (should= {[0 0] 1 [0 1] 2 [0 2] 3 [0 3] nil
+                [1 0] nil [1 1] nil [1 2] nil [1 3] nil
+                [2 0] nil [2 1] nil [2 2] nil [2 3] nil
+                [3 0] nil [3 1] nil [3 2] nil [3 3] nil}
                (->board [1 2 3] 4))))
 
   (describe "mark-square"
@@ -67,55 +62,34 @@
       (should= (->board [nil 2])
                (mark-square empty-board [0 1] 2))))
 
-  (describe "nth-row"
-    (it "Empty board results in nil row"
-      (should= (repeat 3 nil) (nth-row empty-board 0)))
-    (it "0th row results in first row's data"
-      (should= [3 4 5] (nth-row (->board [3 4 5]) 0)))
-    (it "1st row results in second row's data"
-      (should= [6 7 8] (nth-row (->board (range 3 9)) 1)))
-    (it "2nd row results in third row's data"
-      (should= [9 10 nil] (nth-row (->board (range 3 11)) 2))))
+  (describe "series"
+    (it "Returns rows, columns, and diagonals as lists of key-value pairs"
+      (should= (set [{[0 0] nil [0 1] nil [0 2] nil}
+                     {[1 0] nil [1 1] nil [1 2] nil}
+                     {[2 0] nil [2 1] nil [2 2] nil}
+                     {[0 0] nil [1 0] nil [2 0] nil}
+                     {[0 1] nil [1 1] nil [2 1] nil}
+                     {[0 2] nil [1 2] nil [2 2] nil}
+                     {[0 0] nil [1 1] nil [2 2] nil}
+                     {[0 2] nil [1 1] nil [2 0] nil}])
+               (set (series (->board []))))
+      (should= (set [{[0 0] 0 [0 1] 1 [0 2] 2}
+                     {[1 0] 3 [1 1] 4 [1 2] 5}
+                     {[2 0] 6 [2 1] 7 [2 2] 8}
+                     {[0 0] 0 [1 0] 3 [2 0] 6}
+                     {[0 1] 1 [1 1] 4 [2 1] 7}
+                     {[0 2] 2 [1 2] 5 [2 2] 8}
+                     {[0 0] 0 [1 1] 4 [2 2] 8}
+                     {[0 2] 2 [1 1] 4 [2 0] 6}])
+               (set (series (->board (range)))))))
 
   (describe "rows"
-    (it "Returns three empty rows"
+    (it "Returns row data for empty board"
       (should= (take 3 (partition 3 3 (repeat nil)))
-               (rows empty-board)))
-    (it "Returns row data from full board"
-      (should= [[1 2 3] [4 5 6] [7 8 9]]
+               (rows (->board []))))
+    (it "Returns ordered row data for board with values 1 - 9"
+      (should= (take 3 (partition 3 3 (range 1 10)))
                (rows (->board (range 1 10))))))
-
-  (describe "nth-col"
-    (it "Returns nil values for empty board"
-      (should= (repeat 3 nil) (nth-col empty-board 0)))
-    (it "Returns values for 0th column"
-      (should= [0 3 6] (nth-col (->board (range 10)) 0)))
-    (it "Returns values for 1st column"
-      (should= [1 4 7] (nth-col (->board (range 10)) 1))))
-
-  (describe "columns"
-    (it "Results in nil values for empty board"
-      (should= (take 3 (partition 3 3 (repeat nil)))
-               (columns empty-board)))
-    (it "Returns columns"
-      (should= [[1 4 7] [2 5 8] [3 6 9]]
-               (columns (->board (range 1 10))))))
-
-  (describe "top-left-diagonal"
-    (it "Results in nil values for empty board"
-      (should= (repeat 3 nil) (top-left-diagonal empty-board)))
-    (it "Results in [1 5 9] for board with values, 1 - 9"
-      (should= [1 5 9] (top-left-diagonal (->board (range 1 10)))))
-    (it "Allows for a mixture of nil and non-nil values"
-      (should= [1 nil nil] (top-left-diagonal (->board (range 1 3))))))
-
-  (describe "top-right-diagonal"
-    (it "Results in nil values for empty board"
-      (should= (repeat 3 nil) (top-right-diagonal empty-board)))
-    (it "Results in [3 5 7] for board with values, 1 - 9"
-      (should= [3 5 7] (top-right-diagonal (->board (range 1 10)))))
-    (it "Allows for a mixture of nil and non-nil values"
-      (should= [3 nil nil] (top-right-diagonal (->board (range 1 5))))))
 
   (describe "full-board?"
     (it "Empty board results in false"
@@ -170,4 +144,13 @@
           (should= false (valid-move? (mark-square empty-board move 1) move))
           (recur rest-moves))))
     (it "[0 0] results in false for empty vector"
-      (should= false (valid-move? [] [0 0])))))
+      (should= false (valid-move? [] [0 0]))))
+
+  (describe "size"
+    (it "Results in the square root of the size of the collection"
+      (should= 1 (size [1]))
+      (should= 2 (size [1 2 3 4]))
+      (should= 3 (size [1 2 3 4 5 6 7 8 9]))
+      (should= 3 (size (->board [])))
+      (should= 4 (size (->board [] 4)))))
+  )

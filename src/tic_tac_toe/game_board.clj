@@ -1,58 +1,45 @@
-(ns tic-tac-toe.game-board)
+(ns tic-tac-toe.game-board
+  (:use [tic-tac-toe.collection-util]))
 
-(defn- map-cells [board rows cols]
-  (map (fn [r c] (get-in board [r c])) rows cols))
-(defn- map-board [board f]
-  (map (partial f board) (range (count board))))
+(defn size [board] (int (Math/sqrt (count board))))
 
-(defn nth-col [board c]
-  (map-cells board (range (count board)) (repeat c)))
-(defn nth-row [board r]
-  (map-cells board (repeat r) (range (count board))))
+(defn series [board]
+  (let [size (dec (size board))]
+    (concat
+      (group-into ffirst board)
+      (group-into #(second (first %)) board)
+      [(filter-into (fn [[[r c] _]] (= r c)) board)]
+      [(filter-into (fn [[[r c] _]] (= size (+ r c))) board)])))
 
-(defn columns [board] (map-board board nth-col))
-(defn rows [board] (map-board board nth-row))
-
-(defn top-left-diagonal [board]
-  (let [indices (range (count board))]
-    (map-cells board indices indices)))
-
-(defn top-right-diagonal [board]
-  (let [indices (range (count board))]
-    (map-cells board indices (reverse indices))))
+(defn rows [board]
+  (map #(map second %)
+       (map #(sort-by first %)
+            (map second (sort-by first (group-by ffirst board))))))
 
 (defn full-board? [board]
-  (every? identity (mapcat #(map second (second %)) board)))
+  (every? identity (map second board)))
 
-(defn- completed? [[first & rest]]
-  (and (every? (partial = first) rest)
-       first))
+(defn- completed? [row]
+  (let [[value & rest] (map second row)]
+    (and (every? #(= value %) rest)
+         value)))
 
-(defn- partition-cells [cells size]
-  (take size (partition size size (concat cells (repeat nil)))))
+(defn- ->cell [position value size]
+  [[(quot position size) (rem position size)] value])
 
-(defn- ->dict [keys values]
-  (into {} (map (fn [k v] [k v]) keys values)))
-
-(defn- ->row [size row-data]
-  (->dict (range size) row-data))
-
-(defn- cells->rows [cells size]
-  (map (partial ->row size) (partition-cells cells size)))
+(defn- take-cells [cells size]
+  (take (* size size) (concat cells (repeat nil))))
 
 (defn ->board
   ([cells] (->board cells 3))
   ([cells size]
-   (->dict (range size) (cells->rows cells size))))
+   (map-into #(->cell %1 %2 size) (range) (take-cells cells size))))
 
 (defn mark-square [board cell token]
-  (assoc-in board cell token))
+  (assoc board cell token))
 
 (defn- winning-token [board]
-  (or (some completed? (rows board))
-      (some completed? (columns board))
-      (completed? (top-left-diagonal board))
-      (completed? (top-right-diagonal board))))
+  (some completed? (series board)))
 
 (defn game-results [board]
   (if-let [winner (winning-token board)]
@@ -62,7 +49,7 @@
       {:draw false :game-over false :winner nil})))
 
 (defn valid-move? [board [row col & rest]]
-  (let [found (get-in board [row col] :not-found)]
+  (let [found (get board [row col] :not-found)]
     (and (empty? rest)
-         (not= found :not-found)
-         (nil? found))))
+         (nil? found)
+         (not= found :not-found))))
