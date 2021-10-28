@@ -2,10 +2,14 @@
   (:require [speclj.core :refer :all]
             [tic-tac-toe.console-io :refer :all]
             [tic-tac-toe.game-board :refer :all]
+            [tic-tac-toe.human :refer :all]
+            [tic-tac-toe.player :refer :all]
+            [tic-tac-toe.user-interface :refer :all]
             [tic-tac-toe.game-board-formatter :refer :all]))
 
 (def header-line "---------------\n")
 (def messages ["Header" "Another Header Phrase" ""])
+(def io (->ConsoleIO))
 
 (defmacro out-should= [expected actual]
   `(should= ~expected (with-out-str ~actual)))
@@ -20,48 +24,58 @@
                        (write-header message))
           (recur rest)))))
 
-  (describe "write-message"
-    (it "Writes plaintext message out to console with a newline"
-      (loop [[message & rest] messages]
-        (when message
-          (out-should= (str message "\n") (write-message message)))))
-    (it "Writes message out beneath game board"
-      (let [board (->board (repeat nil))]
-        (out-should= (str "\n" (format-board board) "\nSome Message\n")
-                     (write-message "Some Message" board)))))
+  (describe "show-title"
+    (it "Displays the Tic Tac Toe title"
+      (out-should= (str header-line "Tic Tac Toe\n" header-line) (show-title io))))
+
+  (describe "show-instructions"
+    (it "Writes instructions to the console"
+      (out-should= (str "Enter the 0-based index for the row and column\n"
+                        "Example: 0 2 for Row 1, Column 3\n")
+                   (show-instructions io))))
 
   (describe "show-results"
     (it "Writes game board and winner to output"
-      (let [board (->board (repeat nil))]
-        (out-should= (str "\n" (format-board board) "\n" "Game Over! X wins!\n")
-                     (show-results {:game-over true :winner \X :draw false} board))
-        (out-should= (str "\n" (format-board board) "\n" "Game Over! O wins!\n")
-                     (show-results {:game-over true :winner \O :draw false} board))))
+      (let [x-board (->board [\X \X \X])
+            o-board (->board [\O \O \O])]
+        (out-should= (str "\n" (format-board x-board) "\n" "Game Over! X wins!\n")
+                     (show-results io x-board))
+        (out-should= (str "\n" (format-board o-board) "\n" "Game Over! O wins!\n")
+                     (show-results io o-board))))
     (it "Writes game board and draw result to output"
-      (let [board (->board (repeat nil))]
+      (let [board (->board (range))]
         (out-should= (str "\n" (format-board board) "\n" "Game Over! Game was a Draw.\n")
-                     (show-results {:game-over true :winner nil :draw true} board)))))
+                     (show-results io board)))))
+
+  (describe "request-game-mode"
+    (it "Request message is written to output"
+      (out-should= (str header-line "Game Mode\n" header-line
+                        "1.) Player vs Player\n"
+                        "2.) Player vs Computer\n"
+                        "Choose Game Mode > ")
+                   (with-in-str "1" (request-game-mode io)))))
 
   (describe "request-move"
-    (it "Writes board and token to output"
-      (let [board (->board (repeat nil))]
-        (out-should= (str "\n" (format-board board) "\n" "X's move! > ")
-                     (with-in-str "1 1" (request-move \X board)))
-        (out-should= (str "\n" (format-board board) "\n" "O's move! > ")
-                     (with-in-str "1 1" (request-move \O board))))))
+    (it "Request message is written to output"
+      (out-should= (str "\n[_ _ _]\n[_ _ _]\n[_ _ _]\nX's turn! > ")
+                   (with-in-str "1 1" (request-move io (->board []) (->Human \X io)))))
+    (it "Results in the cell the user entered"
+      ; ignore output
+      (with-out-str
+        (should= [1 2] (with-in-str "1 2" (request-move io (->board []) (->Human \X io)))))))
 
-  (describe "parse-input"
+  (describe "parse-numbers"
     (it "Empty input results in an empty array"
-      (should= [] (parse-input "")))
+      (should= [] (parse-numbers "")))
     (it "One number results in an array with that number"
-      (should= [1] (parse-input "1")))
+      (should= [1] (parse-numbers "1")))
     (it "Two numbers results in an array with both numbers"
-      (should= [1 2] (parse-input "1 2")))
+      (should= [1 2] (parse-numbers "1 2")))
     (it "Non-numeric characters are ignored"
-      (should= [1 2] (parse-input "1a2")))
+      (should= [1 2] (parse-numbers "1a2")))
     (it "Two-digit indices are split as two-digit numbers"
-      (should= [10 11] (parse-input "10_11")))
+      (should= [10 11] (parse-numbers "10_11")))
     (it "Negative numbers are parsed as negative"
-      (should= [-1 2] (parse-input "-1 2")))
+      (should= [-1 2] (parse-numbers "-1 2")))
     (it "Numbers joined by dashes are treated as negative numbers"
-      (should= [1 -2 -3] (parse-input "1-2-3")))))
+      (should= [1 -2 -3] (parse-numbers "1-2-3")))))

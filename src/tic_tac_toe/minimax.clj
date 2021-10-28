@@ -23,9 +23,6 @@
         (nil? winner) 0
         :else (calculate-min depth)))
 
-(defn- reduce-minimax [shortcut? min-max depth coll]
-  (reduce #(if (shortcut? depth %2) (reduced %2) (min-max %1 %2)) coll))
-
 (defn- fns-for-minimax [token maximizing-token]
   (if (= token maximizing-token)
     [max shortcut-max?]
@@ -35,9 +32,9 @@
   (let [results (game-results board)]
     (if (:game-over results)
       (value-of (:winner results) maximizing-token depth)
-      (let [[min-max shortcut] (fns-for-minimax token maximizing-token)]
-        (reduce-minimax
-          shortcut min-max depth
+      (let [[min-max shortcut?] (fns-for-minimax token maximizing-token)]
+        (reduce
+          #(if (shortcut? depth %2) (reduced %2) (min-max %1 %2))
           (map #(minimax % (inc depth) maximizing-token [next-token token])
                (children board token)))))))
 

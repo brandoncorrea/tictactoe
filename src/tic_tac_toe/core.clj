@@ -1,24 +1,26 @@
 (ns tic-tac-toe.core
   (:use [tic-tac-toe.game-board]
-        [clojure.string :only [join replace trim split]]
-        [tic-tac-toe.game-board]
+        [tic-tac-toe.user-interface]
+        [tic-tac-toe.player]
         [tic-tac-toe.console-io]
-        [tic-tac-toe.collection-util]))
+        [tic-tac-toe.human]
+        [tic-tac-toe.unbeatable-bot]))
 
-(defn- next-move [board token]
-  (find-first (partial valid-move? board)
-              (repeatedly #(request-move token board))))
-
-(defn- update-board [board token]
-  (mark-square board (next-move board token) token))
-
-(defn -main [& _]
-  (write-header "Tic-Tac-Toe")
-  (write-message "Enter the 0-based index for the row and column")
-  (write-message "Example: 0 2 for Row 1, Column 3")
-  (loop [board (->board (repeat nil))
-         [token next-token] [\X \O]]
+(defn- play [io player-1 player-2]
+  (loop [board (->board [])
+         [player next-player] [player-1 player-2]]
     (let [results (game-results board)]
       (if (:game-over results)
-        (show-results results board)
-        (recur (update-board board token) [next-token token])))))
+        (show-results io board)
+        (recur (mark-square board (next-move player board) (token player))
+               [next-player player])))))
+
+(defn -main [& _]
+  (let [io (->ConsoleIO)
+        token-1 \X
+        token-2 \O]
+    (show-title io)
+    (show-instructions io)
+    (if (= :player-vs-player (request-game-mode io))
+      (play io (->Human token-1 io) (->Human token-2 io))
+      (play io (->Human token-1 io) (->UnbeatableBot token-2 token-1)))))
