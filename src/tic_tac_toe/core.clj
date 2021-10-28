@@ -2,10 +2,8 @@
   (:use [tic-tac-toe.game-board]
         [clojure.string :only [join replace trim split]]
         [tic-tac-toe.game-board]
-        [tic-tac-toe.console-io]))
-
-(defn- find-first [pred coll]
-  (reduce #(when (pred %2) (reduced %2)) nil coll))
+        [tic-tac-toe.console-io]
+        [tic-tac-toe.collection-util]))
 
 (defn- next-move [board token]
   (find-first (partial valid-move? board)

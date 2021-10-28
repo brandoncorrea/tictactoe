@@ -6,3 +6,8 @@
   (into {} (filter pred coll)))
 (defn group-into [f coll]
   (map #(into {} (second %)) (group-by f coll)))
+(defn sorted-values [m] (-> m sort vals))
+(defn find-first [pred coll]
+  (reduce #(when (pred %2) (reduced %2)) nil coll))
+(defn count-by [pred coll]
+  (count (filter pred coll)))

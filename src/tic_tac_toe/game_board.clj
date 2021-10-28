@@ -12,15 +12,13 @@
       [(filter-into (fn [[[r c] _]] (= size (+ r c))) board)])))
 
 (defn rows [board]
-  (map #(map second %)
-       (map #(sort-by first %)
-            (map second (sort-by first (group-by ffirst board))))))
+  (map sorted-values (sort-by first (group-into ffirst board))))
 
 (defn full-board? [board]
-  (every? identity (map second board)))
+  (every? identity (vals board)))
 
 (defn- completed? [row]
-  (let [[value & rest] (map second row)]
+  (let [[value & rest] (vals row)]
     (and (every? #(= value %) rest)
          value)))
 
