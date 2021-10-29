@@ -16,7 +16,7 @@
 (defn- calculate-min [depth] (/ -1 (depth-factor depth)))
 (defn- calculate-max [depth] (/ 1 (depth-factor depth)))
 (defn- shortcut-max? [depth value] (<= (calculate-max depth) value))
-(defn- shortcut-min? [depth value] (<= (calculate-min depth) value))
+(defn- shortcut-min? [depth value] (>= (calculate-min depth) value))
 
 (defn value-of [winner maximizing-token depth]
   (cond (= winner maximizing-token) (calculate-max depth)
