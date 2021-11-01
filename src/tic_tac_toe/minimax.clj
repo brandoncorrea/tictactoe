@@ -2,9 +2,6 @@
   (:use [tic-tac-toe.game-board]
         [tic-tac-toe.collection-util]))
 
-(defn- cell-empty? [[_ value]] (nil? value))
-(defn- empty-cells [board]
-  (map first (filter cell-empty? board)))
 (defn children [board token]
   (map #(assoc board % token) (empty-cells board)))
 

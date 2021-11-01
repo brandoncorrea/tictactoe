@@ -3,6 +3,10 @@
 
 (defn size [board] (int (Math/sqrt (count board))))
 
+(defn- cell-empty? [[_ value]] (nil? value))
+(defn empty-cells [board]
+  (map first (filter cell-empty? board)))
+
 (defn series [board]
   (let [size (dec (size board))]
     (concat
