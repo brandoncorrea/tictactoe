@@ -5,47 +5,80 @@
 (defn- cell-empty? [[_ value]] (nil? value))
 (defn- empty-cells [board]
   (map first (filter cell-empty? board)))
-
 (defn children [board token]
   (map #(assoc board % token) (empty-cells board)))
-
-(defn terminal? [board]
-  (:game-over (game-results board)))
 
 (defn- depth-factor [depth] (apply * (repeat depth 2)))
 (defn- calculate-min [depth] (/ -1 (depth-factor depth)))
 (defn- calculate-max [depth] (/ 1 (depth-factor depth)))
-(defn- shortcut-max? [depth value] (<= (calculate-max depth) value))
-(defn- shortcut-min? [depth value] (>= (calculate-min depth) value))
+(defn- shortcut-max? [depth [value _]] (<= (calculate-max depth) value))
+(defn- shortcut-min? [depth [value _]] (>= (calculate-min depth) value))
 
-(defn value-of [winner maximizing-token depth]
-  (cond (= winner maximizing-token) (calculate-max depth)
-        (nil? winner) 0
-        :else (calculate-min depth)))
+(declare greater-than?)
+(defn maximum [a b] (if (greater-than? a b) a b))
+(defn minimum [a b] (if (greater-than? a b) b a))
 
-(defn- fns-for-minimax [token maximizing-token]
-  (if (= token maximizing-token)
-    [max shortcut-max?]
-    [min shortcut-min?]))
+(defn- next-child [value children]
+  (if (empty? children)
+    [value children]
+    (reduce maximum children)))
 
-(defn minimax [board depth maximizing-token [token next-token]]
-  (let [results (game-results board)]
-    (if (:game-over results)
-      (value-of (:winner results) maximizing-token depth)
-      (let [[min-max shortcut?] (fns-for-minimax token maximizing-token)]
-        (reduce
-          #(if (shortcut? depth %2) (reduced %2) (min-max %1 %2))
-          (map #(minimax % (inc depth) maximizing-token [next-token token])
-               (children board token)))))))
-
-(defn- reduce-optimal [board maximizing-token minimizing-token [max-cell max-value] cell]
-  (let [value (minimax (assoc board cell maximizing-token) 0 maximizing-token [minimizing-token maximizing-token])]
+(defn greater-than? [a b]
+  (loop [[v1 c1] a
+         [v2 c2] b]
     (cond
-      (<= 1 value) (reduced [cell value])
-      (< max-value value) [cell value]
-      :else [max-cell max-value])))
+      (< v1 v2) false
+      (> v1 v2) true
+      (and (empty? c1) (empty? c2)) false
+      :else (recur (next-child v1 c1) (next-child v2 c2)))))
+
+(defn value-of [results maximizing-token depth]
+  [(cond (= (:winner results) maximizing-token) (calculate-max depth)
+         (nil? (:winner results)) 0
+         :else (calculate-min depth))
+   []])
+
+(declare minimax)
+
+(defn maximize [board depth maximizing-token minimizing-token]
+  (loop [[child & rest-children] (children board maximizing-token)
+         max-value [-1 []]
+         siblings []]
+    (if child
+      (let [value (minimax child (inc depth) maximizing-token minimizing-token minimizing-token)]
+        (if (shortcut-max? depth value)
+          [(first value) []]
+          (recur rest-children (maximum value max-value) (cons value siblings))))
+      [(first max-value) siblings])))
+
+(defn minimize [board depth maximizing-token minimizing-token]
+  (loop [[child & rest-children] (children board minimizing-token)
+         min-value [1 []]
+         siblings []]
+    (if child
+      (let [value (minimax child (inc depth) maximizing-token minimizing-token maximizing-token)]
+        (if (shortcut-min? depth value)
+          [(first value) []]
+          (recur rest-children (minimum value min-value) (cons value siblings))))
+      [(first min-value) siblings])))
+
+(defn minimax [board depth maximizing-token minimizing-token cur-token]
+  (let [results (game-results board)]
+    (cond
+      (:game-over results) (value-of results maximizing-token depth)
+      (= maximizing-token cur-token)
+        (maximize board depth maximizing-token minimizing-token)
+      :else
+        (minimize board depth maximizing-token minimizing-token))))
 
 (defn optimal-move [board maximizing-token minimizing-token]
-  (->> (empty-cells board)
-       (reduce (partial reduce-optimal board maximizing-token minimizing-token) [nil -2])
-       first))
+  (loop [[cell & rest-cells] (empty-cells board)
+         best-cell cell
+         max-value [-1 []]]
+    (if cell
+      (let [evaluation (minimax (assoc board cell maximizing-token) 0 maximizing-token minimizing-token minimizing-token)]
+        (cond
+          (>= (first evaluation) 1) cell
+          (greater-than? evaluation max-value) (recur rest-cells cell evaluation)
+          :else (recur rest-cells best-cell max-value)))
+      best-cell)))
