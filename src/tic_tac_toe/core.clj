@@ -4,7 +4,8 @@
         [tic-tac-toe.player]
         [tic-tac-toe.console-io]
         [tic-tac-toe.human]
-        [tic-tac-toe.unbeatable-bot]))
+        [tic-tac-toe.unbeatable-bot]
+        [tic-tac-toe.easy-bot]))
 
 (defn- play [io player-1 player-2]
   (loop [board (->board [])
@@ -21,6 +22,10 @@
         token-2 \O]
     (show-title io)
     (show-instructions io)
-    (if (= :player-vs-player (request-game-mode io))
-      (play io (->Human token-1 io) (->Human token-2 io))
-      (play io (->Human token-1 io) (->UnbeatableBot token-2 token-1)))))
+    (cond
+      (= :player-vs-player (request-game-mode io))
+        (play io (->Human token-1 io) (->Human token-2 io))
+      (= :easy (request-difficulty io))
+        (play io (->Human token-1 io) (->EasyBot token-2))
+      :else
+        (play io (->Human token-1 io) (->UnbeatableBot token-2 token-1)))))
