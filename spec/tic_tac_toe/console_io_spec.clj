@@ -53,7 +53,23 @@
                         "1.) Player vs Player\n"
                         "2.) Player vs Computer\n"
                         "Choose Game Mode > ")
-                   (with-in-str "1" (request-game-mode io)))))
+                   (with-in-str "1" (request-game-mode io))))
+    (it "Entering 1 results in :player-vs-player"
+      (should= :player-vs-player (with-in-str "1" (request-game-mode io))))
+    (it "Entering 1 results in :player-vs-computer"
+      (should= :player-vs-computer (with-in-str "2" (request-game-mode io)))))
+
+  (describe "request-difficulty"
+    (it "Request prints out a message to the console"
+      (out-should= (str header-line "Difficulty\n" header-line
+                        "1. Easy\n"
+                        "2. Hard\n"
+                        "Choose Difficulty > ")
+                   (with-in-str "1" (request-difficulty io))))
+    (it "Entering 1 results in :easy"
+      (should= :easy (with-in-str "1" (request-difficulty io))))
+    (it "Entering 2 results in :hard"
+      (should= :hard (with-in-str "2" (request-difficulty io)))))
 
   (describe "request-move"
     (it "Request message is written to output"

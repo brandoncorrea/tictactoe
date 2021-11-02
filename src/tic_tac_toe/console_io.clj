@@ -26,9 +26,11 @@
 (defn- request-numbers-until [pred message]
   (first (filter pred (repeatedly #(request-numbers message)))))
 
-(defn- valid-game-mode? [[choice & rest]]
-  (and (empty? rest)
-       (or (= choice 1) (= choice 2))))
+(defn- request-int-until [pred message]
+  (first (filter pred (map first (take-while #(= 1 (count %)) (repeatedly #(request-numbers message)))))))
+
+(defn- valid-game-mode? [choice]
+  (or (= choice 1) (= choice 2)))
 
 (deftype ConsoleIO [] UserInterface
   (show-title [_]
@@ -49,9 +51,17 @@
     (write-header "Game Mode")
     (println "1.) Player vs Player")
     (println "2.) Player vs Computer")
-    (if (= 1 (request-numbers-until valid-game-mode? "Choose Game Mode"))
+    (if (= 1 (request-int-until #{1 2} "Choose Game Mode"))
       :player-vs-player
       :player-vs-computer))
+
+  (request-difficulty [_]
+    (write-header "Difficulty")
+    (println "1. Easy")
+    (println "2. Hard")
+    (if (= 1 (request-int-until #{1 2} "Choose Difficulty"))
+      :easy
+      :hard))
 
   (request-move [_ board player]
     (show-board board)
