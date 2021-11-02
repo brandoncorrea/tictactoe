@@ -54,10 +54,9 @@
   (request-difficulty [_]
     (write-header "Difficulty")
     (println "1. Easy")
-    (println "2. Hard")
-    (if (= 1 (request-int-until #{1 2} "Choose Difficulty"))
-      :easy
-      :hard))
+    (println "2. Medium")
+    (println "3. Hard")
+    ({1 :easy 2 :medium 3 :hard} (request-int-until #{1 2 3} "Choose Difficulty")))
 
   (request-move [_ board player]
     (show-board board)

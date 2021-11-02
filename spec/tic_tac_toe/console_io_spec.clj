@@ -63,13 +63,16 @@
     (it "Request prints out a message to the console"
       (out-should= (str header-line "Difficulty\n" header-line
                         "1. Easy\n"
-                        "2. Hard\n"
+                        "2. Medium\n"
+                        "3. Hard\n"
                         "Choose Difficulty > ")
                    (with-in-str "1" (request-difficulty io))))
     (it "Entering 1 results in :easy"
       (should= :easy (with-in-str "1" (request-difficulty io))))
-    (it "Entering 2 results in :hard"
-      (should= :hard (with-in-str "2" (request-difficulty io)))))
+    (it "Entering 2 results in :medium"
+      (should= :medium (with-in-str "2" (request-difficulty io))))
+    (it "Entering 3 results in :hard"
+      (should= :hard (with-in-str "3" (request-difficulty io)))))
 
   (describe "request-move"
     (it "Request message is written to output"
