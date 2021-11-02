@@ -1,10 +1,8 @@
 (ns tic-tac-toe.unbeatable-bot
-  (:use [tic-tac-toe.game-board]
-        [tic-tac-toe.collection-util]
-        [tic-tac-toe.minimax]
-        [tic-tac-toe.player]))
+  (:require [tic-tac-toe.minimax :as minimax]
+            [tic-tac-toe.player :as player]))
 
 (deftype UnbeatableBot [token opponent]
-  Player
-  (next-move [_ board] (optimal-move board token opponent))
+  player/Player
+  (next-move [_ board] (minimax/optimal-move board token opponent))
   (token [_] token))

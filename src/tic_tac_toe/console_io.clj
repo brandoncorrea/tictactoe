@@ -1,14 +1,13 @@
 (ns tic-tac-toe.console-io
-  (:use [tic-tac-toe.game-board-formatter :only [format-board]]
-        [tic-tac-toe.collection-util]
-        [tic-tac-toe.user-interface]
-        [tic-tac-toe.game-board]
-        [tic-tac-toe.player]))
+  (:require [tic-tac-toe.game-board-formatter :as formatter]
+            [tic-tac-toe.user-interface :as ui]
+            [tic-tac-toe.game-board :as board]
+            [tic-tac-toe.player :as player]))
 
 (def ^:private horizontal-line (apply str (repeat 15 "-")))
 (defn- show-board [board]
   (println)
-  (println (format-board board)))
+  (println (formatter/format-board board)))
 
 (defn parse-numbers [text]
   (map #(Integer. %) (re-seq #"-?\d+" text)))
@@ -29,10 +28,7 @@
 (defn- request-int-until [pred message]
   (first (filter pred (map first (take-while #(= 1 (count %)) (repeatedly #(request-numbers message)))))))
 
-(defn- valid-game-mode? [choice]
-  (or (= choice 1) (= choice 2)))
-
-(deftype ConsoleIO [] UserInterface
+(deftype ConsoleIO [] ui/UserInterface
   (show-title [_]
     (write-header "Tic Tac Toe"))
 
@@ -42,7 +38,7 @@
 
   (show-results [_ board]
     (show-board board)
-    (let [results (game-results board)]
+    (let [results (board/game-results board)]
       (if (:draw results)
         (println "Game Over! Game was a Draw.")
         (println (str "Game Over! " (:winner results) " wins!")))))
@@ -65,4 +61,4 @@
 
   (request-move [_ board player]
     (show-board board)
-    (request-numbers-until (partial valid-move? board) (str (token player) "'s turn!"))))
+    (request-numbers-until (partial board/valid-move? board) (str (player/token player) "'s turn!"))))

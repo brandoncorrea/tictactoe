@@ -1,5 +1,5 @@
 (ns tic-tac-toe.game-board
-  (:use [tic-tac-toe.collection-util]))
+  (:require [tic-tac-toe.collection-util :as util]))
 
 (defn size [board] (int (Math/sqrt (count board))))
 
@@ -10,13 +10,13 @@
 (defn series [board]
   (let [size (dec (size board))]
     (concat
-      (group-into ffirst board)
-      (group-into #(second (first %)) board)
-      [(filter-into (fn [[[r c] _]] (= r c)) board)]
-      [(filter-into (fn [[[r c] _]] (= size (+ r c))) board)])))
+      (util/group-into ffirst board)
+      (util/group-into #(second (first %)) board)
+      [(util/filter-into (fn [[[r c] _]] (= r c)) board)]
+      [(util/filter-into (fn [[[r c] _]] (= size (+ r c))) board)])))
 
 (defn rows [board]
-  (map sorted-values (sort-by first (group-into ffirst board))))
+  (map util/sorted-values (sort-by first (util/group-into ffirst board))))
 
 (defn full-board? [board]
   (every? identity (vals board)))
@@ -35,7 +35,7 @@
 (defn ->board
   ([cells] (->board cells 3))
   ([cells size]
-   (map-into #(->cell %1 %2 size) (range) (take-cells cells size))))
+   (util/map-into #(->cell %1 %2 size) (range) (take-cells cells size))))
 
 (defn mark-square [board cell token]
   (assoc board cell token))

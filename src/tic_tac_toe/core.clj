@@ -1,31 +1,31 @@
 (ns tic-tac-toe.core
-  (:use [tic-tac-toe.game-board]
-        [tic-tac-toe.user-interface]
-        [tic-tac-toe.player]
-        [tic-tac-toe.console-io]
-        [tic-tac-toe.human]
-        [tic-tac-toe.unbeatable-bot]
-        [tic-tac-toe.easy-bot]))
+  (:require [tic-tac-toe.game-board :as board]
+            [tic-tac-toe.user-interface :as ui]
+            [tic-tac-toe.player :as player]
+            [tic-tac-toe.console-io :as console]
+            [tic-tac-toe.human :as human]
+            [tic-tac-toe.unbeatable-bot :as hard-bot]
+            [tic-tac-toe.easy-bot :as easy-bot]))
 
 (defn- play [io player-1 player-2]
-  (loop [board (->board [])
+  (loop [board (board/->board [])
          [player next-player] [player-1 player-2]]
-    (let [results (game-results board)]
+    (let [results (board/game-results board)]
       (if (:game-over results)
-        (show-results io board)
-        (recur (mark-square board (next-move player board) (token player))
+        (ui/show-results io board)
+        (recur (board/mark-square board (player/next-move player board) (player/token player))
                [next-player player])))))
 
 (defn -main [& _]
-  (let [io (->ConsoleIO)
+  (let [io (console/->ConsoleIO)
         token-1 \X
         token-2 \O]
-    (show-title io)
-    (show-instructions io)
+    (ui/show-title io)
+    (ui/show-instructions io)
     (cond
-      (= :player-vs-player (request-game-mode io))
-        (play io (->Human token-1 io) (->Human token-2 io))
-      (= :easy (request-difficulty io))
-        (play io (->Human token-1 io) (->EasyBot token-2))
+      (= :player-vs-player (ui/request-game-mode io))
+        (play io (human/->Human token-1 io) (human/->Human token-2 io))
+      (= :easy (ui/request-difficulty io))
+        (play io (human/->Human token-1 io) (easy-bot/->EasyBot token-2))
       :else
-        (play io (->Human token-1 io) (->UnbeatableBot token-2 token-1)))))
+        (play io (human/->Human token-1 io) (hard-bot/->UnbeatableBot token-2 token-1)))))

@@ -1,6 +1,6 @@
 (ns tic-tac-toe.game-board-formatter
-  (:use [clojure.string :only [join]]
-        [tic-tac-toe.game-board :only [rows]]))
+  (:require [clojure.string :as s]
+            [tic-tac-toe.game-board :as board]))
 
 (defn- token->str [token]
   (if token
@@ -8,7 +8,7 @@
     "_"))
 
 (defn format-row [row]
-  (str "[" (join " " (map token->str row)) "]"))
+  (str "[" (s/join " " (map token->str row)) "]"))
 
 (defn format-board [board]
-  (join "\n" (map format-row (rows board))))
+  (s/join "\n" (map format-row (board/rows board))))

@@ -1,9 +1,8 @@
 (ns tic-tac-toe.minimax
-  (:use [tic-tac-toe.game-board]
-        [tic-tac-toe.collection-util]))
+  (:require [tic-tac-toe.game-board :as board]))
 
 (defn children [board token]
-  (map #(assoc board % token) (empty-cells board)))
+  (map #(assoc board % token) (board/empty-cells board)))
 
 (defn- depth-factor [depth] (apply * (repeat depth 2)))
 (defn- calculate-min [depth] (/ -1 (depth-factor depth)))
@@ -60,7 +59,7 @@
       [(first min-value) siblings])))
 
 (defn minimax [board depth maximizing-token minimizing-token cur-token]
-  (let [results (game-results board)]
+  (let [results (board/game-results board)]
     (cond
       (:game-over results) (value-of results maximizing-token depth)
       (= maximizing-token cur-token)
@@ -69,7 +68,7 @@
         (minimize board depth maximizing-token minimizing-token))))
 
 (defn optimal-move [board maximizing-token minimizing-token]
-  (loop [[cell & rest-cells] (empty-cells board)
+  (loop [[cell & rest-cells] (board/empty-cells board)
          best-cell cell
          max-value [-1 []]]
     (if cell
