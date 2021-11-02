@@ -22,4 +22,4 @@
   (it "Chooses winning square when next move wins"
     (should= [1 0] (next-move bot (->board [\X nil nil nil nil nil \X]))))
   (it "First move does not optimize to center square"
-    (should-not= [1 1] (next-move bot (->board [\X])))))
+    (should-not= [1 1] (next-move bot (->board [\O])))))
