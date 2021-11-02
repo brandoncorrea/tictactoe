@@ -35,20 +35,20 @@
 
 (describe "minimax"
   (it "Results in 1 for winning board"
-    (should= [1 []] (minimax (->board [\X \X \X]) 0 \X \O \X)))
+    (should= [1 []] (minimax (->board [\X \X \X]) 0 100 \X \O \X)))
   (it "Results in -1 for losing board"
-    (should= [-1 []] (minimax (->board [\O \O \O]) 0 \X \O \X)))
+    (should= [-1 []] (minimax (->board [\O \O \O]) 0 100 \X \O \X)))
   (it "Results in 0 for draw board"
-    (should= [0 []] (minimax (->board (range)) 0 \X \O \X)))
+    (should= [0 []] (minimax (->board (range)) 0 100 \X \O \X)))
   (it "One empty space for a draw results in 0 with the one-cell mapping"
     (should= [0 [[0 []]]] (minimax (->board [nil \X \O
                                    \O  \X  \X
-                                   \X \O \O]) 0 \X \O \X)))
+                                   \X \O \O]) 0 100 \X \O \X)))
   (it "Two empty spaces results in both cells' result mapping"
     (should= [0 [[0 [[0 []]]] [-1/4 [[-1/4 []]]]]]
              (minimax (->board [nil \X \O
                                 \O  \X  \X
-                                nil \O \O]) 0 \X \O \X))))
+                                nil \O \O]) 0 100 \X \O \X))))
 
 (describe "optimal-move"
   (it "Results in empty cell for two in row"

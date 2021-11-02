@@ -36,45 +36,48 @@
 
 (declare minimax)
 
-(defn maximize [board depth maximizing-token minimizing-token]
+(defn maximize [board depth limit maximizing-token minimizing-token]
   (loop [[child & rest-children] (children board maximizing-token)
          max-value [-1 []]
          siblings []]
-    (if child
-      (let [value (minimax child (inc depth) maximizing-token minimizing-token minimizing-token)]
+    (if (and child (< depth limit))
+      (let [value (minimax child (inc depth) limit maximizing-token minimizing-token minimizing-token)]
         (if (shortcut-max? depth value)
           [(first value) []]
           (recur rest-children (maximum value max-value) (cons value siblings))))
       [(first max-value) siblings])))
 
-(defn minimize [board depth maximizing-token minimizing-token]
+(defn minimize [board depth limit maximizing-token minimizing-token]
   (loop [[child & rest-children] (children board minimizing-token)
          min-value [1 []]
          siblings []]
-    (if child
-      (let [value (minimax child (inc depth) maximizing-token minimizing-token maximizing-token)]
+    (if (and child (< depth limit))
+      (let [value (minimax child (inc depth) limit maximizing-token minimizing-token maximizing-token)]
         (if (shortcut-min? depth value)
           [(first value) []]
           (recur rest-children (minimum value min-value) (cons value siblings))))
       [(first min-value) siblings])))
 
-(defn minimax [board depth maximizing-token minimizing-token cur-token]
+(defn minimax [board depth limit maximizing-token minimizing-token cur-token]
   (let [results (board/game-results board)]
     (cond
       (:game-over results) (value-of results maximizing-token depth)
       (= maximizing-token cur-token)
-        (maximize board depth maximizing-token minimizing-token)
+        (maximize board depth limit maximizing-token minimizing-token)
       :else
-        (minimize board depth maximizing-token minimizing-token))))
+        (minimize board depth limit maximizing-token minimizing-token))))
 
-(defn optimal-move [board maximizing-token minimizing-token]
-  (loop [[cell & rest-cells] (board/empty-cells board)
-         best-cell cell
-         max-value [-1 []]]
-    (if cell
-      (let [evaluation (minimax (assoc board cell maximizing-token) 0 maximizing-token minimizing-token minimizing-token)]
-        (cond
-          (>= (first evaluation) 1) cell
-          (greater-than? evaluation max-value) (recur rest-cells cell evaluation)
-          :else (recur rest-cells best-cell max-value)))
-      best-cell)))
+(defn optimal-move
+  ([board maximizing-token minimizing-token]
+   (optimal-move board maximizing-token minimizing-token 100))
+  ([board maximizing-token minimizing-token limit]
+   (loop [[cell & rest-cells] (board/empty-cells board)
+          best-cell cell
+          max-value [-1 []]]
+     (if cell
+       (let [evaluation (minimax (assoc board cell maximizing-token) 0 limit maximizing-token minimizing-token minimizing-token)]
+         (cond
+           (>= (first evaluation) 1) cell
+           (greater-than? evaluation max-value) (recur rest-cells cell evaluation)
+           :else (recur rest-cells best-cell max-value)))
+       best-cell))))
