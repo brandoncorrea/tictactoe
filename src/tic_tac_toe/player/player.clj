@@ -18,7 +18,7 @@
 (defn ->hard-bot [token opponent]
   (assoc (->player token :hard) :opponent opponent))
 
-(defmulti next-move (fn [player _] (:type player)))
+(defmulti next-move :type)
 
 (defmethod next-move :human [player board]
   (ui/request-move (:ui player) board player))
