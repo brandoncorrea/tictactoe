@@ -3,9 +3,7 @@
             [tic-tac-toe.game-board :as board]))
 
 (defn- token->str [token]
-  (if token
-    (format "%s" token)
-    "_"))
+  (if token (str token) "_"))
 
 (defn format-row [row]
   (str "[" (s/join " " (map token->str row)) "]"))

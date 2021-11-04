@@ -1,7 +1,8 @@
 (ns tic-tac-toe.ui.console-io
   (:require [tic-tac-toe.ui.user-interface :as ui]
             [tic-tac-toe.game-board :as board]
-            [tic-tac-toe.ui.game-board-formatter :as formatter]))
+            [tic-tac-toe.ui.game-board-formatter :as formatter]
+            [tic-tac-toe.util.collections :as util]))
 
 (def ^:private horizontal-line (apply str (repeat 15 "-")))
 (defn- show-board [board]
@@ -22,10 +23,10 @@
   (parse-numbers (read-line)))
 
 (defn- request-numbers-until [pred message]
-  (first (filter pred (repeatedly #(request-numbers message)))))
+  (util/find-first pred (repeatedly #(request-numbers message))))
 
 (defn- request-int-until [pred message]
-  (first (filter pred (map first (take-while #(= 1 (count %)) (repeatedly #(request-numbers message)))))))
+  (util/find-first pred (map first (take-while #(= 1 (count %)) (repeatedly #(request-numbers message))))))
 
 (deftype ConsoleIO [] ui/UserInterface
   (show-title [_]

@@ -21,10 +21,9 @@
 (defn full-board? [board]
   (every? identity (vals board)))
 
-(defn- completed? [row]
+(defn- completed-token [row]
   (let [[value & rest] (vals row)]
-    (and (every? #(= value %) rest)
-         value)))
+    (and (every? #(= value %) rest) value)))
 
 (defn- ->cell [position value size]
   [[(quot position size) (rem position size)] value])
@@ -41,7 +40,7 @@
   (assoc board cell token))
 
 (defn- winning-token [board]
-  (some completed? (series board)))
+  (some completed-token (series board)))
 
 (defn game-results [board]
   (if-let [winner (winning-token board)]
