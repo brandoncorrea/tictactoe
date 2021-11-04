@@ -2,11 +2,7 @@
   (:require [tic-tac-toe.game-board :as board]
             [tic-tac-toe.ui.user-interface :as ui]
             [tic-tac-toe.ui.console-io :as console]
-            [tic-tac-toe.player.player :as player]
-            [tic-tac-toe.player.human :as human]
-            [tic-tac-toe.player.unbeatable-bot :as hard-bot]
-            [tic-tac-toe.player.medium-bot :as medium-bot]
-            [tic-tac-toe.player.easy-bot :as easy-bot]))
+            [tic-tac-toe.player.player :as player]))
 
 (defn- play [io player-1 player-2]
   (loop [board (board/->board [])
@@ -14,19 +10,19 @@
     (let [results (board/game-results board)]
       (if (:game-over results)
         (ui/show-results io board)
-        (recur (board/mark-square board (player/next-move player board) (player/token player))
+        (recur (board/mark-square board (player/next-move player board) (:token player))
                [next-player player])))))
 
 (defn ->bot [difficulty token-1 token-2]
   (cond
-    (= difficulty :easy) (easy-bot/->EasyBot token-2)
-    (= difficulty :medium) (medium-bot/->MediumBot token-2 token-1)
-    :else (hard-bot/->UnbeatableBot token-2 token-1)))
+    (= difficulty :easy) (player/->easy-bot token-2)
+    (= difficulty :medium) (player/->medium-bot token-2 token-1)
+    :else (player/->hard-bot token-2 token-1)))
 
 (defn- new-game [io token-1 token-2]
   (if (= :player-vs-player (ui/request-game-mode io))
-    (play io (human/->Human token-1 io) (human/->Human token-2 io))
-    (play io (human/->Human token-1 io) (->bot (ui/request-difficulty io) token-1 token-2))))
+    (play io (player/->human token-1 io) (player/->human token-2 io))
+    (play io (player/->human token-1 io) (->bot (ui/request-difficulty io) token-1 token-2))))
 
 (defn -main [& _]
   (let [io (console/->ConsoleIO)]

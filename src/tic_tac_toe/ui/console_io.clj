@@ -1,8 +1,7 @@
 (ns tic-tac-toe.ui.console-io
   (:require [tic-tac-toe.ui.user-interface :as ui]
             [tic-tac-toe.game-board :as board]
-            [tic-tac-toe.ui.game-board-formatter :as formatter]
-            [tic-tac-toe.player.player :as player]))
+            [tic-tac-toe.ui.game-board-formatter :as formatter]))
 
 (def ^:private horizontal-line (apply str (repeat 15 "-")))
 (defn- show-board [board]
@@ -60,4 +59,4 @@
 
   (request-move [_ board player]
     (show-board board)
-    (request-numbers-until (partial board/valid-move? board) (str (player/token player) "'s turn!"))))
+    (request-numbers-until (partial board/valid-move? board) (str (:token player) "'s turn!"))))
