@@ -1,4 +1,4 @@
-(ns tic-tac-toe.player.unbeatable-bot-spec
+(ns tic-tac-toe.player.hard-bot-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.player.player :refer :all]
             [tic-tac-toe.game-board :refer :all]))
