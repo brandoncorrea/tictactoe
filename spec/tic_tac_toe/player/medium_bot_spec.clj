@@ -14,7 +14,7 @@
     (should= \O (:opponent (->medium-bot \X \O)))
     (should= \X (:opponent (->medium-bot \O \X)))))
 
-(describe "make-move"
+(describe "next-move"
   (it "Chooses last square when it is the only available space"
     (should= [2 2] (next-move bot (->board (range 8)))))
   (it "Chooses first square when it is the only available space"

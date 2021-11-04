@@ -14,7 +14,7 @@
     (should= \O (:opponent (->hard-bot \X \O)))
     (should= \X (:opponent (->hard-bot \O \X)))))
 
-(describe "make-move"
+(describe "next-move"
   (it "Empty board results in corner square"
     (should= true (contains? #{[0 0] [0 2] [2 0] [2 2]} (next-move bot (->board [nil \X \X])))))
   (it "Returns last cell to complete row"

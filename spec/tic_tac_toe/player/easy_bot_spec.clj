@@ -13,7 +13,7 @@
   (it "Easy bot is of type :easy"
     (should= :easy (:type (->easy-bot nil)))))
 
-(describe "make-move"
+(describe "next-move"
   (it "Next move results in last available cell"
     (should= [2 2] (next-move bot (game/->board (range 8)))))
   (it "Next move results in either of the last two cells"
