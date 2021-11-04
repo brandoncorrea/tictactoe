@@ -1,5 +1,5 @@
 (ns tic-tac-toe.game-board
-  (:require [tic-tac-toe.collection-util :as util]))
+  (:require [tic-tac-toe.util.collections :as util]))
 
 (defn size [board] (int (Math/sqrt (count board))))
 

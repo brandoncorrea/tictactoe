@@ -1,5 +1,5 @@
-(ns tic-tac-toe.easy-bot
-  (:require [tic-tac-toe.player :as player]
+(ns tic-tac-toe.player.easy-bot
+  (:require [tic-tac-toe.player.player :as player]
             [tic-tac-toe.game-board :as board]))
 
 (deftype EasyBot [token]

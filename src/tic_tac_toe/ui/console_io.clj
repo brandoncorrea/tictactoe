@@ -1,8 +1,8 @@
-(ns tic-tac-toe.console-io
-  (:require [tic-tac-toe.game-board-formatter :as formatter]
-            [tic-tac-toe.user-interface :as ui]
+(ns tic-tac-toe.ui.console-io
+  (:require [tic-tac-toe.ui.user-interface :as ui]
             [tic-tac-toe.game-board :as board]
-            [tic-tac-toe.player :as player]))
+            [tic-tac-toe.ui.game-board-formatter :as formatter]
+            [tic-tac-toe.player.player :as player]))
 
 (def ^:private horizontal-line (apply str (repeat 15 "-")))
 (defn- show-board [board]
@@ -47,16 +47,16 @@
     (write-header "Game Mode")
     (println "1.) Player vs Player")
     (println "2.) Player vs Computer")
-    (if (= 1 (request-int-until #{1 2} "Choose Game Mode"))
-      :player-vs-player
-      :player-vs-computer))
+    ({1 :player-vs-player 2 :player-vs-computer}
+     (request-int-until #{1 2} "Choose Game Mode")))
 
   (request-difficulty [_]
     (write-header "Difficulty")
     (println "1. Easy")
     (println "2. Medium")
     (println "3. Hard")
-    ({1 :easy 2 :medium 3 :hard} (request-int-until #{1 2 3} "Choose Difficulty")))
+    ({1 :easy 2 :medium 3 :hard}
+     (request-int-until #{1 2 3} "Choose Difficulty")))
 
   (request-move [_ board player]
     (show-board board)

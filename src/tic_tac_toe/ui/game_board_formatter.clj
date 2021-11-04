@@ -1,4 +1,4 @@
-(ns tic-tac-toe.game-board-formatter
+(ns tic-tac-toe.ui.game-board-formatter
   (:require [clojure.string :as s]
             [tic-tac-toe.game-board :as board]))
 

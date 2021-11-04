@@ -1,12 +1,12 @@
 (ns tic-tac-toe.core
   (:require [tic-tac-toe.game-board :as board]
-            [tic-tac-toe.user-interface :as ui]
-            [tic-tac-toe.player :as player]
-            [tic-tac-toe.console-io :as console]
-            [tic-tac-toe.human :as human]
-            [tic-tac-toe.unbeatable-bot :as hard-bot]
-            [tic-tac-toe.medium-bot :as medium-bot]
-            [tic-tac-toe.easy-bot :as easy-bot]))
+            [tic-tac-toe.ui.user-interface :as ui]
+            [tic-tac-toe.ui.console-io :as console]
+            [tic-tac-toe.player.player :as player]
+            [tic-tac-toe.player.human :as human]
+            [tic-tac-toe.player.unbeatable-bot :as hard-bot]
+            [tic-tac-toe.player.medium-bot :as medium-bot]
+            [tic-tac-toe.player.easy-bot :as easy-bot]))
 
 (defn- play [io player-1 player-2]
   (loop [board (board/->board [])
@@ -17,19 +17,19 @@
         (recur (board/mark-square board (player/next-move player board) (player/token player))
                [next-player player])))))
 
+(defn ->bot [difficulty token-1 token-2]
+  (cond
+    (= difficulty :easy) (easy-bot/->EasyBot token-2)
+    (= difficulty :medium) (medium-bot/->MediumBot token-2 token-1)
+    :else (hard-bot/->UnbeatableBot token-2 token-1)))
+
+(defn- new-game [io token-1 token-2]
+  (if (= :player-vs-player (ui/request-game-mode io))
+    (play io (human/->Human token-1 io) (human/->Human token-2 io))
+    (play io (human/->Human token-1 io) (->bot (ui/request-difficulty io) token-1 token-2))))
+
 (defn -main [& _]
-  (let [io (console/->ConsoleIO)
-        token-1 \X
-        token-2 \O]
+  (let [io (console/->ConsoleIO)]
     (ui/show-title io)
     (ui/show-instructions io)
-    (if (= :player-vs-player (ui/request-game-mode io))
-      (play io (human/->Human token-1 io) (human/->Human token-2 io))
-      (let [difficulty (ui/request-difficulty io)]
-        (cond
-          (= difficulty :easy)
-            (play io (human/->Human token-1 io) (easy-bot/->EasyBot token-2))
-          (= difficulty :medium)
-            (play io (human/->Human token-1 io) (medium-bot/->MediumBot token-2 token-1))
-          :else
-            (play io (human/->Human token-1 io) (hard-bot/->UnbeatableBot token-2 token-1)))))))
+    (new-game io \X \O)))

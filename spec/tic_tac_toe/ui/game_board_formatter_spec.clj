@@ -1,7 +1,7 @@
-(ns tic-tac-toe.game-board-formatter-spec
+(ns tic-tac-toe.ui.game-board-formatter-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.game-board :refer :all]
-            [tic-tac-toe.game-board-formatter :refer :all]))
+            [tic-tac-toe.ui.game-board-formatter :refer :all]))
 
 (describe "format-board"
   (it "Formats empty 1x1 board"

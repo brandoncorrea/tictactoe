@@ -1,5 +1,5 @@
-(ns tic-tac-toe.medium-bot
-  (:require [tic-tac-toe.player :as player]
+(ns tic-tac-toe.player.medium-bot
+  (:require [tic-tac-toe.player.player :as player]
             [tic-tac-toe.minimax :as minimax]))
 
 (deftype MediumBot [token opponent]

@@ -1,4 +1,4 @@
-(ns tic-tac-toe.collection-util)
+(ns tic-tac-toe.util.collections)
 
 (defn map-into [f c1 c2]
   (into {} (map f c1 c2)))

@@ -1,4 +1,4 @@
-(ns tic-tac-toe.user-interface)
+(ns tic-tac-toe.ui.user-interface)
 
 (defprotocol UserInterface
   (show-title [this])

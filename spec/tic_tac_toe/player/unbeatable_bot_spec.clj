@@ -1,8 +1,8 @@
-(ns tic-tac-toe.unbeatable-bot-spec
+(ns tic-tac-toe.player.unbeatable-bot-spec
   (:require [speclj.core :refer :all]
-            [tic-tac-toe.unbeatable-bot :refer :all]
-            [tic-tac-toe.game-board :refer :all]
-            [tic-tac-toe.player :refer :all]))
+            [tic-tac-toe.player.player :refer :all]
+            [tic-tac-toe.player.unbeatable-bot :refer :all]
+            [tic-tac-toe.game-board :refer :all]))
 
 (def bot (->UnbeatableBot \X \O))
 

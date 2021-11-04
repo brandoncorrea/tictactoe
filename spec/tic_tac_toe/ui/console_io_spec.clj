@@ -1,11 +1,11 @@
-(ns tic-tac-toe.console-io-spec
+(ns tic-tac-toe.ui.console-io-spec
   (:require [speclj.core :refer :all]
-            [tic-tac-toe.console-io :refer :all]
+            [tic-tac-toe.ui.console-io :refer :all]
+            [tic-tac-toe.ui.user-interface :refer :all]
+            [tic-tac-toe.player.human :refer :all]
+            [tic-tac-toe.player.player :refer :all]
             [tic-tac-toe.game-board :refer :all]
-            [tic-tac-toe.human :refer :all]
-            [tic-tac-toe.player :refer :all]
-            [tic-tac-toe.user-interface :refer :all]
-            [tic-tac-toe.game-board-formatter :refer :all]))
+            [tic-tac-toe.ui.game-board-formatter :refer :all]))
 
 (def header-line "---------------\n")
 (def messages ["Header" "Another Header Phrase" ""])

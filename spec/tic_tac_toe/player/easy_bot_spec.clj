@@ -1,9 +1,8 @@
-(ns tic-tac-toe.easy-bot-spec
+(ns tic-tac-toe.player.easy-bot-spec
   (:require [speclj.core :refer :all]
-            [tic-tac-toe.player :refer :all]
-            [tic-tac-toe.easy-bot :refer :all]
+            [tic-tac-toe.player.player :refer :all]
+            [tic-tac-toe.player.easy-bot :refer :all]
             [tic-tac-toe.game-board :as game]))
-
 
 (def bot (->EasyBot \X))
 
