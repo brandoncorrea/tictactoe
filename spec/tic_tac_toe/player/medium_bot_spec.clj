@@ -1,6 +1,7 @@
 (ns tic-tac-toe.player.medium-bot-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.player.player :refer :all]
+            [tic-tac-toe.player.medium-bot :refer :all]
             [tic-tac-toe.game-board :refer :all]))
 
 (def bot (->medium-bot \X \O))

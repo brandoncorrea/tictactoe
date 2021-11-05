@@ -1,7 +1,10 @@
 (ns tic-tac-toe.core-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.core :refer :all]
-            [tic-tac-toe.player.player :refer :all]))
+            [tic-tac-toe.player.player :refer :all]
+            [tic-tac-toe.player.easy-bot :refer :all]
+            [tic-tac-toe.player.medium-bot :refer :all]
+            [tic-tac-toe.player.hard-bot :refer :all]))
 
 (describe "->bot"
   (it ":easy difficulty results in an easy bot"

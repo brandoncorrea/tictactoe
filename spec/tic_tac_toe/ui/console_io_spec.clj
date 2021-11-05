@@ -2,7 +2,7 @@
   (:require [speclj.core :refer :all]
             [tic-tac-toe.ui.console-io :refer :all]
             [tic-tac-toe.ui.user-interface :refer :all]
-            [tic-tac-toe.player.player :as player]
+            [tic-tac-toe.player.human :as human]
             [tic-tac-toe.game-board :refer :all]
             [tic-tac-toe.ui.game-board-formatter :refer :all]))
 
@@ -76,11 +76,11 @@
   (describe "request-move"
     (it "Request message is written to output"
       (out-should= (str "\n[_ _ _]\n[_ _ _]\n[_ _ _]\nX's turn! > ")
-                   (with-in-str "1 1" (request-move io (->board []) (player/->human \X io)))))
+                   (with-in-str "1 1" (request-move io (->board []) (human/->human \X io)))))
     (it "Results in the cell the user entered"
       ; ignore output
       (with-out-str
-        (should= [1 2] (with-in-str "1 2" (request-move io (->board []) (player/->human \X io)))))))
+        (should= [1 2] (with-in-str "1 2" (request-move io (->board []) (human/->human \X io)))))))
 
   (describe "parse-numbers"
     (it "Empty input results in an empty array"

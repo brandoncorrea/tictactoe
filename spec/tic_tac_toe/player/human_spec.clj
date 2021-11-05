@@ -1,6 +1,6 @@
 (ns tic-tac-toe.player.human-spec
   (:require [speclj.core :refer :all]
-            [tic-tac-toe.player.player :refer :all]))
+            [tic-tac-toe.player.human :refer :all]))
 
 (describe "->human"
   (it "Human player holds a reference to their token"
