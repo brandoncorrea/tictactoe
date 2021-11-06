@@ -28,6 +28,9 @@
 (defn- request-int-until [pred message]
   (util/find-first pred (map first (take-while #(= 1 (count %)) (repeatedly #(request-numbers message))))))
 
+(defn- request-int-option [options message]
+  (get options (request-int-until (set (keys options)) message)))
+
 (deftype ConsoleIO [] ui/UserInterface
   (show-title [_]
     (write-header "Tic Tac Toe"))
@@ -47,16 +50,21 @@
     (write-header "Game Mode")
     (println "1.) Player vs Player")
     (println "2.) Player vs Computer")
-    ({1 :player-vs-player 2 :player-vs-computer}
-     (request-int-until #{1 2} "Choose Game Mode")))
+    (request-int-option {1 :player-vs-player 2 :player-vs-computer}
+                        "Choose Game Mode"))
+
+  (request-board-size [_]
+    (write-header "Board Size")
+    (println "1.) 3x3")
+    (println "2.) 4x4")
+    (request-int-option {1 3 2 4} "Choose Board Size"))
 
   (request-difficulty [_]
     (write-header "Difficulty")
     (println "1. Easy")
     (println "2. Medium")
     (println "3. Hard")
-    ({1 :easy 2 :medium 3 :hard}
-     (request-int-until #{1 2 3} "Choose Difficulty")))
+    (request-int-option {1 :easy 2 :medium 3 :hard} "Choose Difficulty"))
 
   (request-move [_ board player]
     (show-board board)

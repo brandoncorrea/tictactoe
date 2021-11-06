@@ -7,6 +7,12 @@
    [1 0] nil [1 1] nil [1 2] nil
    [2 0] nil [2 1] nil [2 2] nil})
 
+(def empty-4x4
+  {[0 0] nil [0 1] nil [0 2] nil [0 3] nil
+   [1 0] nil [1 1] nil [1 2] nil [1 3] nil
+   [2 0] nil [2 1] nil [2 2] nil [2 3] nil
+   [3 0] nil [3 1] nil [3 2] nil [3 3] nil})
+
 (def win-result {:draw false :game-over true :winner 1})
 (def draw-result {:draw true :game-over true :winner nil})
 (def game-not-over-result {:draw false :game-over false :winner nil})
@@ -48,10 +54,7 @@
       (should= {[0 0] 1 [0 1] 2 [0 2] 3 [1 0] 4 [1 1] 5 [1 2] 6 [2 0] 7 [2 1] 8 [2 2] 9}
                (->board (range 1 10))))
     (it "Can initialize 4x4 board"
-      (should= {[0 0] 1 [0 1] 2 [0 2] 3 [0 3] nil
-                [1 0] nil [1 1] nil [1 2] nil [1 3] nil
-                [2 0] nil [2 1] nil [2 2] nil [2 3] nil
-                [3 0] nil [3 1] nil [3 2] nil [3 3] nil}
+      (should= (merge empty-4x4 {[0 0] 1 [0 1] 2 [0 2] 3})
                (->board [1 2 3] 4))))
 
   (describe "mark-square"
@@ -60,7 +63,11 @@
                (mark-square empty-board [0 0] 1)))
     (it "Player 2 marks the second square"
       (should= (->board [nil 2])
-               (mark-square empty-board [0 1] 2))))
+               (mark-square empty-board [0 1] 2)))
+    (it "Marks 4x4 board"
+      (should= (merge empty-4x4 {[0 2] 2})
+               (mark-square empty-4x4 [0 2] 2)))
+    )
 
   (describe "series"
     (it "Returns rows, columns, and diagonals as lists of key-value pairs"
@@ -81,7 +88,19 @@
                      {[0 2] 2 [1 2] 5 [2 2] 8}
                      {[0 0] 0 [1 1] 4 [2 2] 8}
                      {[0 2] 2 [1 1] 4 [2 0] 6}])
-               (set (series (->board (range)))))))
+               (set (series (->board (range))))))
+    (it "Returns series of 4x4 board"
+      (should= (set [{[0 0] 0 [0 1] 1 [0 2] 2 [0 3] 3}
+                     {[1 0] 4 [1 1] 5 [1 2] 6 [1 3] 7}
+                     {[2 0] 8 [2 1] 9 [2 2] 10 [2 3] 11}
+                     {[3 0] 12 [3 1] 13 [3 2] 14 [3 3] 15}
+                     {[0 0] 0 [1 0] 4 [2 0] 8 [3 0] 12}
+                     {[0 1] 1 [1 1] 5 [2 1] 9 [3 1] 13}
+                     {[0 2] 2 [1 2] 6 [2 2] 10 [3 2] 14}
+                     {[0 3] 3 [1 3] 7 [2 3] 11 [3 3] 15}
+                     {[0 0] 0 [1 1] 5 [2 2] 10 [3 3] 15}
+                     {[0 3] 3 [1 2] 6 [2 1] 9 [3 0] 12}])
+               (set (series (->board (range) 4))))))
 
   (describe "rows"
     (it "Returns row data for empty board"
@@ -89,7 +108,13 @@
                (rows (->board []))))
     (it "Returns ordered row data for board with values 1 - 9"
       (should= (take 3 (partition 3 3 (range 1 10)))
-               (rows (->board (range 1 10))))))
+               (rows (->board (range 1 10)))))
+    (it "Returns row data for empty 4x4"
+      (should= (take 4 (partition 4 4 (repeat nil)))
+               (rows empty-4x4)))
+    (it "Returns ordered row data for board with values 1 - 16"
+      (should= (take 4 (partition 4 4 (range 1 17)))
+               (rows (->board (range 1 17) 4)))))
 
   (describe "full-board?"
     (it "Empty board results in false"
@@ -97,7 +122,13 @@
     (it "Results in false when board is full except one cell"
       (should= false (full-board? (->board (range 8)))))
     (it "Results in true when there are no nil values"
-      (should= true (full-board? (->board (range 9))))))
+      (should= true (full-board? (->board (range 9)))))
+    (it "Empty 4x4 board results in false"
+      (should= false (full-board? empty-4x4)))
+    (it "Results in true when there are no nil values in 4x4"
+      (should= true (full-board? (->board (range) 4))))
+    (it "Results in false when there is one empty cell in 4x4"
+      (should= false (full-board? (->board (range 1 16) 4)))))
 
   (describe "game-results"
     (it "Empty game board results in game not over"
@@ -152,5 +183,4 @@
       (should= 2 (size [1 2 3 4]))
       (should= 3 (size [1 2 3 4 5 6 7 8 9]))
       (should= 3 (size (->board [])))
-      (should= 4 (size (->board [] 4)))))
-  )
+      (should= 4 (size (->board [] 4))))))

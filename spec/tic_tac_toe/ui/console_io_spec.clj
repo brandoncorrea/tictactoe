@@ -58,6 +58,18 @@
     (it "Entering 1 results in :player-vs-computer"
       (should= :player-vs-computer (with-in-str "2" (request-game-mode io)))))
 
+  (describe "request-board-size"
+    (it "Request message is written to output"
+      (out-should= (str header-line "Board Size\n" header-line
+                        "1.) 3x3\n"
+                        "2.) 4x4\n"
+                        "Choose Board Size > ")
+                   (with-in-str "1" (request-board-size io))))
+    (it "Entering 1 results in 3"
+      (should= 3 (with-in-str "1" (request-board-size io))))
+    (it "Entering 1 results in 3"
+      (should= 4 (with-in-str "2" (request-board-size io)))))
+
   (describe "request-difficulty"
     (it "Request prints out a message to the console"
       (out-should= (str header-line "Difficulty\n" header-line
