@@ -69,7 +69,7 @@
 
 (defn optimal-move
   ([board maximizing-token minimizing-token]
-   (optimal-move board maximizing-token minimizing-token 100))
+   (optimal-move board maximizing-token minimizing-token 6))
   ([board maximizing-token minimizing-token limit]
    (loop [[cell & rest-cells] (board/empty-cells board)
           best-cell cell
