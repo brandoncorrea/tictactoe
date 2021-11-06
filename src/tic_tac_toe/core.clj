@@ -9,7 +9,7 @@
             [tic-tac-toe.player.human :as human]))
 
 (defn- play [io player-1 player-2]
-  (loop [board (board/->board [])
+  (loop [board (board/->board [] (ui/request-board-size io))
          [player next-player] [player-1 player-2]]
     (let [results (board/game-results board)]
       (if (:game-over results)
