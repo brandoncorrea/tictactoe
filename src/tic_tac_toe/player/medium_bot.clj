@@ -6,4 +6,4 @@
   (assoc (player/->player token :medium) :opponent opponent))
 
 (defmethod player/next-move :medium [player board]
-  (minimax/optimal-move board (:token player) (:opponent player) 2))
+  (minimax/optimal-move board (:token player) (:opponent player) 4))
