@@ -1,10 +1,11 @@
 (ns tic-tac-toe.minimax
-  (:require [tic-tac-toe.game-board :as board]))
+  (:require [tic-tac-toe.game-board :as board]
+            [tic-tac-toe.util.int-math :as math]))
 
 (defn children [board token]
   (map #(assoc board % token) (board/empty-cells board)))
 
-(defn- depth-factor [depth] (apply * (repeat depth 2)))
+(defn- depth-factor [depth] (math/pow 2 depth))
 (defn- calculate-min [depth] (/ -1 (depth-factor depth)))
 (defn- calculate-max [depth] (/ 1 (depth-factor depth)))
 (defn- shortcut-max? [depth [value _]] (<= (calculate-max depth) value))
