@@ -2,6 +2,9 @@
   (:require [speclj.core :refer :all]
             [tic-tac-toe.game-board :refer :all]))
 
+(def empty-1x5
+  {[0] nil [1] nil [2] nil [3] nil [4] nil})
+
 (def empty-3x3
   {[0 0] nil [0 1] nil [0 2] nil
    [1 0] nil [1 1] nil [1 2] nil
@@ -71,7 +74,12 @@
       (should= empty-3x3x3 (->board [] 3 3))
       (should= (assoc empty-3x3x3 [0 0 0] 2
                                   [0 0 1] 8
-                                  [0 0 2] 3) (->board [2 8 3] 3 3))))
+                                  [0 0 2] 3)
+               (->board [2 8 3] 3 3)))
+    (it "Can initialize 1x5 board"
+      (should= empty-1x5 (->board [] 5 1))
+      (should= (assoc empty-1x5 [0] 3 [1] 6 [2] 2)
+               (->board [3 6 2] 5 1))))
 
   (describe "mark-square"
     (it "Player 1 marks the first square"
