@@ -43,13 +43,14 @@
 (defn- ->cell [position dimensions size value]
   [(->cell-key position dimensions size) value])
 
-(defn- take-cells [cells size]
-  (take (* size size) (concat cells (repeat nil))))
+(defn- take-cells [cells size dimensions]
+  (take (pow size dimensions) (concat cells (repeat nil))))
 
 (defn ->board
-  ([cells] (->board cells 3))
-  ([cells size]
-   (util/map-into #(->cell %1 2 size %2) (range) (take-cells cells size))))
+  ([cells] (->board cells 3 2))
+  ([cells size] (->board cells size 2))
+  ([cells size dimensions]
+   (util/map-into #(->cell %1 dimensions size %2) (range) (take-cells cells size dimensions))))
 
 (defn mark-square [board cell token]
   (assoc board cell token))

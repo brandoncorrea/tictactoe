@@ -13,6 +13,17 @@
    [2 0] nil [2 1] nil [2 2] nil [2 3] nil
    [3 0] nil [3 1] nil [3 2] nil [3 3] nil})
 
+(def empty-3x3x3
+  {[0 0 0] nil [0 0 1] nil [0 0 2] nil
+   [0 1 0] nil [0 1 1] nil [0 1 2] nil
+   [0 2 0] nil [0 2 1] nil [0 2 2] nil
+   [1 0 0] nil [1 0 1] nil [1 0 2] nil
+   [1 1 0] nil [1 1 1] nil [1 1 2] nil
+   [1 2 0] nil [1 2 1] nil [1 2 2] nil
+   [2 0 0] nil [2 0 1] nil [2 0 2] nil
+   [2 1 0] nil [2 1 1] nil [2 1 2] nil
+   [2 2 0] nil [2 2 1] nil [2 2 2] nil})
+
 (def win-result {:draw false :game-over true :winner 1})
 (def draw-result {:draw true :game-over true :winner nil})
 (def game-not-over-result {:draw false :game-over false :winner nil})
@@ -55,7 +66,12 @@
                (->board (range 1 10))))
     (it "Can initialize 4x4 board"
       (should= (merge empty-4x4 {[0 0] 1 [0 1] 2 [0 2] 3})
-               (->board [1 2 3] 4))))
+               (->board [1 2 3] 4)))
+    (it "Can initialize 3x3x3 board"
+      (should= empty-3x3x3 (->board [] 3 3))
+      (should= (assoc empty-3x3x3 [0 0 0] 2
+                                  [0 0 1] 8
+                                  [0 0 2] 3) (->board [2 8 3] 3 3))))
 
   (describe "mark-square"
     (it "Player 1 marks the first square"
