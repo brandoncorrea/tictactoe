@@ -21,7 +21,18 @@
   (it "Characters don't include backslashes"
     (should= "[X O Y]\n[_ _ _]\n[_ _ _]" (format-board (->board [\X \O \Y]))))
   (it "Strings don't include quotation marks"
-    (should= "[A B C]\n[_ _ _]\n[_ _ _]" (format-board (->board ["A" "B" "C"])))))
+    (should= "[A B C]\n[_ _ _]\n[_ _ _]" (format-board (->board ["A" "B" "C"]))))
+  (it "Formats 1x5 board"
+    (should= "[1 _ 3 5 _]" (format-board (->board [1 nil 3 5] 5 1))))
+  (it "Formats 3x3x3 board"
+    (should= (str "[0 1 2]\t[9 10 11]\t[18 19 20]\n"
+                  "[3 4 5]\t[12 13 14]\t[21 22 23]\n"
+                  "[6 7 8]\t[15 16 17]\t[24 25 26]")
+             (format-board (->board (range) 3 3)))
+    (should= (str "[_ _ _]\t[_ _ _]\t[_ _ _]\n"
+                  "[_ _ _]\t[_ _ _]\t[_ _ _]\n"
+                  "[_ _ _]\t[_ _ _]\t[_ _ _]")
+             (format-board (->board [] 3 3)))))
 
 (describe "format-row"
   (it "Formats empty row with brackets"
