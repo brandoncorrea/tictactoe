@@ -25,8 +25,23 @@
   (let [[value & rest] (vals row)]
     (and (every? #(= value %) rest) value)))
 
-(defn- ->cell [position value size]
-  [[(quot position size) (rem position size)] value])
+(defn- pow [n e]
+  (if (zero? e)
+    1
+    (apply * (repeat e n))))
+
+(defn ->cell-key [position dimensions size]
+  (loop [pos position
+         cell []
+         dim (dec dimensions)]
+    (if (< dim 0)
+      (vec (reverse cell))
+      (recur (rem pos (pow size dim))
+             (cons (quot pos (pow size dim)) cell)
+             (dec dim)))))
+
+(defn- ->cell [position dimensions size value]
+  [(->cell-key position dimensions size) value])
 
 (defn- take-cells [cells size]
   (take (* size size) (concat cells (repeat nil))))
@@ -34,7 +49,7 @@
 (defn ->board
   ([cells] (->board cells 3))
   ([cells size]
-   (util/map-into #(->cell %1 %2 size) (range) (take-cells cells size))))
+   (util/map-into #(->cell %1 2 size %2) (range) (take-cells cells size))))
 
 (defn mark-square [board cell token]
   (assoc board cell token))

@@ -183,4 +183,33 @@
       (should= 2 (size [1 2 3 4]))
       (should= 3 (size [1 2 3 4 5 6 7 8 9]))
       (should= 3 (size (->board [])))
-      (should= 4 (size (->board [] 4))))))
+      (should= 4 (size (->board [] 4)))))
+
+  (describe "->cell-key"
+    (it "Results in empty vector for zero dimensions"
+      (should= [] (->cell-key 0 0 0)))
+    (it "Results in 1 dimensional positions"
+      (should= [0] (->cell-key 0 1 1))
+      (should= [1] (->cell-key 1 1 1))
+      (should= [2] (->cell-key 2 1 1))
+      (should= [5] (->cell-key 5 1 3)))
+    (it "Results in 2 dimensional positions"
+      (should= [0 0] (->cell-key 0 2 3))
+      (should= [0 2] (->cell-key 2 2 3))
+      (should= [1 0] (->cell-key 3 2 3))
+      (should= [2 1] (->cell-key 7 2 3)))
+    (it "Results in 3 dimensional positions"
+      (should= [0 0 0] (->cell-key 0 3 3))
+      (should= [0 0 1] (->cell-key 1 3 3))
+      (should= [0 1 2] (->cell-key 5 3 3))
+      (should= [2 1 1] (->cell-key 22 3 3))
+      (should= [2 2 2] (->cell-key 26 3 3)))
+    (it "Results in 4 dimensional positions"
+      (should= [0 0 0 0] (->cell-key 0 4 3))
+      (should= [0 0 0 1] (->cell-key 1 4 3))
+      (should= [0 0 1 1] (->cell-key 4 4 3))
+      (should= [0 1 0 2] (->cell-key 11 4 3))
+      (should= [1 0 2 2] (->cell-key 35 4 3))
+      (should= [0 0 2 1] (->cell-key 11 4 5))
+      (should= [0 2 2 4] (->cell-key 64 4 5))))
+  )
