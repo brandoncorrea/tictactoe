@@ -1,7 +1,9 @@
 (ns tic-tac-toe.game-board
-  (:require [tic-tac-toe.util.collections :as util]))
+  (:require [tic-tac-toe.util.collections :as util]
+            [tic-tac-toe.util.int-math :as math]))
 
-(defn size [board] (int (Math/sqrt (count board))))
+(defn dimensions [board] (count (ffirst board)))
+(defn size [board] (math/nth-root (count board) (dimensions board)))
 
 (defn- cell-empty? [[_ value]] (nil? value))
 (defn empty-cells [board]
@@ -25,26 +27,21 @@
   (let [[value & rest] (vals row)]
     (and (every? #(= value %) rest) value)))
 
-(defn- pow [n e]
-  (if (zero? e)
-    1
-    (apply * (repeat e n))))
-
 (defn ->cell-key [position dimensions size]
   (loop [pos position
          cell []
          dim (dec dimensions)]
     (if (< dim 0)
       (vec (reverse cell))
-      (recur (rem pos (pow size dim))
-             (cons (quot pos (pow size dim)) cell)
+      (recur (rem pos (math/pow size dim))
+             (cons (quot pos (math/pow size dim)) cell)
              (dec dim)))))
 
 (defn- ->cell [position dimensions size value]
   [(->cell-key position dimensions size) value])
 
 (defn- take-cells [cells size dimensions]
-  (take (pow size dimensions) (concat cells (repeat nil))))
+  (take (math/pow size dimensions) (concat cells (repeat nil))))
 
 (defn ->board
   ([cells] (->board cells 3 2))

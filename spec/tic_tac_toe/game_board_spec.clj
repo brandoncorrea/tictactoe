@@ -201,12 +201,20 @@
     (it "[0 0] results in false for empty vector"
       (should= false (valid-move? [] [0 0]))))
 
+  (describe "dimensions"
+    (it "Results in the number of elements in the first key"
+      (loop [[dim & rest] [1 2 3 4]]
+        (when dim
+          (should= dim (dimensions (->board [] 3 dim)))
+          (recur rest)))))
+
   (describe "size"
-    (it "Results in the square root of the size of the collection"
-      (should= 1 (size [1]))
-      (should= 2 (size [1 2 3 4]))
-      (should= 3 (size [1 2 3 4 5 6 7 8 9]))
+    (it "Results in the dimension's root of the size of the board"
+      (should= 5 (size empty-1x5))
+      (should= 3 (size empty-3x3))
+      (should= 3 (size empty-3x3x3))
       (should= 3 (size (->board [])))
+      (should= 4 (size empty-4x4))
       (should= 4 (size (->board [] 4)))))
 
   (describe "->cell-key"
