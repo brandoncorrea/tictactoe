@@ -2,7 +2,8 @@
   (:require [tic-tac-toe.ui.user-interface :as ui]
             [tic-tac-toe.game-board :as board]
             [tic-tac-toe.ui.game-board-formatter :as formatter]
-            [tic-tac-toe.util.collections :as util]))
+            [tic-tac-toe.util.collections :as util]
+            [tic-tac-toe.util.int-math :as math]))
 
 (def ^:private horizontal-line (apply str (repeat 15 "-")))
 (defn- show-board [board]
@@ -10,7 +11,7 @@
   (println (formatter/format-board board)))
 
 (defn parse-numbers [text]
-  (map #(Integer. %) (re-seq #"-?\d+" text)))
+  (map math/string->int (re-seq #"-?\d+" text)))
 
 (defn write-header [message]
   (println horizontal-line)
