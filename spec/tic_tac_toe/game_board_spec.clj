@@ -138,7 +138,18 @@
                (rows empty-4x4)))
     (it "Returns ordered row data for board with values 1 - 16"
       (should= (take 4 (partition 4 4 (range 1 17)))
-               (rows (->board (range 1 17) 4)))))
+               (rows (->board (range 1 17) 4))))
+    (it "Returns one row for 1D board"
+      (should= [[nil nil nil nil nil]] (rows empty-1x5))
+      (should= [[1 2 3 4 5]] (rows (->board [1 2 3 4 5] 5 1))))
+    (it "Returns all rows for all pages in 3x3x3 board"
+      (should= [[0 1 2] [3 4 5] [6 7 8]
+                [9 10 11] [12 13 14] [15 16 17]
+                [18 19 20] [21 22 23] [24 25 26]]
+               (rows (->board (range) 3 3))))
+    (it "Returns all rows for all pages in 3x3x3x3"
+      (should= (partition 3 (range 81))
+               (rows (->board (range 81) 3 4)))))
 
   (describe "full-board?"
     (it "Empty board results in false"

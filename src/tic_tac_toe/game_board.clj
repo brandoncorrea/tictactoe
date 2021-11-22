@@ -18,7 +18,7 @@
       [(util/filter-into (fn [[[r c] _]] (= size (+ r c))) board)])))
 
 (defn rows [board]
-  (map util/sorted-values (sort-by first (util/group-into ffirst board))))
+  (partition (size board) (util/sorted-values board)))
 
 (defn full-board? [board]
   (every? identity (vals board)))
