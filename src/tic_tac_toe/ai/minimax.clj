@@ -1,4 +1,4 @@
-(ns tic-tac-toe.minimax
+(ns tic-tac-toe.ai.minimax
   (:require [tic-tac-toe.game-board :as board]
             [tic-tac-toe.util.int-math :as math]))
 
@@ -64,9 +64,9 @@
     (cond
       (:game-over results) (value-of results maximizing-token depth)
       (= maximizing-token cur-token)
-        (maximize board depth limit maximizing-token minimizing-token)
+      (maximize board depth limit maximizing-token minimizing-token)
       :else
-        (minimize board depth limit maximizing-token minimizing-token))))
+      (minimize board depth limit maximizing-token minimizing-token))))
 
 (defn optimal-move
   ([board maximizing-token minimizing-token]

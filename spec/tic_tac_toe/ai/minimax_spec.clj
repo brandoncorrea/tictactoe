@@ -1,6 +1,6 @@
-(ns tic-tac-toe.minimax-spec
+(ns tic-tac-toe.ai.minimax-spec
   (:require [speclj.core :refer :all]
-            [tic-tac-toe.minimax :refer :all]
+            [tic-tac-toe.ai.minimax :refer :all]
             [tic-tac-toe.game-board :refer :all]))
 
 (def empty-board (->board []))
@@ -42,8 +42,8 @@
     (should= [0 []] (minimax (->board (range)) 0 100 \X \O \X)))
   (it "One empty space for a draw results in 0 with the one-cell mapping"
     (should= [0 [[0 []]]] (minimax (->board [nil \X \O
-                                   \O  \X  \X
-                                   \X \O \O]) 0 100 \X \O \X)))
+                                             \O  \X  \X
+                                             \X \O \O]) 0 100 \X \O \X)))
   (it "Two empty spaces results in both cells' result mapping"
     (should= [0 [[0 [[0 []]]] [-1/4 [[-1/4 []]]]]]
              (minimax (->board [nil \X \O
@@ -78,8 +78,8 @@
 
   (it "Chooses best of available options - T - LEFT"
     (should-contain (optimal-move (->board [\O nil nil
-                                             \X \X \O
-                                             \O nil nil]) \X \O)
+                                            \X \X \O
+                                            \O nil nil]) \X \O)
                     [[0 1] [2 1]]))
 
   (it "Chooses best of available options - T - BOTTOM"
@@ -96,9 +96,9 @@
 
   (it "Chooses best of available options - Dipper - Bottom-Right"
     (should-contain (optimal-move (->board [\O nil nil
-                                             nil \X \O
-                                             nil \O \X]) \X \O)
-                     [[0 2] [2 0]]))
+                                            nil \X \O
+                                            nil \O \X]) \X \O)
+                    [[0 2] [2 0]]))
 
   (it "Chooses best of available options - Dipper - Bottom-Left"
     (should-contain (optimal-move (->board [nil nil \O
