@@ -60,6 +60,15 @@
     (println "2.) 4x4")
     (request-int-option {1 3 2 4} "Choose Board Size"))
 
+  (request-board-dimensions [_ size]
+    (if (not= 3 size)
+      2
+      (do
+        (write-header "Board Dimensions")
+        (println "1.) 2D")
+        (println "2.) 3D")
+        (request-int-option {1 2 2 3} "Choose Board Dimensions"))))
+
   (request-difficulty [_]
     (write-header "Difficulty")
     (println "1. Easy")

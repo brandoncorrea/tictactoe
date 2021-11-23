@@ -70,6 +70,21 @@
     (it "Entering 1 results in 3"
       (should= 4 (with-in-str "2" (request-board-size io)))))
 
+  (describe "request-board-dimensions"
+    (it "Request message is written to output"
+      (out-should= (str header-line "Board Dimensions\n" header-line
+                        "1.) 2D\n"
+                        "2.) 3D\n"
+                        "Choose Board Dimensions > ")
+                   (with-in-str "1" (request-board-dimensions io 3))))
+    (it "Results in 2 if size is not 3"
+      (out-should= "" (request-board-dimensions io 2))
+      (out-should= "" (request-board-dimensions io 4))
+      (should= 2 (request-board-dimensions io 2))
+      (should= 2 (request-board-dimensions io 4))
+      (should= 2 (with-in-str "1" (request-board-dimensions io 3)))
+      (should= 3 (with-in-str "2" (request-board-dimensions io 3)))))
+
   (describe "request-difficulty"
     (it "Request prints out a message to the console"
       (out-should= (str header-line "Difficulty\n" header-line
