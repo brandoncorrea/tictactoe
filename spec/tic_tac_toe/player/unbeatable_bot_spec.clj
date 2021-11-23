@@ -1,19 +1,19 @@
-(ns tic-tac-toe.player.hard-bot-spec
+(ns tic-tac-toe.player.unbeatable-bot-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.player.player :refer :all]
-            [tic-tac-toe.player.hard-bot :refer :all]
+            [tic-tac-toe.player.unbeatable-bot :refer :all]
             [tic-tac-toe.game-board :refer :all]))
 
-(def bot (->hard-bot \X \O))
+(def bot (->unbeatable-bot \X \O))
 
 (describe "->hard-bot"
   (it "Hard bot is associated with the token it was given"
-    (should= \X (:token (->hard-bot \X \O)))
-    (should= \O (:token (->hard-bot \O \X)))
-    (should= 321 (:token (->hard-bot 321 \O))))
+    (should= \X (:token (->unbeatable-bot \X \O)))
+    (should= \O (:token (->unbeatable-bot \O \X)))
+    (should= 321 (:token (->unbeatable-bot 321 \O))))
   (it "Hard bot holds the opponent's token"
-    (should= \O (:opponent (->hard-bot \X \O)))
-    (should= \X (:opponent (->hard-bot \O \X)))))
+    (should= \O (:opponent (->unbeatable-bot \X \O)))
+    (should= \X (:opponent (->unbeatable-bot \O \X)))))
 
 (describe "next-move"
   (it "Empty board results in corner square"
