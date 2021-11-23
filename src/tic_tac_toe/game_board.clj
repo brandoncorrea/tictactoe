@@ -9,13 +9,37 @@
 (defn empty-cells [board]
   (map first (filter cell-empty? board)))
 
-(defn series [board]
+(defmulti series dimensions)
+
+(defmethod series :default [board]
   (let [size (dec (size board))]
     (concat
       (util/group-into ffirst board)
       (util/group-into #(second (first %)) board)
       [(util/filter-into (fn [[[r c] _]] (= r c)) board)]
       [(util/filter-into (fn [[[r c] _]] (= size (+ r c))) board)])))
+
+(defmethod series 3 [board]
+  (let [size (dec (size board))]
+    (concat
+      (util/group-into #(take 2 (first %)) board)
+      (util/group-into #(drop 1 (first %)) board)
+      (util/group-into (fn [[[x _ z] _]] [x z]) board)
+      (map (partial util/filter-into (fn [[[_ y z] _]] (= y z))) (util/group-into ffirst board))
+      (map (partial util/filter-into (fn [[[_ y z] _]] (= size (+ y z)))) (util/group-into ffirst board))
+      (map (partial util/filter-into (fn [[[x _ z] _]] (= x z))) (util/group-into #(second (first %)) board))
+      (map (partial util/filter-into (fn [[[x _ z] _]] (= size (+ x z)))) (util/group-into #(second (first %)) board))
+      (map (partial util/filter-into (fn [[[x y _] _]] (= x y))) (util/group-into #(last (first %)) board))
+      (map (partial util/filter-into (fn [[[x y _] _]] (= size (+ x y)))) (util/group-into #(last (first %)) board))
+      (if (= 1 size)
+        [(into {} (filter (fn [[key _]] (contains? #{[0 1 0] [1 0 1]} key)) board))
+         (into {} (filter (fn [[key _]] (contains? #{[0 1 1] [1 0 0]} key)) board))
+         (into {} (filter (fn [[key _]] (contains? #{[0 0 0] [1 1 1]} key)) board))
+         (into {} (filter (fn [[key _]] (contains? #{[0 0 1] [1 1 0]} key)) board))]
+        [(into {} (filter (fn [[key _]] (contains? #{[0 2 0] [1 1 1] [2 0 2]} key)) board))
+         (into {} (filter (fn [[key _]] (contains? #{[0 2 2] [1 1 1] [2 0 0]} key)) board))
+         (into {} (filter (fn [[key _]] (contains? #{[0 0 0] [1 1 1] [2 2 2]} key)) board))
+         (into {} (filter (fn [[key _]] (contains? #{[0 0 2] [1 1 1] [2 2 0]} key)) board))]))))
 
 (defn rows [board]
   (partition (size board) (util/sorted-values board)))
