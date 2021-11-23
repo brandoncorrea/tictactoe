@@ -338,7 +338,13 @@
           (should= false (valid-move? (mark-square empty-3x3 move 1) move))
           (recur rest-moves))))
     (it "[0 0] results in false for empty vector"
-      (should= false (valid-move? [] [0 0]))))
+      (should= false (valid-move? [] [0 0])))
+    (it "3D move results in false for 2D board"
+      (should= false (valid-move? empty-3x3 [0 0 0])))
+    (it "2D move results in false for 3D board"
+      (should= false (valid-move? empty-3x3x3 [0 0])))
+    (it "3D move is valid for 3D board"
+      (should= true (valid-move? empty-3x3x3 [0 0 0]))))
 
   (describe "dimensions"
     (it "Results in the number of elements in the first key"

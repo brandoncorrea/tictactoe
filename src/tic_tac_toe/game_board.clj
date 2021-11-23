@@ -86,8 +86,8 @@
       {:draw true :game-over true :winner nil}
       {:draw false :game-over false :winner nil})))
 
-(defn valid-move? [board [row col & rest]]
-  (let [found (get board [row col] :not-found)]
-    (and (empty? rest)
+(defn valid-move? [board cell]
+  (let [found (get board cell :not-found)]
+    (and (= (count cell) (dimensions board))
          (nil? found)
          (not= found :not-found))))
