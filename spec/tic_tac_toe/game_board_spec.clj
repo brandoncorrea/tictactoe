@@ -285,7 +285,13 @@
     (it "Results in true when there are no nil values in 4x4"
       (should= true (full-board? (->board (range) 4))))
     (it "Results in false when there is one empty cell in 4x4"
-      (should= false (full-board? (->board (range 1 16) 4)))))
+      (should= false (full-board? (->board (range 1 16) 4))))
+    (it "Empty 3x3x3 results in false"
+      (should= false (full-board? empty-3x3x3)))
+    (it "Full 3x3x3 results in true"
+      (should= true (full-board? (->board (range) 3 3))))
+    (it "Full 3x3x3 except for one cell results in false"
+      (should= false (full-board? (->board (range 26) 3 3)))))
 
   (describe "game-results"
     (it "Empty game board results in game not over"
