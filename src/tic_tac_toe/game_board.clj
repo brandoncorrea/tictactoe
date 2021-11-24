@@ -5,7 +5,7 @@
 (defn dimensions [board] (count (ffirst board)))
 (defn size [board] (math/nth-root (count board) (dimensions board)))
 
-(defn- cell-empty? [[_ value]] (nil? value))
+(defn cell-empty? [[_ value]] (nil? value))
 (defn empty-cells [board]
   (map first (filter cell-empty? board)))
 

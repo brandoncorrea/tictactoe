@@ -8,16 +8,16 @@
 
 (describe "->bot"
   (it ":easy difficulty results in an easy bot"
-    (should= (->random-ai \X) (->bot :easy \O \X))
-    (should= (->random-ai \O) (->bot :easy \X \O))
-    (should= (->random-ai 456) (->bot :easy 123 456)))
+    (should= (->random-ai \X) (->bot :easy \O \X 2))
+    (should= (->random-ai \O) (->bot :easy \X \O 2))
+    (should= (->random-ai 456) (->bot :easy 123 456 2)))
   (it ":medium difficulty results in a medium bot"
-    (should= (->medium-bot \X \O) (->bot :medium \O \X))
-    (should= (->medium-bot \O \X) (->bot :medium \X \O))
-    (should= (->medium-bot 456 123) (->bot :medium 123 456)))
+    (should= (->medium-bot \X \O) (->bot :medium \O \X 2))
+    (should= (->medium-bot \O \X) (->bot :medium \X \O 2))
+    (should= (->medium-bot 456 123) (->bot :medium 123 456 2)))
   (it ":hard difficulty results in a hard bot"
-    (should= (->unbeatable-ai \X \O) (->bot :hard \O \X))
-    (should= (->unbeatable-ai \O \X) (->bot :hard \X \O))
-    (should= (->unbeatable-ai 456 123) (->bot :hard 123 456)))
+    (should= (->unbeatable-ai \X \O) (->bot :hard \O \X 2))
+    (should= (->unbeatable-ai \O \X) (->bot :hard \X \O 2))
+    (should= (->unbeatable-ai 456 123) (->bot :hard 123 456 2)))
   (it "default bot is hard difficulty"
-    (should= (->unbeatable-ai \X \O) (->bot nil \O \X))))
+    (should= (->unbeatable-ai \X \O) (->bot nil \O \X 2))))
