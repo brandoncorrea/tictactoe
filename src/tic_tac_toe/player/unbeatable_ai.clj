@@ -3,7 +3,7 @@
             [tic-tac-toe.ai.minimax :as minimax]))
 
 (defn ->unbeatable-ai [token opponent]
-  (assoc (player/->player token :unbeatable) :opponent opponent))
+  (player/->player :unbeatable token opponent))
 
 (defmethod player/next-move :unbeatable [player board]
   (minimax/optimal-move board (:token player) (:opponent player)))

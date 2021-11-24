@@ -3,7 +3,7 @@
             [tic-tac-toe.ai.minimax :as minimax]))
 
 (defn ->medium-bot [token opponent]
-  (assoc (player/->player token :medium) :opponent opponent))
+  (player/->player :medium token opponent))
 
 (defmethod player/next-move :medium [player board]
   (minimax/optimal-move board (:token player) (:opponent player) 4))

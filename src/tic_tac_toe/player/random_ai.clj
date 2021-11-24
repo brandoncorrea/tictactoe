@@ -3,7 +3,7 @@
             [tic-tac-toe.game-board :as board]))
 
 (defn ->random-ai [token]
-  (player/->player token :random))
+  (player/->player :random token))
 
 (defmethod player/next-move :random [_ board]
   (let [cells (board/empty-cells board)]

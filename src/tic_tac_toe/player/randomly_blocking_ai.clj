@@ -3,7 +3,7 @@
             [tic-tac-toe.game-board :as board]))
 
 (defn ->randomly-blocking-ai [token opponent]
-  (assoc (player/->player token :randomly-blocking) :opponent opponent))
+  (player/->player :randomly-blocking token opponent))
 
 (defn- block? [percentage]
   (< (rand-int 100) percentage))
