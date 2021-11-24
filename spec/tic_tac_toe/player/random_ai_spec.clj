@@ -1,18 +1,18 @@
-(ns tic-tac-toe.player.random-bot-spec
+(ns tic-tac-toe.player.random-ai-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.player.player :refer :all]
-            [tic-tac-toe.player.random-bot :refer :all]
+            [tic-tac-toe.player.random-ai :refer :all]
             [tic-tac-toe.game-board :as game]))
 
-(def bot (->random-bot \X))
+(def bot (->random-ai \X))
 
-(describe "->easy-bot"
+(describe "->random-ai"
   (it "Easy bot contains the token it was given"
-    (should= \X (:token (->random-bot \X)))
-    (should= \O (:token (->random-bot \O)))
-    (should= 123 (:token (->random-bot 123))))
+    (should= \X (:token (->random-ai \X)))
+    (should= \O (:token (->random-ai \O)))
+    (should= 123 (:token (->random-ai 123))))
   (it "Easy bot is of type :easy"
-    (should= :random (:type (->random-bot nil)))))
+    (should= :random (:type (->random-ai nil)))))
 
 (describe "next-move"
   (it "Next move results in last available cell"

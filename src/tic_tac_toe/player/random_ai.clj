@@ -1,8 +1,8 @@
-(ns tic-tac-toe.player.random-bot
+(ns tic-tac-toe.player.random-ai
   (:require [tic-tac-toe.player.player :as player]
             [tic-tac-toe.game-board :as board]))
 
-(defn ->random-bot [token]
+(defn ->random-ai [token]
   (player/->player token :random))
 
 (defmethod player/next-move :random [_ board]

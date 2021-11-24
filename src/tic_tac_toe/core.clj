@@ -3,9 +3,9 @@
             [tic-tac-toe.ui.user-interface :as ui]
             [tic-tac-toe.ui.console-io :as console]
             [tic-tac-toe.player.player :as player]
-            [tic-tac-toe.player.random-bot :as random-bot]
+            [tic-tac-toe.player.random-ai :as random-ai]
             [tic-tac-toe.player.medium-bot :as medium-bot]
-            [tic-tac-toe.player.unbeatable-bot :as unbeatable-bot]
+            [tic-tac-toe.player.unbeatable-ai :as unbeatable-ai]
             [tic-tac-toe.player.human :as human]))
 
 (defn- play [io player-1 player-2]
@@ -20,9 +20,9 @@
 
 (defn ->bot [difficulty token-1 token-2]
   (cond
-    (= difficulty :easy) (random-bot/->random-bot token-2)
+    (= difficulty :easy) (random-ai/->random-ai token-2)
     (= difficulty :medium) (medium-bot/->medium-bot token-2 token-1)
-    :else (unbeatable-bot/->unbeatable-bot token-2 token-1)))
+    :else (unbeatable-ai/->unbeatable-ai token-2 token-1)))
 
 (defn- new-game [io token-1 token-2]
   (if (= :player-vs-player (ui/request-game-mode io))
