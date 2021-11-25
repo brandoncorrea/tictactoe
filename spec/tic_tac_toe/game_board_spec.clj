@@ -1,6 +1,7 @@
 (ns tic-tac-toe.game-board-spec
   (:require [speclj.core :refer :all]
-            [tic-tac-toe.game-board :refer :all]))
+            [tic-tac-toe.game-board :refer :all]
+            [tic-tac-toe.util.collections :refer [any]]))
 
 (def empty-1x5
   {[0] nil [1] nil [2] nil [3] nil [4] nil})
@@ -41,6 +42,29 @@
   [[] [0] [0 0 0] [3 2] [3 3] [2 3] [4 2] [2 4] [-1 0] [0 -1]])
 (def valid-moves
   [[0 0] [1 1] [0 1] [1 0]])
+
+(def non-winning-paths
+  [{[0 0] nil [0 1] nil [0 2] nil}
+   {[0 0] \X [0 1] nil [0 2] nil}
+   {[0 0] nil [0 1] \X [0 2] nil}
+   {[0 0] nil [0 1] nil [0 2] \X}
+   {[0 0] \X [0 1] \O [0 2] nil}
+   {[0 0] \O [0 1] \X [0 2] nil}
+   {[0 0] \X [0 1] nil [0 2] \O}
+   {[0 0] \O [0 1] nil [0 2] \X}
+   {[0 0] nil [0 1] \X [0 2] \O}
+   {[0 0] nil [0 1] \O [0 2] \X}])
+
+(def winning-paths
+  [{[0 0] \X [0 1] \X [0 2] nil}
+   {[0 0] \X [0 1] nil [0 2] \X}
+   {[0 0] nil [0 1] \X [0 2] \X}])
+
+(defn test-winning-path [expected paths]
+  (loop [[path & rest] paths]
+    (when path
+      (should= expected (winning-path? \X path))
+      (recur rest))))
 
 (describe "game-board"
   (describe "->board"
@@ -388,4 +412,18 @@
       (should= [0 1 0 2] (->cell-key 11 4 3))
       (should= [1 0 2 2] (->cell-key 35 4 3))
       (should= [0 0 2 1] (->cell-key 11 4 5))
-      (should= [0 2 2 4] (->cell-key 64 4 5)))))
+      (should= [0 2 2 4] (->cell-key 64 4 5))))
+
+  (describe "winning-cell"
+    (it "Results in nil when there are no winning paths"
+      (should= nil (winning-cell \X (series empty-3x3))))
+    (it "Results in last empty cell for winning paths"
+      (loop [[path & rest] winning-paths]
+        (when path
+          (should= (any-empty-cell path)
+                   (winning-cell \X (series (merge empty-3x3 path))))
+          (recur rest)))))
+
+  (describe "winning-path?"
+    (it "Results in false" (test-winning-path false non-winning-paths))
+    (it "Results in true" (test-winning-path true winning-paths))))

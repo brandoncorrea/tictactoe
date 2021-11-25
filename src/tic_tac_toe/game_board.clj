@@ -8,6 +8,22 @@
 (defn cell-empty? [[_ value]] (nil? value))
 (defn empty-cells [board]
   (map first (filter cell-empty? board)))
+(defn any-empty-cell [path]
+  (first (util/any cell-empty? path)))
+
+(defn winning-path? [token path]
+  (let [values (vals path)
+        unchecked-cells (filter (partial not= token) values)]
+    (and (= 1 (count unchecked-cells))
+         (nil? (first unchecked-cells)))))
+
+(defn- winning-paths [token paths]
+  (filter #(winning-path? token %) paths))
+(defn incomplete-paths [paths]
+  (filter #(some cell-empty? %) paths))
+
+(defn winning-cell [token paths]
+  (first (map any-empty-cell (winning-paths token paths))))
 
 (defmulti series dimensions)
 

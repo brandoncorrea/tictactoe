@@ -5,7 +5,8 @@
             [tic-tac-toe.player.player :as player]
             [tic-tac-toe.player.random-ai :as random-ai]
             [tic-tac-toe.player.medium-bot :as medium-bot]
-            [tic-tac-toe.player.randomly-blocking-ai :as randomly-blocking-ai]
+            [tic-tac-toe.player.randomly-blocking-ai :as blocking-ai]
+            [tic-tac-toe.player.advanced-blocking-ai :as advanced-ai]
             [tic-tac-toe.player.unbeatable-ai :as unbeatable-ai]
             [tic-tac-toe.player.human :as human]))
 
@@ -27,8 +28,8 @@
         (unbeatable-ai/->unbeatable-ai token-2 token-1))
     :else
       (if (= difficulty :medium)
-        (randomly-blocking-ai/->randomly-blocking-ai token-2 token-1)
-        (unbeatable-ai/->unbeatable-ai token-2 token-1))))
+        (blocking-ai/->randomly-blocking-ai token-2 token-1)
+        (advanced-ai/->advanced-blocking-ai token-2 token-1))))
 
 (defn- player-vs-player? [io]
   (= :player-vs-player (ui/request-game-mode io)))
