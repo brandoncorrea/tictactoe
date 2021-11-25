@@ -24,10 +24,10 @@
   (parse-numbers (read-line)))
 
 (defn- request-numbers-until [pred message]
-  (util/find-first pred (repeatedly #(request-numbers message))))
+  (util/any pred (repeatedly #(request-numbers message))))
 
 (defn- request-int-until [pred message]
-  (util/find-first pred (map first (take-while #(= 1 (count %)) (repeatedly #(request-numbers message))))))
+  (util/any pred (map first (take-while #(= 1 (count %)) (repeatedly #(request-numbers message))))))
 
 (defn- request-int-option [options message]
   (get options (request-int-until (set (keys options)) message)))
