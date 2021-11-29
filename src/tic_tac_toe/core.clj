@@ -12,10 +12,12 @@
             [tic-tac-toe.resources.data :as data]
             [tic-tac-toe.resources.datomic-db :as datomic-db]))
 
+(def datomic-uri "datomic:free://localhost:4334/ttt-games-db")
+
 (defn- play [io db board player-1 player-2]
   (loop [board board
          [player next-player] [player-1 player-2]]
-    (data/save-game db board player next-player)
+    (data/save-game db board (dissoc player :ui) (dissoc next-player :ui))
     (let [results (board/game-results board)]
       (if (:game-over results)
         (ui/show-results io board)
@@ -52,14 +54,17 @@
        (not (:game-over (board/game-results (:board game))))))
 
 (defn- resume [io db game]
-  (play io db (:board game) (:next-player game) (:second-player game)))
+  (play io db (:board game)
+        (assoc (:next-player game) :ui io)
+        (assoc (:second-player game) :ui io)))
 
 (defn -main [& _]
   (let [io (console/->ConsoleIO)
-        db (datomic-db/->datomic-db "datomic:mem://ttt-test-db")
+        db (datomic-db/->datomic-db datomic-uri)
         game (data/last-saved-game db)]
     (ui/show-title io)
     (ui/show-instructions io)
     (if (can-resume? game)
       (resume io db game)
-      (new-game io db \X \O))))
+      (new-game io db \X \O))
+    (data/disconnect db)))
