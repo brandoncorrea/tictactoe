@@ -8,11 +8,14 @@
             [tic-tac-toe.player.randomly-blocking-ai :as blocking-ai]
             [tic-tac-toe.player.advanced-blocking-ai :as advanced-ai]
             [tic-tac-toe.player.unbeatable-ai :as unbeatable-ai]
-            [tic-tac-toe.player.human :as human]))
+            [tic-tac-toe.player.human :as human]
+            [tic-tac-toe.resources.data :as data]
+            [tic-tac-toe.resources.datomic-db :as datomic-db]))
 
-(defn- play [io board player-1 player-2]
+(defn- play [io db board player-1 player-2]
   (loop [board board
          [player next-player] [player-1 player-2]]
+    (data/save-game db board player next-player)
     (let [results (board/game-results board)]
       (if (:game-over results)
         (ui/show-results io board)
@@ -34,18 +37,29 @@
 (defn- player-vs-player? [io]
   (= :player-vs-player (ui/request-game-mode io)))
 
-(defn- new-game [io token-1 token-2]
+(defn- new-game [io db token-1 token-2]
   (let [size (ui/request-board-size io)
         dimensions (ui/request-board-dimensions io size)]
-    (play io
+    (play io db
           (board/->board [] size dimensions)
           (human/->human token-1 io)
           (if (player-vs-player? io)
             (human/->human token-2 io)
             (->bot (ui/request-difficulty io) token-1 token-2 dimensions)))))
 
+(defn- can-resume? [game]
+  (and game
+       (not (:game-over (board/game-results (:board game))))))
+
+(defn- resume [io db game]
+  (play io db (:board game) (:next-player game) (:second-player game)))
+
 (defn -main [& _]
-  (let [io (console/->ConsoleIO)]
+  (let [io (console/->ConsoleIO)
+        db (datomic-db/->datomic-db "datomic:dev://localhost:4334/hello")
+        game (data/last-saved-game db)]
     (ui/show-title io)
     (ui/show-instructions io)
-    (new-game io \X \O)))
+    (if (can-resume? game)
+      (resume io db game)
+      (new-game io db \X \O))))
