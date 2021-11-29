@@ -42,3 +42,7 @@
 
 (defmethod data/last-saved-game :datomic [db]
   (last (sort-by :ts (data/find-all-games db))))
+
+(defmethod data/disconnect :datomic [{conn :connection}]
+  (d/release conn)
+  (d/shutdown true))

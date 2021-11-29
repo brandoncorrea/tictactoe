@@ -80,3 +80,10 @@
         (when game
           (save-game db (:board game) (:next-player game) (:second-player game))
           (recur rest (cons game added)))))))
+
+(describe "disconnect"
+  (it "Shuts down all connections"
+    (let [db (recreate-db)]
+      (should= [] (find-all-games db))
+      (disconnect db)
+      (should-throw (find-all-games db)))))
