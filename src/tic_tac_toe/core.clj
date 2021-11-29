@@ -56,7 +56,7 @@
 
 (defn -main [& _]
   (let [io (console/->ConsoleIO)
-        db (datomic-db/->datomic-db "datomic:dev://localhost:4334/hello")
+        db (datomic-db/->datomic-db "datomic:mem://ttt-test-db")
         game (data/last-saved-game db)]
     (ui/show-title io)
     (ui/show-instructions io)
