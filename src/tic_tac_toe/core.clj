@@ -50,7 +50,9 @@
                       (->bot (ui/request-difficulty io) token-1 token-2 size dimensions)))))
 
 (defn- should-resume? [game io]
-  (and game (ui/resume-game? io)))
+  (and game
+       (-> game :board board/game-results :game-over not)
+       (ui/resume-game? io)))
 
 (defn- resume [io db game]
   (play io db
