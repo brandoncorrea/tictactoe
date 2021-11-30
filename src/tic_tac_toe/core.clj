@@ -49,9 +49,10 @@
             (human/->human token-2 io)
             (->bot (ui/request-difficulty io) token-1 token-2 dimensions)))))
 
-(defn- can-resume? [game]
+(defn- should-resume? [game io]
   (and game
-       (not (:game-over (board/game-results (:board game))))))
+       (not (:game-over (board/game-results (:board game))))
+       (ui/resume-game? io)))
 
 (defn- resume [io db game]
   (play io db (:board game)
@@ -64,7 +65,7 @@
         game (data/last-saved-game db)]
     (ui/show-title io)
     (ui/show-instructions io)
-    (if (can-resume? game)
+    (if (should-resume? game io)
       (resume io db game)
       (new-game io db \X \O))
     (data/disconnect db)))
