@@ -44,7 +44,7 @@
         (should= {:board board
                   :next-player cur
                   :second-player next}
-                 (dissoc (last-saved-game db) :ts))
+                 (dissoc (last-saved-game db) :ts :id))
         (when cell
           (recur (assoc board cell (:token cur)) [next cur] rest))))))
 
@@ -55,13 +55,13 @@
       (should= {:board empty-3x3
                 :next-player bot-player
                 :second-player human-player}
-               (dissoc (last-saved-game db) :ts)))))
+               (dissoc (last-saved-game db) :ts :id)))))
 
 (describe "find-all-games"
   (it "Contains :board, :turn, and :ts keys"
     (let [db (recreate-db)]
       (save-game db {} {} {})
-      (should= #{:ts :board :next-player :second-player}
+      (should= #{:id :ts :board :next-player :second-player}
                (-> (find-all-games db) first keys set))))
 
   (it "Results in all saved games"
@@ -76,7 +76,7 @@
                              :next-player human-player
                              :second-player bot-player}]
              added []]
-        (should= (set added) (set (map #(dissoc % :ts) (find-all-games db))))
+        (should= (set added) (set (map #(dissoc % :ts :id) (find-all-games db))))
         (when game
           (save-game db (:board game) (:next-player game) (:second-player game))
           (recur rest (cons game added)))))))
@@ -97,14 +97,14 @@
       (should= [] (incomplete-games db)))
     (it "Contains keys: :board, :next-player, :second-player, :ts"
       (save-game db {} {} {})
-      (should= [:ts :board :next-player :second-player] (first (incomplete-games db))))
+      (should= [:id :ts :board :next-player :second-player] (first (incomplete-games db))))
     (it "Results every saved and incomplete game"
       (loop [[game & rest] [{:board (board/->board []) :next-player {} :second-player {}}
                             {:board (board/->board [1]) :next-player {:a :b} :second-player {:c :d}}
                             {:board (board/->board [1 2]) :next-player {:e :f} :second-player {:g :h}}
                             {:board (board/->board [1 2 3]) :next-player {:i :j} :second-player {:k :l}}]
              added []]
-        (should= (set added) (set (map #(dissoc % :ts) (incomplete-games db))))
+        (should= (set added) (set (map #(dissoc % :ts :id) (incomplete-games db))))
         (when game
           (save-game db (:board game) (:next-player game) (:second-player game))
           (recur rest (cons game added)))))))

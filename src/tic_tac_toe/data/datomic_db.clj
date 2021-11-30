@@ -5,10 +5,11 @@
 
 (def ^:private schema (load-file "src/tic_tac_toe/data/schema.edn"))
 
-(defn- deserialize-game [[ts board next-player second-player]]
-  {:ts    ts
-   :board (read-string board)
-   :next-player (read-string next-player)
+(defn- deserialize-game [[id ts board next-player second-player]]
+  {:id            id
+   :ts            ts
+   :board         (read-string board)
+   :next-player   (read-string next-player)
    :second-player (read-string second-player)})
 
 (defn ->datomic-db [uri]
@@ -18,15 +19,19 @@
     {:type       :datomic
      :connection conn}))
 
-(defmethod data/save-game :datomic [{conn :connection} board next-player second-player]
-  @(d/transact conn
-               [{:game/ts    (new java.util.Date)
-                 :game/board (str board)
-                 :game/next-player (str next-player)
-                 :game/second-player (str second-player)}]))
+(defmethod data/save-game :datomic
+  ([db board next-player second-player]
+   (data/save-game db board next-player second-player (d/tempid :db.part/user)))
+  ([{conn :connection} board next-player second-player id]
+   @(d/transact conn
+                [{:db/id              id
+                  :game/ts            (new java.util.Date)
+                  :game/board         (str board)
+                  :game/next-player   (str next-player)
+                  :game/second-player (str second-player)}])))
 
 (defn- games [{conn :connection}]
-  (d/q '[:find  ?ts ?board ?next-player ?second-player
+  (d/q '[:find  ?eid ?ts ?board ?next-player ?second-player
          :where [?eid :game/ts ?ts]
                 [?eid :game/board ?board]
                 [?eid :game/next-player ?next-player]
