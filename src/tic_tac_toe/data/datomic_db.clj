@@ -19,18 +19,16 @@
     {:type       :datomic
      :connection conn}))
 
-(def transact-id (comp first vals :tempids))
-
 (defmethod data/save-game :datomic
   ([db board next-player second-player]
    (data/save-game db board next-player second-player (d/tempid :db.part/user)))
   ([{conn :connection} board next-player second-player id]
-   (d/id @(d/transact conn
-                      [{:db/id              id
-                        :game/ts            (new java.util.Date)
-                        :game/board         (str board)
-                        :game/next-player   (str next-player)
-                        :game/second-player (str second-player)}]))))
+   @(d/transact conn
+                [{:db/id              id
+                  :game/ts            (new java.util.Date)
+                  :game/board         (str board)
+                  :game/next-player   (str next-player)
+                  :game/second-player (str second-player)}])))
 
 (defn- games [{conn :connection}]
   (d/q '[:find  ?eid ?ts ?board ?next-player ?second-player

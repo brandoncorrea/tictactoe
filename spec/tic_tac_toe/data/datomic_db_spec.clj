@@ -49,10 +49,6 @@
           (recur (assoc board cell (:token cur)) [next cur] rest))))))
 
 (describe "save-game"
-  (it "Results in game ID"
-    (let [id (save-game (recreate-db) empty-3x3 bot-player human-player)]
-      (should= true (pos? id))
-      (should= true (integer? id))))
   (it "Adds game state"
     (let [db (recreate-db)]
       (save-game db empty-3x3 bot-player human-player)
@@ -65,7 +61,7 @@
       (save-game db empty-3x3 bot-player human-player)
       (let [{id :id board :board} (first (find-all-games db))]
         (should= 1 (count (find-all-games db)))
-        (should= id (save-game db (assoc board [0 0] \X) human-player bot-player id))
+        (save-game db (assoc board [0 0] \X) human-player bot-player id)
         (should= 1 (count (find-all-games db)))
         (save-game db (assoc board [0 0] \X [0 1] \O) bot-player human-player id)
         (should= 1 (count (find-all-games db)))))))
