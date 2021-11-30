@@ -17,7 +17,7 @@
 (defn- play [io db board player-1 player-2]
   (loop [board board
          [player next-player] [player-1 player-2]]
-    (data/save-game db board (dissoc player :ui) (dissoc next-player :ui))
+    (data/save-game db board player next-player)
     (let [results (board/game-results board)]
       (if (:game-over results)
         (ui/show-results io board)
@@ -55,11 +55,11 @@
 
 (defn- resume [io db game]
   (play io db (:board game)
-        (assoc (:next-player game) :ui io)
-        (assoc (:second-player game) :ui io)))
+        (:next-player game)
+        (:second-player game)))
 
 (defn -main [& _]
-  (let [io (console/->ConsoleIO)
+  (let [io (console/->consoleIO)
         db (datomic-db/->datomic-db datomic-uri)
         game (data/last-saved-game db)]
     (ui/show-title io)

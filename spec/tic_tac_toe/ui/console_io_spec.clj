@@ -8,12 +8,16 @@
 
 (def header-line "---------------\n")
 (def messages ["Header" "Another Header Phrase" ""])
-(def io (->ConsoleIO))
+(def io (->consoleIO))
 
 (defmacro out-should= [expected actual]
   `(should= ~expected (with-out-str ~actual)))
 
 (describe "Console IO"
+
+  (describe "->consoleIO"
+    (it "Creates map with type :console"
+      (should= {:type :console} (->consoleIO))))
 
   (describe "write-header"
     (it "Displays header with two horizontal lines and newline"
