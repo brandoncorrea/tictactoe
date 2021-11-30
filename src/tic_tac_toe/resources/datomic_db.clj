@@ -17,25 +17,20 @@
     {:type       :datomic
      :connection conn}))
 
-(defmethod data/save-game :datomic [db board next-player second-player]
-  (let [game-id (d/tempid :db.part/user)]
-    @(d/transact (:connection db)
-                 [{:db/id      game-id
-                   :game/ts    (new java.util.Date)}
-                  {:db/id      game-id
-                   :game/board (str board)}
-                  {:db/id        game-id
-                   :game/next-player (str next-player)}
-                  {:db/id        game-id
-                   :game/second-player (str second-player)}])))
+(defmethod data/save-game :datomic [{conn :connection} board next-player second-player]
+  @(d/transact conn
+               [{:game/ts    (new java.util.Date)
+                 :game/board (str board)
+                 :game/next-player (str next-player)
+                 :game/second-player (str second-player)}]))
 
-(defn- games [db]
-  (d/q '[:find  ?ts ?game-board ?game-next-player ?game-second-player
+(defn- games [{conn :connection}]
+  (d/q '[:find  ?ts ?board ?next-player ?second-player
          :where [?eid :game/ts ?ts]
-                [?eid :game/board ?game-board]
-                [?eid :game/next-player ?game-next-player]
-                [?eid :game/second-player ?game-second-player]]
-       (d/db (:connection db))))
+                [?eid :game/board ?board]
+                [?eid :game/next-player ?next-player]
+                [?eid :game/second-player ?second-player]]
+       (d/db conn)))
 
 (defmethod data/find-all-games :datomic [db]
   (map deserialize-game (games db)))
