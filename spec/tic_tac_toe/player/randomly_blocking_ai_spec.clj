@@ -27,12 +27,12 @@
       (should (contains? (set (board/empty-cells board))
                          (next-move bot board)))
       (if cell (recur (assoc board cell value) rest))))
-  (it "Results in winning cell when given the opportunity"
-    (loop [[path & rest] winning-paths]
-      (when path
-        (should= (board/winning-cell (:token bot) (board/series (merge empty-board path)))
-                 (next-move bot (merge empty-board path)))
-        (recur rest))))
+
+  (for [path winning-paths]
+    (it (format "Results in winning cell for path: %s" path)
+      (should= (board/winning-cell (:token bot) (board/series (merge empty-board path)))
+               (next-move bot (merge empty-board path)))))
+
   (it "Blocks the opponent half the time with a 30% deviation"
     (let [board (assoc empty-board [0 0] \O [0 1] \O)
           moves (take 100 (repeatedly (fn [] (next-move bot board))))

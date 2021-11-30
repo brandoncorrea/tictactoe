@@ -16,13 +16,11 @@
     (should= \X (:opponent (->medium-bot \O \X)))))
 
 (describe "next-move"
-  (it "Chooses last square when it is the only available space"
-    (should= [2 2] (next-move bot (->board (range 8)))))
-  (it "Chooses first square when it is the only available space"
-    (should= [0 0] (next-move bot (->board (concat [nil] (range 9))))))
-  (it "Blocks opponent from winning winning on the next move"
-    (should= [1 1] (next-move bot (->board [nil nil nil \O nil \O]))))
-  (it "Chooses winning square when next move wins"
-    (should= [1 0] (next-move bot (->board [\X nil nil nil nil nil \X]))))
+  (for [[cell init] [[[2 2] (range 8)]
+                     [[0 0] (concat [nil] (range 9))]
+                     [[1 1] [nil nil nil \O nil \O]]
+                     [[1 0] [\X nil nil nil nil nil \X]]]]
+    (it (format "Chooses %s with initial values: %s" cell init)
+      (should= cell (next-move bot (->board init)))))
   (it "First move does not optimize to center square"
     (should-not= [1 1] (next-move bot (->board [\O])))))

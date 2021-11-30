@@ -114,17 +114,8 @@
         (should= [1 2] (with-in-str "1 2" (request-move io (->board []) (human/->human \X io)))))))
 
   (describe "parse-numbers"
-    (it "Empty input results in an empty array"
-      (should= [] (parse-numbers "")))
-    (it "One number results in an array with that number"
-      (should= [1] (parse-numbers "1")))
-    (it "Two numbers results in an array with both numbers"
-      (should= [1 2] (parse-numbers "1 2")))
-    (it "Non-numeric characters are ignored"
-      (should= [1 2] (parse-numbers "1a2")))
-    (it "Two-digit indices are split as two-digit numbers"
-      (should= [10 11] (parse-numbers "10_11")))
-    (it "Negative numbers are parsed as negative"
-      (should= [-1 2] (parse-numbers "-1 2")))
-    (it "Numbers joined by dashes are treated as negative numbers"
-      (should= [1 -2 -3] (parse-numbers "1-2-3")))))
+    (for [[input expected] (vec {"" [] "1" [1] "1 2" [1 2]
+                                 "1a2" [1 2] "10_11" [10 11]
+                                 "-1 2" [-1 2] "1-2-3" [1 -2 -3]})]
+      (it (format "%s results in %s" input expected)
+        (should= expected (parse-numbers input))))))
