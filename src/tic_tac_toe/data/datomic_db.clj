@@ -1,8 +1,8 @@
-(ns tic-tac-toe.resources.datomic-db
+(ns tic-tac-toe.data.datomic-db
   (:require [datomic.api :as d]
-            [tic-tac-toe.resources.data :as data]))
+            [tic-tac-toe.data.data :as data]))
 
-(def ^:private schema (load-file "src/tic_tac_toe/resources/schema.edn"))
+(def ^:private schema (load-file "src/tic_tac_toe/data/schema.edn"))
 
 (defn- deserialize-game [[ts board next-player second-player]]
   {:ts    ts

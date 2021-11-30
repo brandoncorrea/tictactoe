@@ -1,4 +1,4 @@
-(ns tic-tac-toe.resources.data)
+(ns tic-tac-toe.data.data)
 
 (defn- type-of [m & _] (:type m))
 (defmulti save-game type-of)

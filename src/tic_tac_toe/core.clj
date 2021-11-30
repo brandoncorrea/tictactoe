@@ -9,8 +9,8 @@
             [tic-tac-toe.player.advanced-blocking-ai :as advanced-ai]
             [tic-tac-toe.player.unbeatable-ai :as unbeatable-ai]
             [tic-tac-toe.player.human :as human]
-            [tic-tac-toe.resources.data :as data]
-            [tic-tac-toe.resources.datomic-db :as datomic-db]))
+            [tic-tac-toe.data.data :as data]
+            [tic-tac-toe.data.datomic-db :as datomic-db]))
 
 (def datomic-uri "datomic:free://localhost:4334/ttt-games-db")
 

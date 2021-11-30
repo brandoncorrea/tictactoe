@@ -1,8 +1,8 @@
-(ns tic-tac-toe.resources.datomic-db-spec
+(ns tic-tac-toe.data.datomic-db-spec
   (:require [speclj.core :refer :all]
-            [tic-tac-toe.resources.datomic-db :refer :all]
+            [tic-tac-toe.data.datomic-db :refer :all]
             [datomic.api :as d]
-            [tic-tac-toe.resources.data :refer :all]
+            [tic-tac-toe.data.data :refer :all]
             [tic-tac-toe.game-board :as board]))
 
 (def empty-3x3 (board/->board []))
