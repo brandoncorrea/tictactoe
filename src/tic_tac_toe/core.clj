@@ -14,23 +14,23 @@
 
 (def datomic-uri "datomic:free://localhost:4334/ttt-games-db")
 
-(defn- play [io db board player-1 player-2]
+(defn- play [io db id board player-1 player-2]
   (loop [board board
          [player next-player] [player-1 player-2]]
-    (data/save-game db board player next-player)
+    (data/save-game db board player next-player id)
     (let [results (board/game-results board)]
       (if (:game-over results)
         (ui/show-results io board)
         (recur (board/mark-square board (player/next-move player board) (:token player))
                [next-player player])))))
 
-(defn ->bot [difficulty token-1 token-2 dimensions]
+(defn ->bot [difficulty token-1 token-2 size dimensions]
   (cond
     (= difficulty :easy) (random-ai/->random-ai token-2)
-    (< dimensions 3)
+    (and (< dimensions 3) (< size 4))
       (if (= difficulty :medium)
-        (medium-bot/->medium-bot token-2 token-1)
-        (unbeatable-ai/->unbeatable-ai token-2 token-1))
+          (medium-bot/->medium-bot token-2 token-1)
+          (unbeatable-ai/->unbeatable-ai token-2 token-1))
     :else
       (if (= difficulty :medium)
         (blocking-ai/->randomly-blocking-ai token-2 token-1)
@@ -39,23 +39,23 @@
 (defn- player-vs-player? [io]
   (= :player-vs-player (ui/request-game-mode io)))
 
-(defn- new-game [io db token-1 token-2]
+(defn- create-game [io db token-1 token-2]
   (let [size (ui/request-board-size io)
         dimensions (ui/request-board-dimensions io size)]
-    (play io db
-          (board/->board [] size dimensions)
-          (human/->human token-1 io)
-          (if (player-vs-player? io)
-            (human/->human token-2 io)
-            (->bot (ui/request-difficulty io) token-1 token-2 dimensions)))))
+    (data/save-game db
+                    (board/->board [] size dimensions)
+                    (human/->human token-1 io)
+                    (if (player-vs-player? io)
+                      (human/->human token-2 io)
+                      (->bot (ui/request-difficulty io) token-1 token-2 size dimensions)))))
 
 (defn- should-resume? [game io]
-  (and game
-       (not (:game-over (board/game-results (:board game))))
-       (ui/resume-game? io)))
+  (and game (ui/resume-game? io)))
 
 (defn- resume [io db game]
-  (play io db (:board game)
+  (play io db
+        (:id game)
+        (:board game)
         (:next-player game)
         (:second-player game)))
 
@@ -65,7 +65,7 @@
         game (data/last-saved-game db)]
     (ui/show-title io)
     (ui/show-instructions io)
-    (if (should-resume? game io)
-      (resume io db game)
-      (new-game io db \X \O))
+    (if-not (should-resume? game io)
+      (create-game io db \X \O))
+    (resume io db (data/last-saved-game db))
     (data/disconnect db)))

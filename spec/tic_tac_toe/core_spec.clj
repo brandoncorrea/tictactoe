@@ -4,20 +4,20 @@
             [tic-tac-toe.player.player :refer :all]
             [tic-tac-toe.player.random-ai :refer :all]
             [tic-tac-toe.player.medium-bot :refer :all]
-            [tic-tac-toe.player.unbeatable-ai :refer :all]))
+            [tic-tac-toe.player.unbeatable-ai :refer :all]
+            [tic-tac-toe.player.randomly-blocking-ai :refer :all]
+            [tic-tac-toe.player.advanced-blocking-ai :refer :all]))
+
+(defn test-ai [ai-desc difficulty options ->ai]
+  (for [[size dim] options]
+    (it (format "%dD %dx%d on %s difficulty results in %s" dim size size difficulty ai-desc)
+      (should= (->ai \X \O) (->bot difficulty \O \X size dim)))))
 
 (describe "->bot"
-  (it ":easy difficulty results in an easy bot"
-    (should= (->random-ai \X) (->bot :easy \O \X 2))
-    (should= (->random-ai \O) (->bot :easy \X \O 2))
-    (should= (->random-ai 456) (->bot :easy 123 456 2)))
-  (it ":medium difficulty results in a medium bot"
-    (should= (->medium-bot \X \O) (->bot :medium \O \X 2))
-    (should= (->medium-bot \O \X) (->bot :medium \X \O 2))
-    (should= (->medium-bot 456 123) (->bot :medium 123 456 2)))
-  (it ":hard difficulty results in a hard bot"
-    (should= (->unbeatable-ai \X \O) (->bot :hard \O \X 2))
-    (should= (->unbeatable-ai \O \X) (->bot :hard \X \O 2))
-    (should= (->unbeatable-ai 456 123) (->bot :hard 123 456 2)))
-  (it "default bot is hard difficulty"
-    (should= (->unbeatable-ai \X \O) (->bot nil \O \X 2))))
+  (it "Default bot is Unbeatable AI"
+    (should= (->unbeatable-ai \X \O) (->bot nil \O \X 3 2)))
+  (test-ai "Random AI" :easy [[3 2] [3 3] [5 5] [1 1] [100 100]] (fn [a _] (->random-ai a)))
+  (test-ai "Medium Bot" :medium [[3 2]] ->medium-bot)
+  (test-ai "Unbeatable AI" :hard [[3 2] [2 2] [1 2]] ->unbeatable-ai)
+  (test-ai "Advanced Blocking AI" :hard [[3 3] [4 2] [2 3]] ->advanced-blocking-ai)
+  (test-ai "Randomly Blocking AI" :medium [[3 3] [4 2] [2 3]] ->randomly-blocking-ai))
