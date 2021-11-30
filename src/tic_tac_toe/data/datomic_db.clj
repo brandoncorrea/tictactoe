@@ -1,6 +1,7 @@
 (ns tic-tac-toe.data.datomic-db
   (:require [datomic.api :as d]
-            [tic-tac-toe.data.data :as data]))
+            [tic-tac-toe.data.data :as data]
+            [tic-tac-toe.game-board :as board]))
 
 (def ^:private schema (load-file "src/tic_tac_toe/data/schema.edn"))
 
@@ -34,6 +35,12 @@
 
 (defmethod data/find-all-games :datomic [db]
   (map deserialize-game (games db)))
+
+(defn- incomplete? [game]
+  (-> game :board board/game-results :game-over not))
+
+(defmethod data/incomplete-games :datomic [db]
+  (filter incomplete? (data/find-all-games db)))
 
 (defmethod data/last-saved-game :datomic [db]
   (last (sort-by :ts (data/find-all-games db))))

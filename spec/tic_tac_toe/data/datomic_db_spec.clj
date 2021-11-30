@@ -87,3 +87,24 @@
       (should= [] (find-all-games db))
       (disconnect db)
       (should-throw (find-all-games db)))))
+
+(describe "incomplete-games"
+  (let [db (recreate-db)]
+    (it "Results in no games when there are only completed games"
+      (save-game db (board/->board (range)) {} {})
+      (save-game db (board/->board (range 1 11)) {} {})
+      (save-game db (board/->board (range 2 12)) {} {})
+      (should= [] (incomplete-games db)))
+    (it "Contains keys: :board, :next-player, :second-player, :ts"
+      (save-game db {} {} {})
+      (should= [:ts :board :next-player :second-player] (first (incomplete-games db))))
+    (it "Results every saved and incomplete game"
+      (loop [[game & rest] [{:board (board/->board []) :next-player {} :second-player {}}
+                            {:board (board/->board [1]) :next-player {:a :b} :second-player {:c :d}}
+                            {:board (board/->board [1 2]) :next-player {:e :f} :second-player {:g :h}}
+                            {:board (board/->board [1 2 3]) :next-player {:i :j} :second-player {:k :l}}]
+             added []]
+        (should= (set added) (set (map #(dissoc % :ts) (incomplete-games db))))
+        (when game
+          (save-game db (:board game) (:next-player game) (:second-player game))
+          (recur rest (cons game added)))))))
