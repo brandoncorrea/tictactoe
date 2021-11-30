@@ -9,3 +9,4 @@
 (defmulti request-board-dimensions type-of)
 (defmulti request-difficulty type-of)
 (defmulti request-move type-of)
+(defmulti resume-game? type-of)

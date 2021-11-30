@@ -113,6 +113,18 @@
       (with-out-str
         (should= [1 2] (with-in-str "1 2" (request-move io (->board []) (human/->human \X io)))))))
 
+  (describe "resume-game?"
+    (it "Request message is written to console"
+      (out-should= (str header-line "Resume?\n" header-line
+                        "Resume last game? (Y/N) > ")
+                   (with-in-str "Y" (resume-game? io))))
+    (it "Y or y results in true"
+      (should= true (with-in-str "Y" (resume-game? io)))
+      (should= true (with-in-str "y" (resume-game? io))))
+    (it "N or n results in false"
+      (should= false (with-in-str "N" (resume-game? io)))
+      (should= false (with-in-str "n" (resume-game? io)))))
+
   (describe "parse-numbers"
     (for [[input expected] (vec {"" [] "1" [1] "1 2" [1 2]
                                  "1a2" [1 2] "10_11" [10 11]

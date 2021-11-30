@@ -18,19 +18,25 @@
   (println message)
   (println horizontal-line))
 
-(defn- request-numbers [message]
+(defn- request-str [message]
   (print (str message " > "))
   (flush)
-  (parse-numbers (read-line)))
+  (read-line))
 
-(defn- request-numbers-until [pred message]
-  (util/any pred (repeatedly #(request-numbers message))))
+(defn- request-until [f pred message]
+  (util/any pred (repeatedly #(f message))))
 
+(def request-numbers (comp parse-numbers request-str))
+(def request-numbers-until (partial request-until request-numbers))
+(def request-str-until (partial request-until request-str))
 (defn- request-int-until [pred message]
   (util/any pred (map first (take-while #(= 1 (count %)) (repeatedly #(request-numbers message))))))
 
 (defn- request-int-option [options message]
   (get options (request-int-until (set (keys options)) message)))
+
+(defn- request-str-option [options message]
+  (get options (request-str-until (set (keys options)) message)))
 
 (defn ->consoleIO [] {:type :console})
 
@@ -80,3 +86,7 @@
 (defmethod ui/request-move :console [_ board player]
   (show-board board)
   (request-numbers-until (partial board/valid-move? board) (str (:token player) "'s turn!")))
+
+(defmethod ui/resume-game? :console [_]
+  (write-header "Resume?")
+  (request-str-option {"Y" true "y" true "N" false "n" false} "Resume last game? (Y/N)"))
