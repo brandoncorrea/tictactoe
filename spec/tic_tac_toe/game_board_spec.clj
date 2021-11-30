@@ -58,13 +58,19 @@
 (def winning-paths
   [{[0 0] \X [0 1] \X [0 2] nil}
    {[0 0] \X [0 1] nil [0 2] \X}
-   {[0 0] nil [0 1] \X [0 2] \X}])
-
-(defn test-winning-path [expected paths]
-  (loop [[path & rest] paths]
-    (when path
-      (should= expected (winning-path? \X path))
-      (recur rest))))
+   {[0 0] nil [0 1] \X [0 2] \X}
+   {[1 0] \X [1 1] \X [1 2] nil}
+   {[1 0] \X [1 1] nil [1 2] \X}
+   {[1 0] nil [1 1] \X [1 2] \X}
+   {[2 0] \X [2 1] \X [2 2] nil}
+   {[2 0] \X [2 1] nil [2 2] \X}
+   {[2 0] nil [2 1] \X [2 2] \X}
+   {[0 0] \X [1 1] \X [2 2] nil}
+   {[0 0] \X [1 1] nil [2 2] \X}
+   {[0 0] nil [1 1] \X [2 2] \X}
+   {[0 2] \X [1 1] \X [2 0] nil}
+   {[0 2] \X [1 1] nil [2 0] \X}
+   {[0 2] nil [1 1] \X [2 0] \X}])
 
 (describe "game-board"
   (describe "->board"
@@ -127,8 +133,7 @@
                (mark-square empty-3x3 [0 1] 2)))
     (it "Marks 4x4 board"
       (should= (merge empty-4x4 {[0 2] 2})
-               (mark-square empty-4x4 [0 2] 2)))
-    )
+               (mark-square empty-4x4 [0 2] 2))))
 
   (describe "series"
     (it "Returns rows, columns, and diagonals as lists of key-value pairs"
@@ -298,84 +303,54 @@
                (rows (->board (range 81) 3 4)))))
 
   (describe "full-board?"
-    (it "Empty board results in false"
-      (should= false (full-board? empty-3x3)))
-    (it "Results in false when board is full except one cell"
-      (should= false (full-board? (->board (range 8)))))
-    (it "Results in true when there are no nil values"
-      (should= true (full-board? (->board (range 9)))))
-    (it "Empty 4x4 board results in false"
-      (should= false (full-board? empty-4x4)))
-    (it "Results in true when there are no nil values in 4x4"
-      (should= true (full-board? (->board (range) 4))))
-    (it "Results in false when there is one empty cell in 4x4"
-      (should= false (full-board? (->board (range 1 16) 4))))
-    (it "Empty 3x3x3 results in false"
-      (should= false (full-board? empty-3x3x3)))
-    (it "Full 3x3x3 results in true"
-      (should= true (full-board? (->board (range) 3 3))))
-    (it "Full 3x3x3 except for one cell results in false"
-      (should= false (full-board? (->board (range 26) 3 3)))))
+    (for [[dim size count] [[2 3 0]
+                            [2 3 8]
+                            [2 4 0]
+                            [2 4 15]
+                            [3 3 0]
+                            [3 3 26]]]
+      (it (format "Results in false for %dD %dx%d with %d initial values" dim size size count)
+        (should= false (full-board? (->board (range count) size dim)))))
+    (for [[dim size] [[2 3] [2 4] [3 3]]]
+      (it (format "Results in true for %dD %dx%d" dim size size)
+        (should= true (full-board? (->board (range (apply * (repeat dim size))) size dim))))))
 
   (describe "game-results"
-    (it "Empty game board results in game not over"
-      (should= game-not-over-result (game-results empty-3x3)))
-    (it "Board with one filled square results in game not over"
-      (should= game-not-over-result (game-results (->board [1]))))
-    (it "Board with first three items as 1 results in a win"
-      (should= win-result (game-results (->board [1 1 1]))))
-    (it "Board with middle three items as 1 results in a win"
-      (should= win-result (game-results (->board [nil nil nil 1 1 1]))))
-    (it "Board with last three items as 1 results in a win"
-      (should= win-result (game-results (->board (concat (repeat 6 nil) [1 1 1])))))
-    (it "Board with first row filled with different values results in game not over"
-      (should= game-not-over-result (game-results (->board [1 2 1]))))
-    (it "Board with first column filled results in a win"
-      (should= win-result (game-results (->board [1 nil nil 1 nil nil 1 nil nil]))))
-    (it "Board with second column filled results in a win"
-      (should= win-result (game-results (->board [nil 1 nil nil 1 nil nil 1 nil]))))
-    (it "Board with last column filled results in a win"
-      (should= win-result (game-results (->board [nil nil 1 nil nil 1 nil nil 1]))))
-    (it "Board with top-left diagonal filled results in a win"
-      (should= win-result (game-results (->board [1 nil nil nil 1 nil nil nil 1]))))
-    (it "Board with top-right diagonal filled results in a win"
-      (should= win-result (game-results (->board [nil nil 1 nil 1 nil 1 nil nil]))))
+    (for [init [[] [1] [1 2 1]]]
+      (it (format "Results in Game Not Over for board initialized with %s" init)
+        (should= game-not-over-result (game-results (->board init)))))
+    (for [init [{[0 0] 1 [0 1] 1 [0 2] 1}
+                {[1 0] 1 [1 1] 1 [1 2] 1}
+                {[2 0] 1 [2 1] 1 [2 2] 1}
+                {[0 0] 1 [1 0] 1 [2 0] 1}
+                {[0 1] 1 [1 1] 1 [2 1] 1}
+                {[0 2] 1 [1 2] 1 [2 2] 1}
+                {[0 0] 1 [1 1] 1 [2 2] 1}
+                {[0 2] 1 [1 1] 1 [2 0] 1}]]
+      (it (format "Results in win with initial values: %s" init)
+        (should= win-result (game-results (merge empty-3x3 init)))))
     (it "Full game board results in a draw"
       (should= draw-result (game-results (->board (range 1 10))))))
 
   (describe "valid-move?"
-    (it "Results in true for empty cell"
-      (should= true (valid-move? empty-3x3 [0 0])))
-    (it "Results in false when first cell is occupied"
-      (should= false (valid-move? (mark-square empty-3x3 [0 0] 1) [0 0])))
-    (it "Results in false when last cell is occupied"
-      (should= false (valid-move? (mark-square empty-3x3 [2 2] 1) [2 2])))
-    (it "Invalid moves result in false"
-      (loop [[move & rest-moves] invalid-moves]
-        (when move
-          (should= false (valid-move? empty-3x3 move))
-          (recur rest-moves))))
-    (it "Valid positions result in true for empty spaces and false for occupied spaces"
-      (loop [[move & rest-moves] valid-moves]
-        (when move
-          (should= true (valid-move? empty-3x3 move))
-          (should= false (valid-move? (mark-square empty-3x3 move 1) move))
-          (recur rest-moves))))
+    (for [move invalid-moves]
+      (it (format "%s is an invalid move" move)
+        (should= false (valid-move? empty-3x3 move))))
+    (for [move valid-moves]
+      (it (format "%s is a valid when unoccupied and invalid when occupied" move)
+        (should= true (valid-move? empty-3x3 move))
+        (should= false (valid-move? (mark-square empty-3x3 move 1) move))))
     (it "[0 0] results in false for empty vector"
       (should= false (valid-move? [] [0 0])))
-    (it "3D move results in false for 2D board"
-      (should= false (valid-move? empty-3x3 [0 0 0])))
     (it "2D move results in false for 3D board"
       (should= false (valid-move? empty-3x3x3 [0 0])))
     (it "3D move is valid for 3D board"
       (should= true (valid-move? empty-3x3x3 [0 0 0]))))
 
   (describe "dimensions"
-    (it "Results in the number of elements in the first key"
-      (loop [[dim & rest] [1 2 3 4]]
-        (when dim
-          (should= dim (dimensions (->board [] 3 dim)))
-          (recur rest)))))
+    (for [dim [1 2 3 4]]
+      (it (format "Results in %d for %dD board" dim dim)
+        (should= dim (dimensions (->board [] 3 dim))))))
 
   (describe "size"
     (it "Results in the dimension's root of the size of the board"
@@ -387,43 +362,40 @@
       (should= 4 (size (->board [] 4)))))
 
   (describe "->cell-key"
-    (it "Results in empty vector for zero dimensions"
-      (should= [] (->cell-key 0 0 0)))
-    (it "Results in 1 dimensional positions"
-      (should= [0] (->cell-key 0 1 1))
-      (should= [1] (->cell-key 1 1 1))
-      (should= [2] (->cell-key 2 1 1))
-      (should= [5] (->cell-key 5 1 3)))
-    (it "Results in 2 dimensional positions"
-      (should= [0 0] (->cell-key 0 2 3))
-      (should= [0 2] (->cell-key 2 2 3))
-      (should= [1 0] (->cell-key 3 2 3))
-      (should= [2 1] (->cell-key 7 2 3)))
-    (it "Results in 3 dimensional positions"
-      (should= [0 0 0] (->cell-key 0 3 3))
-      (should= [0 0 1] (->cell-key 1 3 3))
-      (should= [0 1 2] (->cell-key 5 3 3))
-      (should= [2 1 1] (->cell-key 22 3 3))
-      (should= [2 2 2] (->cell-key 26 3 3)))
-    (it "Results in 4 dimensional positions"
-      (should= [0 0 0 0] (->cell-key 0 4 3))
-      (should= [0 0 0 1] (->cell-key 1 4 3))
-      (should= [0 0 1 1] (->cell-key 4 4 3))
-      (should= [0 1 0 2] (->cell-key 11 4 3))
-      (should= [1 0 2 2] (->cell-key 35 4 3))
-      (should= [0 0 2 1] (->cell-key 11 4 5))
-      (should= [0 2 2 4] (->cell-key 64 4 5))))
+    (for [[pos dim size expected] [[0 0 0 []]
+                                   [0 1 1 [0]]
+                                   [1 1 1 [1]]
+                                   [2 1 1 [2]]
+                                   [5 1 3 [5]]
+                                   [0 2 3 [0 0]]
+                                   [2 2 3 [0 2]]
+                                   [3 2 3 [1 0]]
+                                   [7 2 3 [2 1]]
+                                   [0 3 3 [0 0 0]]
+                                   [1 3 3 [0 0 1]]
+                                   [5 3 3 [0 1 2]]
+                                   [22 3 3 [2 1 1]]
+                                   [26 3 3 [2 2 2]]
+                                   [0 4 3 [0 0 0 0]]
+                                   [1 4 3 [0 0 0 1]]
+                                   [4 4 3 [0 0 1 1]]
+                                   [11 4 3 [0 1 0 2]]
+                                   [35 4 3 [1 0 2 2]]
+                                   [11 4 5 [0 0 2 1]]
+                                   [64 4 5 [0 2 2 4]]]]
+      (it (format "Position %d for %dD %dx%d results in expected" pos dim size size expected)
+        (should= expected (->cell-key pos dim size)))))
 
   (describe "winning-cell"
     (it "Results in nil when there are no winning paths"
       (should= nil (winning-cell \X (series empty-3x3))))
-    (it "Results in last empty cell for winning paths"
-      (loop [[path & rest] winning-paths]
-        (when path
-          (should= (any-empty-cell path)
-                   (winning-cell \X (series (merge empty-3x3 path))))
-          (recur rest)))))
+    (for [path winning-paths]
+      (it (format "Results in last empty cell for path: %s" path)
+        (should= (any-empty-cell path)
+                 (winning-cell \X (series (merge empty-3x3 path)))))))
 
   (describe "winning-path?"
-    (it "Results in false" (test-winning-path false non-winning-paths))
-    (it "Results in true" (test-winning-path true winning-paths))))
+    (for [[expected paths] [[true winning-paths] [false non-winning-paths]]]
+      (for [path paths]
+        (it (format "Results in %s for %s" expected path)
+          (should= expected (winning-path? \X path)))))))
