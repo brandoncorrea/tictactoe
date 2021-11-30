@@ -10,6 +10,8 @@
   (let [vals-1 (frequencies (vals path-1))
         vals-2 (frequencies (vals path-2))]
     (cond
+      (nil? (get vals-1 nil)) path-2
+      (nil? (get vals-2 nil)) path-1
       (= 3 (count vals-1)) path-2
       (= 3 (count vals-2)) path-1
       (and (= 1 (get vals-1 nil))

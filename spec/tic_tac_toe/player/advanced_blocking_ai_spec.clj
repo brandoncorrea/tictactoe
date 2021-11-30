@@ -19,6 +19,13 @@
 (describe "next-move"
   (it "Chooses any cell when board is empty"
     (should (contains? (set (keys empty-3x3)) (next-move bot empty-3x3))))
+  (it "Does not result in nil"
+    (should-not= nil (next-move bot (merge (board/->board [] 3 3)
+                                         {[0 0 0] \O
+                                          [0 0 1] \O
+                                          [0 0 2] \X
+                                          [1 1 2] \O
+                                          [2 2 2] \X}))))
   (it "Chooses a cell in which it already has a token"
     (should (contains? #{[0 1] [0 2] [1 0] [2 0] [1 1] [2 2]}
                        (next-move bot (board/mark-square empty-3x3 [0 0] \X))))))
