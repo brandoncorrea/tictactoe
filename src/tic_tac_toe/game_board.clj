@@ -19,8 +19,6 @@
 
 (defn- winning-paths [token paths]
   (filter #(winning-path? token %) paths))
-(defn incomplete-paths [paths]
-  (filter #(some cell-empty? %) paths))
 
 (defn winning-cell [token paths]
   (first (map any-empty-cell (winning-paths token paths))))
