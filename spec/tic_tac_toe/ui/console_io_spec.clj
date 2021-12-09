@@ -107,11 +107,11 @@
   (describe "request-move"
     (it "Request message is written to output"
       (out-should= (str "\n[_ _ _]\n[_ _ _]\n[_ _ _]\nX's turn! > ")
-                   (with-in-str "1 1" (request-move io (->board []) (human/->human \X io)))))
+                   (with-in-str "1 1" (request-move io (->board []) (human/->human \X)))))
     (it "Results in the cell the user entered"
       ; ignore output
       (with-out-str
-        (should= [1 2] (with-in-str "1 2" (request-move io (->board []) (human/->human \X io)))))))
+        (should= [1 2] (with-in-str "1 2" (request-move io (->board []) (human/->human \X)))))))
 
   (describe "resume-game?"
     (it "Request message is written to console"
