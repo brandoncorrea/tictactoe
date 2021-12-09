@@ -6,17 +6,20 @@
             [tic-tac-toe.gui.pages.new-game]
             [tic-tac-toe.gui.pages.play]
             [tic-tac-toe.gui.pages.game-over]
+            [tic-tac-toe.gui.pages.load-game]
             [tic-tac-toe.gui.components.mouse :as mouse]
-            [tic-tac-toe.data.datomic-db :as datomic]))
+            [tic-tac-toe.data.datomic-db :as datomic]
+            [tic-tac-toe.gui.state :as s]))
 
 (defn setup []
   (q/frame-rate 30)
   (q/color-mode :hsb)
-  {:screen-height 500
-   :screen-width 500
-   :mouse (mouse/->mouse)
-   :page :new-game
-   :db (datomic/->datomic-db "datomic:free://localhost:4334/ttt-games-db")})
+  (s/load-last-saved-game
+    {:screen-height 500
+     :screen-width  500
+     :mouse         (mouse/->mouse)
+     :page          :new-game
+     :db            (datomic/->datomic-db "datomic:free://localhost:4334/ttt-games-db")}))
 
 (defn update-state [{mouse :mouse :as state}]
   (-> (assoc state :mouse (mouse/update-mouse mouse))

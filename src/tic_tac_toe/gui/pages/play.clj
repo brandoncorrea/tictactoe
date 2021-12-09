@@ -28,4 +28,5 @@
   (->> (c/update-state t/board state)
        s/refresh-game-results
        update-bot
-       s/refresh-game-results))
+       s/refresh-game-results
+       s/save-game))
