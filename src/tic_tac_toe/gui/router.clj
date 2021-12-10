@@ -16,6 +16,6 @@
            (s/game-over? state))))
 
 (defn route [state]
-  (cond (create-game? state) (assoc (s/build-new-game state) :page :play)
-        (show-game-over? state) (assoc state :page :game-over)
-        :else state))
+  (if (show-game-over? state)
+    (navigate state :game-over)
+    state))

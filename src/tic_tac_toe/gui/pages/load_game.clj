@@ -7,8 +7,8 @@
 
 (def components
   [(h/->header "Resume Last Game?")
-   (b/->button "Resume" 20 150 200 200 #(r/navigate % :play))
-   (b/->button "New Game" 280 150 200 200 #(r/navigate % :new-game))])
+   (b/->button "Resume" 125 50 100 30 #(r/navigate % :play))
+   (b/->button "New Game" 275 50 100 30 #(r/navigate % :new-game))])
 
 (defmethod p/render-page :load-game [state]
   (c/draw-all components state))

@@ -1,38 +1,53 @@
 (ns tic-tac-toe.gui.pages.new-game
   (:require [tic-tac-toe.gui.pages.page :as p]
             [tic-tac-toe.gui.components.button :as b]
+            [tic-tac-toe.gui.components.toggle-button :as tb]
             [tic-tac-toe.gui.components.header :as h]
             [tic-tac-toe.gui.components.component :as c]
-            [tic-tac-toe.gui.state :as s]))
+            [tic-tac-toe.gui.state :as s]
+            [tic-tac-toe.gui.router :as r]))
 
 (def ^:private header (h/->header "New Game"))
 
-(def size-components
-  [(b/->button "3x3" 20 150 200 200 (partial s/set-game-size 3))
-   (b/->button "4x4" 280 150 200 200 (partial s/set-game-size 4))])
+(defn can-create-game? [{page :page :as state}]
+  (boolean (and (= :new-game page)
+                (s/game-size state)
+                (or (s/player-vs-player? state)
+                    (and (s/difficulty state)
+                         (s/game-mode state))))))
 
-(def game-mode-components
-  [(b/->button "Player vs Player" 20 150 200 200 (partial s/set-game-mode :player-vs-player))
-   (b/->button "Player vs Computer" 280 150 200 200 (partial s/set-game-mode :player-vs-computer))])
+(defn continue-clicked [state]
+  (if (can-create-game? state)
+    (r/navigate (s/build-new-game state) :play)
+    state))
 
-(def difficulty-components
-  [(b/->button "Easy" 20 150 133 133 (partial s/set-game-difficulty :easy))
-   (b/->button "Medium" 183 150 133 133 (partial s/set-game-difficulty :medium))
-   (b/->button "Hard" 346 150 133 133 (partial s/set-game-difficulty :hard))])
-
-(defn requires-difficulty? [state]
-  (and (s/player-vs-computer? state)
-       (not (s/difficulty state))))
-
-(defn dispatch-components [state]
-  (cond (not (s/game-size state)) size-components
-        (not (s/game-mode state)) game-mode-components
-        (requires-difficulty? state) difficulty-components
-        :else []))
+(def components
+  [header
+   (tb/->toggle-button "3x3" 66 50 150 30
+                       (partial s/set-game-size 3)
+                       #(= 3 (s/game-size %)))
+   (tb/->toggle-button "4x4" 284 50 150 30
+                       (partial s/set-game-size 4)
+                       #(= 4 (s/game-size %)))
+   (tb/->toggle-button "Player vs Player" 66 100 150 30
+                       (partial s/set-game-mode :player-vs-player)
+                       s/player-vs-player?)
+   (tb/->toggle-button "Player vs Computer" 284 100 150 30
+                       (partial s/set-game-mode :player-vs-computer)
+                       s/player-vs-computer?)
+   (tb/->toggle-button "Easy" 66 150 100 30
+                       (partial s/set-game-difficulty :easy)
+                       #(= :easy (s/difficulty %)))
+   (tb/->toggle-button "Medium" 200 150 100 30
+                       (partial s/set-game-difficulty :medium)
+                       #(= :medium (s/difficulty %)))
+   (tb/->toggle-button "Hard" 334 150 100 30
+                       (partial s/set-game-difficulty :hard)
+                       #(= :hard (s/difficulty %)))
+   (tb/->toggle-button "Continue" 66 200 368 50 continue-clicked can-create-game?)])
 
 (defmethod p/render-page :new-game [state]
-  (c/draw header state)
-  (c/draw-all (dispatch-components state) state))
+  (c/draw-all components state))
 
 (defmethod p/update-page :new-game [state]
-  (c/update-all (dispatch-components state) state))
+  (c/update-all components state))

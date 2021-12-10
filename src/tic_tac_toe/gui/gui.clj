@@ -27,7 +27,7 @@
       r/route))
 
 (defn draw-state [state]
-  (q/background 255)
+  (q/background 245)
   (q/fill 0)
   (q/text-align :center :center)
   (p/render-page state))

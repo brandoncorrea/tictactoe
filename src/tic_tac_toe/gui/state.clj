@@ -29,17 +29,15 @@
 (defn human-turn? [state]
   (= :human (:type (player state))))
 
-(defn- ->play [{:keys [id board next-player second-player]}]
-  {:id id
-   :board board
-   :player next-player
-   :next-player second-player})
-
-(defn save-game [{db :db :as state}]
+(defn save-game [{db :db play :play :as state}]
   (if-let [id (game-id state)]
     (data/save-game db (board state) (player state) (next-player state) id)
     (data/save-game db (board state) (player state) (next-player state)))
-    (assoc state :play (->play (data/last-saved-game db))))
+  (let [{:keys [id board next-player second-player]} (data/last-saved-game db)]
+    (assoc state :play (assoc play :id id
+                                   :board board
+                                   :player next-player
+                                   :next-player second-player))))
 
 (defn- build-play [state]
   {:board       (g/->board [] (game-size state))
@@ -63,6 +61,12 @@
 
 (defn can-resume? [game]
   (and game (-> game :board g/game-results :game-over not)))
+
+(defn- ->play [{:keys [id board next-player second-player]}]
+  {:id id
+   :board board
+   :player next-player
+   :next-player second-player})
 
 (defn load-last-saved-game [{db :db :as state}]
   (let [game (data/last-saved-game db)]
