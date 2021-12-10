@@ -4,6 +4,8 @@
             [tic-tac-toe.player.player-dispatcher :as dispatcher]
             [tic-tac-toe.data.data :as data]))
 
+(defn navigate [state page] (assoc state :page page))
+
 (defn game-id [state] (get-in state [:play :id]))
 (defn board [state] (get-in state [:play :board]))
 (defn player [state] (get-in state [:play :player]))

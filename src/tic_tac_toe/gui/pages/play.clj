@@ -6,6 +6,11 @@
             [tic-tac-toe.gui.components.ttt-board :as t]
             [tic-tac-toe.player.player :as p]))
 
+(defn toggle-game-over [state]
+  (if (s/game-over? state)
+    (s/navigate state :game-over)
+    state))
+
 (defn- draw-header [state]
   (-> (s/player-token state)
       (str "'s turn!")
@@ -16,7 +21,7 @@
   (draw-header state)
   (c/draw t/board state))
 
-(defn move-bot [state]
+(defn- move-bot [state]
   (s/move-current-player (p/next-move (s/player state) (s/board state)) state))
 
 (defn- update-bot [state]
@@ -29,4 +34,5 @@
        s/refresh-game-results
        update-bot
        s/refresh-game-results
-       s/save-game))
+       s/save-game
+       toggle-game-over))

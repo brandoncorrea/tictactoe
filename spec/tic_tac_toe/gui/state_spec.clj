@@ -3,6 +3,10 @@
             [tic-tac-toe.gui.state :refer :all]))
 
 (describe "state"
+  (for [page [:new-game :game-over]]
+    (it (format "navigates to %s" page)
+      (should= {:page page} (navigate {} page))))
+
   (it "holds reference to game id"
     (should= 3 (game-id {:play {:id 3}}))
     (should= 4 (game-id {:play {:id 4}})))

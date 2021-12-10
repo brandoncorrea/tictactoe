@@ -2,7 +2,6 @@
   (:require [quil.core :as q]
             [quil.middleware :as m]
             [tic-tac-toe.gui.pages.page :as p]
-            [tic-tac-toe.gui.router :as r]
             [tic-tac-toe.gui.pages.new-game]
             [tic-tac-toe.gui.pages.play]
             [tic-tac-toe.gui.pages.game-over]
@@ -22,9 +21,7 @@
      :db            (datomic/->datomic-db "datomic:free://localhost:4334/ttt-games-db")}))
 
 (defn update-state [{mouse :mouse :as state}]
-  (-> (assoc state :mouse (mouse/update-mouse mouse))
-      p/update-page
-      r/route))
+  (p/update-page (assoc state :mouse (mouse/update-mouse mouse))))
 
 (defn draw-state [state]
   (q/background 245)

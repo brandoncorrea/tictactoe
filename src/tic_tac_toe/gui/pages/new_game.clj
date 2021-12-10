@@ -1,24 +1,21 @@
 (ns tic-tac-toe.gui.pages.new-game
   (:require [tic-tac-toe.gui.pages.page :as p]
-            [tic-tac-toe.gui.components.button :as b]
             [tic-tac-toe.gui.components.toggle-button :as tb]
             [tic-tac-toe.gui.components.header :as h]
             [tic-tac-toe.gui.components.component :as c]
-            [tic-tac-toe.gui.state :as s]
-            [tic-tac-toe.gui.router :as r]))
+            [tic-tac-toe.gui.state :as s]))
 
 (def ^:private header (h/->header "New Game"))
 
-(defn can-create-game? [{page :page :as state}]
-  (boolean (and (= :new-game page)
-                (s/game-size state)
+(defn can-create-game? [state]
+  (boolean (and (s/game-size state)
                 (or (s/player-vs-player? state)
                     (and (s/difficulty state)
                          (s/game-mode state))))))
 
 (defn continue-clicked [state]
   (if (can-create-game? state)
-    (r/navigate (s/build-new-game state) :play)
+    (s/navigate (s/build-new-game state) :play)
     state))
 
 (def components
