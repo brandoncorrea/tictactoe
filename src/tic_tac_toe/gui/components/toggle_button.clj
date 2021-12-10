@@ -2,12 +2,12 @@
   (:require [tic-tac-toe.gui.components.component :as c]
             [tic-tac-toe.gui.components.button :as b]))
 
-(def green (Integer. 0xFF00FF00))
+(def green (Integer. 0xFF2ECC40))
 
 (deftype toggle-button [text x y width height update toggled? text-color back-color]
   c/component
   (draw [_ state]
-    (let [back-color (if (toggled? state) green back-color)]
+    (let [[back-color text-color] (if (toggled? state) [green 255] [back-color text-color])]
       (c/draw (b/->button text x y width height update text-color back-color) state)))
   (update-state [_ state]
     (c/update-state (b/->button text x y width height update text-color green) state)))
