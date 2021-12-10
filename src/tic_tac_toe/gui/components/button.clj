@@ -1,6 +1,7 @@
 (ns tic-tac-toe.gui.components.button
   (:require [tic-tac-toe.gui.components.component :as c]
-            [quil.core :as q]))
+            [quil.core :as q]
+            [tic-tac-toe.gui.colors :as color]))
 
 (defn clicked? [x y width height
                  {:keys [up-x up-y down-x down-y]}]
@@ -31,7 +32,7 @@
   ([text x y width height update text-color back-color]
    (button. (str text) x y width height update text-color back-color))
   ([text x y width height update]
-   (->button text x y width height update 0 255))
+   (->button text x y width height update color/black color/white))
   ([text x y width height]
    (->button text x y width height identity))
   ([x y width height]
