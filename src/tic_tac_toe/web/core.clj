@@ -1,9 +1,12 @@
 (ns tic-tac-toe.web.core
   (:require [http-server.core :as h]
-            [tic-tac-toe.web.pages.home :refer [home-page]]))
+            [tic-tac-toe.web.pages.home :as home]))
+
+(defn page [body]
+  (fn [_] (h/create-response 200 body {"Content-Type" "text/html"})))
 
 (def routes
-  {:* {:get home-page}})
+  {:* {:get (page home/body)}})
 
 (defn -main []
   (h/listen (h/create-server 8080 routes)))

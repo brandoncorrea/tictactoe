@@ -4,8 +4,5 @@
 
 (describe "home-page"
   (it "renders HTML content"
-    (should= "<h1>Tic Tac Toe</h1>" body))
-  (it "results in status code 200"
-    (should= 200 (:status (home-page nil))))
-  (it "contains Content-Type text/html header"
-    (should= "text/html" (get (:headers (home-page nil)) "Content-Type"))))
+    (should= "<h1>Tic Tac Toe</h1>" body)))
+
