@@ -18,38 +18,33 @@
 (defn ->rb [text name value]
   [:input {:type :radio :name name :value value} text])
 
-(defn ->radio-group [title name options]
-  (concat
-    [:div [:label {:for name} title]]
-    (if-let [[text val] (first options)]
-      [(->checked-rb text name val)]
-      [])
-    (for [[text val] (rest options)]
-      (->rb text name val))))
-
-(def game-mode-options
-  (->radio-group "Game Mode:" :mode
-                 [["Player vs Player" :player-vs-player]
-                  ["Player vs Computer" :player-vs-computer]]))
+(def mode-options
+  [:div
+   [:label {:for :mode} "Game Mode:"]
+   (->checked-rb "Player vs Player" :mode :player-vs-player)
+   (->rb "Player vs Computer" :mode :player-vs-computer)])
 
 (def size-options
-  (->radio-group "Board Size:" :size
-                 [["3x3" :3]
-                  ["4x4" :4]]))
+  [:div
+   [:label {:for :size} "Board Size:"]
+   (->checked-rb "3x3" :size :3)
+   (->rb "4x4" :size :4)])
 
 (def difficulty-options
-  (->radio-group "Difficulty:" :difficulty
-                 [["Easy" :easy]
-                  ["Medium" :medium]
-                  ["Hard" :hard]]))
+  [:div
+   [:label {:for :difficulty} "Difficulty:"]
+   (->checked-rb "Easy" :difficulty :easy)
+   (->rb "Medium" :difficulty :medium)
+   (->rb "Hard" :difficulty :hard)])
 
-(defn render [board]
+(defn render [{:keys [board next-player]}]
   (h/html [:body {:style "text-align: center; margin: 0 auto;"}
            [:h1 "Tic Tac Toe"]
+           [:p (str (:token next-player) "'s turn")]
            [:form {:method "POST" :action "/move"}
             (->ttt-board board)]
            [:form {:method "POST" :action "/new-game"}
-            game-mode-options
+            mode-options
             size-options
             difficulty-options
             [:button {:type :submit :name :new-game} "New Game"]]]))

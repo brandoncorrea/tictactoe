@@ -1,6 +1,6 @@
 (ns tic-tac-toe.web.routes.home-spec
   (:require [speclj.core :refer :all]
-            [tic-tac-toe.web.pages.home :refer :all]))
+            [tic-tac-toe.web.routes.home :refer :all]))
 
 (describe "radio-button"
   (it "can be generated with text, a name, and a value"
@@ -13,26 +13,7 @@
     (should= [:input {:type :radio :name "val" :value 99 :checked true} "My Checked RB"]
              (->checked-rb "My Checked RB" "val" 99))
     (should= [:input {:type :radio :name :name :value :somethin :checked true} "Another Radio Button"]
-             (->checked-rb "Another Radio Button" :name :somethin)))
-
-
-  (it "generates an empty radio group"
-    (should= [:div [:label {:for "empty"} "Empty Group"]]
-             (->radio-group "Empty Group" "empty" [])))
-  (it "checks the first button in a group"
-    (should= [:div
-              [:label {:for "vals"} "Radio Group"]
-              [:input {:type :radio :name "vals" :value 1 :checked true} "Value 1"]]
-             (->radio-group "Radio Group" "vals" [["Value 1" 1]])))
-  (it "generates group of 3 options"
-    (should= [:div
-              [:label {:for "choice"} "Many Choices"]
-              [:input {:type :radio :name "choice" :value 5 :checked true} "Choice 1"]
-              [:input {:type :radio :name "choice" :value 10} "Choice 2"]
-              [:input {:type :radio :name "choice" :value 15} "Choice 3"]]
-             (->radio-group "Many Choices" "choice" [["Choice 1" 5]
-                                                     ["Choice 2" 10]
-                                                     ["Choice 3" 15]]))))
+             (->checked-rb "Another Radio Button" :name :somethin))))
 
 (describe "ttt-button"
   (it "converts cell to HTML submit button"
