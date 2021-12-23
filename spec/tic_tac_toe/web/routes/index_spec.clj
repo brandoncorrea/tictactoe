@@ -22,9 +22,6 @@
   (it "should not load if game is 1D"
     (should= false (should-load? (g/->board [] 1 1)))))
 
-(defmethod data/last-saved-game :in-memory [db]
-  (:last-save db))
-
 (def in-memory-uri "datomic:mem://ttt-test-db")
 (defn recreate-db []
   (datomic/delete-database in-memory-uri)
