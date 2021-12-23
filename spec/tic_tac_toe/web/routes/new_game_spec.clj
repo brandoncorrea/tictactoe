@@ -1,18 +1,12 @@
 (ns tic-tac-toe.web.routes.new-game-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.web.routes.new-game :refer :all]
-            [datomic.api :as datomic]
-            [tic-tac-toe.data.datomic-db :as datomic-db]
             [tic-tac-toe.web.pages.home :as home]
             [tic-tac-toe.game-board :as g]
             [tic-tac-toe.player.human :as human]
             [tic-tac-toe.player.player-dispatcher :as dispatcher]
-            [tic-tac-toe.data.data :as data]))
-
-(def in-memory-uri "datomic:mem://ttt-test-db")
-(defn recreate-db []
-  (datomic/delete-database in-memory-uri)
-  (datomic-db/->datomic-db in-memory-uri))
+            [tic-tac-toe.data.data :as data]
+            [tic-tac-toe.util.datomic-mem :as dm]))
 
 (defn responses-should= [res1 res2]
   (should= (:status res1) (:status res2))
@@ -24,7 +18,7 @@
         mode [:player-vs-player :player-vs-computer]
         difficulty [:easy :medium :hard]]
     (it (format "creates %s %sx%s game as %s" difficulty size size mode)
-      (let [db (recreate-db)
+      (let [db (dm/recreate-db)
             game {:board         (g/->board [] size)
                   :next-player   (human/->human \X)
                   :second-player (dispatcher/->opponent mode difficulty size \X \O)}]
