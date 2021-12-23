@@ -1,6 +1,6 @@
-(ns tic-tac-toe.web.routes.home-spec
+(ns tic-tac-toe.web.pages.home-spec
   (:require [speclj.core :refer :all]
-            [tic-tac-toe.web.routes.home :refer :all]))
+            [tic-tac-toe.web.pages.home :refer :all]))
 
 (describe "radio-button"
   (it "can be generated with text, a name, and a value"

@@ -1,5 +1,6 @@
-(ns tic-tac-toe.web.routes.home
-  (:require [hiccup.core :as h]))
+(ns tic-tac-toe.web.pages.home
+  (:require [hiccup.core :as h]
+            [tic-tac-toe.web.response-util :as r]))
 
 (def cell-style "height: 5em; width: 5em; border: solid #000 2px; display: inline-block")
 
@@ -37,7 +38,7 @@
    (->rb "Medium" :difficulty :medium)
    (->rb "Hard" :difficulty :hard)])
 
-(defn render [{:keys [board next-player]}]
+(defn ->html [{:keys [board next-player]}]
   (h/html [:body {:style "text-align: center; margin: 0 auto;"}
            [:h1 "Tic Tac Toe"]
            [:p (str (:token next-player) "'s turn")]
@@ -48,3 +49,5 @@
             size-options
             difficulty-options
             [:button {:type :submit :name :new-game} "New Game"]]]))
+
+(defn render [game] (r/render-page (->html game)))
