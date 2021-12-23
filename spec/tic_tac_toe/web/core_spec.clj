@@ -1,7 +1,6 @@
 (ns tic-tac-toe.web.core-spec
   (:require [speclj.core :refer :all]
-            [tic-tac-toe.web.core :refer :all]
-            [tic-tac-toe.web.pages.home :as home]))
+            [tic-tac-toe.web.core :refer :all]))
 
 (def empty-page (page ""))
 
