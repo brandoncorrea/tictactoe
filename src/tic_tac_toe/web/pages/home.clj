@@ -48,6 +48,6 @@
             mode-options
             size-options
             difficulty-options
-            [:button {:type :submit :name :new-game} "New Game"]]]))
+            [:button {:type :submit} "New Game"]]]))
 
 (defn render [game] (r/render-page (->html game)))

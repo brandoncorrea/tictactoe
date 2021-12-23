@@ -1,10 +1,12 @@
 (ns tic-tac-toe.web.core
   (:require [http-server.core :as h]
             [tic-tac-toe.data.datomic-db :as datomic-db]
-            [tic-tac-toe.web.routes.index :as index]))
+            [tic-tac-toe.web.routes.index :as index]
+            [tic-tac-toe.web.routes.new-game :as new-game]))
 
 (defn create-routes [db]
-  {:/ {:get (partial index/render db)}})
+  {:/ {:get (partial index/render db)}
+   :new-game {:post (partial new-game/render db)}})
 
 (defn -main []
   (println "Connecting to datomic...")
