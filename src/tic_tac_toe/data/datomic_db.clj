@@ -20,6 +20,8 @@
      :connection conn}))
 
 (defmethod data/save-game :datomic
+  ([db {:keys [board next-player second-player id]}]
+   (data/save-game db board next-player second-player id))
   ([db board next-player second-player]
    (data/save-game db board next-player second-player (d/tempid :db.part/user)))
   ([{conn :connection} board next-player second-player id]
