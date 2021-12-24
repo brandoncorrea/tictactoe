@@ -78,6 +78,14 @@
                 :second-player next-player}
                (move game [1 0]))))
 
+  (it "prevents further moves if game is over"
+    (let [game (assoc (create-game) :board (b/->board [\X \X \X]))]
+      (should= game (move game [2 2]))))
+
+  (it "prevents further moves vs AI if game is over"
+    (let [game (assoc (create-game {:difficulty :medium}) :board (b/->board [\X \X \X]))]
+      (should= game (move game [2 2]))))
+
   (for [[token-1 token-2] [[\X \O] [\O \X]]
         cell [[0 0] [2 2]]]
     (it (format "AI moves immediately after player %s moves to %s" token-1 cell)

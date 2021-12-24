@@ -37,8 +37,10 @@
 
 (defn- cell-occupied? [game cell] (get-in game [:board cell]))
 
-(defn- human-opponent? [{{type :type} :second-player}]
-  (= :human type))
+(defn- human-opponent? [game]
+  (-> game :second-player :type (= :human)))
+
+(def game-over? (comp :game-over b/game-results :board))
 
 (defn- move-player [game {token :token} cell]
   (assoc-in game [:board cell] token))
@@ -48,12 +50,12 @@
 
 (defn- move-vs-bot [{:keys [next-player second-player] :as game} cell]
   (let [{board :board :as game} (move-player game next-player cell)]
-    (if (:game-over (b/game-results board))
+    (if (game-over? game)
       game
       (move-player game second-player (p/next-move second-player board)))))
 
 (defn move [game cell]
   (cond
-    (cell-occupied? game cell) game
+    (or (cell-occupied? game cell) (game-over? game)) game
     (human-opponent? game) (move-vs-human game cell)
     :else (move-vs-bot game cell)))
