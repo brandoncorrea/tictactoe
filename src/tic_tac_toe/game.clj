@@ -48,7 +48,9 @@
 
 (defn- move-vs-bot [{:keys [next-player second-player] :as game} cell]
   (let [{board :board :as game} (move-player game next-player cell)]
-    (move-player game second-player (p/next-move second-player board))))
+    (if (:game-over (b/game-results board))
+      game
+      (move-player game second-player (p/next-move second-player board)))))
 
 (defn move [game cell]
   (cond

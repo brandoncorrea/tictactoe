@@ -100,6 +100,12 @@
       (should= 123 (get-in game [:next-player :id]))
       (should= 456 (get-in game [:second-player :id]))))
 
+  (it "does not move AI when game is over"
+    (let [game (create-game {:difficulty :medium})
+          game (assoc game :board (b/->board [\X \X]))
+          game (move game [0 2])]
+      (should= 3 (count (filter #(not (nil? (second %))) (:board game))))))
+
   (it "results in identity if the cell is already occupied"
     (let [game (assoc-in (create-game) [:board [0 0]] \O)]
       (should= game (move game [0 0]))))
