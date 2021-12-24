@@ -6,8 +6,7 @@
             [tic-tac-toe.player.human :as human]))
 
 (defn should-load? [board]
-  (and (= 2 (g/dimensions board))
-       (not (:game-over (g/game-results board)))))
+  (= 2 (g/dimensions board)))
 
 (defn- create-new-game [db]
   (data/save-game db (g/->board []) (human/->human \X) (dispatcher/->bot :medium \X \O 3))
