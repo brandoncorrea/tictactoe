@@ -2,11 +2,11 @@
   (:require [speclj.core :refer :all]
             [tic-tac-toe.web.routes.move :refer :all]
             [tic-tac-toe.util.datomic-mem :as dm]
-            [tic-tac-toe.web.pages.home :as home]
             [tic-tac-toe.data.data :as data]
             [tic-tac-toe.game-board :as g]
             [tic-tac-toe.player.human :as human]
-            [tic-tac-toe.util.assert-ttt :as a]))
+            [tic-tac-toe.util.assert-ttt :as a]
+            [http-server.core :as h]))
 
 (defn url-cell [[x y]] (str "cell=%5B" x "+" y "%5D"))
 
@@ -19,6 +19,6 @@
             game (assoc-in (data/last-saved-game db) [:board cell] token-1)
             game (assoc game :next-player (:second-player game)
                              :second-player (:next-player game))]
-        (a/responses-should= (home/render game)
+        (a/responses-should= (h/create-response 303 {"Location" "/"})
                              (render db {:body [(url-cell cell)]}))
         (should= (dissoc game :ts) (dissoc (data/last-saved-game db) :ts))))))
