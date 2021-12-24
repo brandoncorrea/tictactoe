@@ -5,15 +5,27 @@
 
 (describe "radio-button"
   (it "can be generated with text, a name, and a value"
-    (should= [:input {:type :radio :name :abc :value "123"} "My RB"]
+    (should= [:div {:class "field"}
+              [:div {:class "ui radio checkbox"}
+               [:input {:type :radio :name :abc :value "123"}]
+               [:label "My RB"]]]
              (->rb "My RB" :abc "123"))
-    (should= [:input {:type :radio :name "name-here" :value :some-value} "Second Btn"]
+    (should= [:div {:class "field"}
+              [:div {:class "ui radio checkbox"}
+               [:input {:type :radio :name "name-here" :value :some-value}]
+               [:label "Second Btn"]]]
              (->rb "Second Btn" "name-here" :some-value)))
 
   (it "can be generated with a checked state"
-    (should= [:input {:type :radio :name "val" :value 99 :checked true} "My Checked RB"]
+    (should= [:div {:class "field"}
+              [:div {:class "ui radio checkbox"}
+               [:input {:type :radio :name "val" :value 99 :checked ""}]
+               [:label "My Checked RB"]]]
              (->checked-rb "My Checked RB" "val" 99))
-    (should= [:input {:type :radio :name :name :value :somethin :checked true} "Another Radio Button"]
+    (should= [:div {:class "field"}
+              [:div {:class "ui radio checkbox"}
+               [:input {:type :radio :name :name :value :somethin :checked ""}]
+               [:label "Another Radio Button"]]]
              (->checked-rb "Another Radio Button" :name :somethin))))
 
 (describe "ttt-button"
