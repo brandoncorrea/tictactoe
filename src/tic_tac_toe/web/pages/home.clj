@@ -3,7 +3,8 @@
             [tic-tac-toe.web.response-util :as r]
             [tic-tac-toe.game-board :as g]))
 
-(def cell-style "height: 5em; width: 5em; border: solid #000 2px; display: inline-block")
+(def cell-style
+  "height: 5em; width: 5em; border: solid #000 1px; display: inline-block; background-color: #fff; vertical-align: middle")
 
 (defn ->ttt-button [[k v]]
   [:button {:type :submit :name :cell :value k :style cell-style} (str v)])
