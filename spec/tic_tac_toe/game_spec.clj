@@ -3,7 +3,8 @@
             [tic-tac-toe.game :refer :all]
             [tic-tac-toe.game-board :as b]
             [tic-tac-toe.player.human :as human]
-            [tic-tac-toe.player.player-dispatcher :as dispatcher]))
+            [tic-tac-toe.player.player-dispatcher :as dispatcher]
+            [tic-tac-toe.player.player :as p]))
 
 (describe "game"
   (it "initializes with board, player 1, and player 2"
@@ -77,9 +78,35 @@
                 :second-player next-player}
                (move game [1 0]))))
 
+  (for [[token-1 token-2] [[\X \O] [\O \X]]
+        cell [[0 0] [2 2]]]
+    (it (format "AI moves immediately after player %s moves to %s" token-1 cell)
+      (let [{next-player-1   :next-player
+             second-player-1 :second-player
+             board-1         :board :as game-init}
+            (create-game {:difficulty :medium :token-1 token-1 :token-2 token-2})
+            bot-cell (p/next-move second-player-1 (assoc board-1 cell token-1))
+            {:keys [board next-player second-player]}
+            (move game-init cell)]
+        (should= next-player-1 next-player)
+        (should= second-player-1 second-player)
+        (should= board (assoc board-1 cell token-1 bot-cell token-2)))))
+
+  (it "players are not modified when AI is opponent"
+    (let [game (create-game {:difficulty :medium})
+          game (assoc-in game [:next-player :id] 123)
+          game (assoc-in game [:second-player :id] 456)
+          game (move game [0 0])]
+      (should= 123 (get-in game [:next-player :id]))
+      (should= 456 (get-in game [:second-player :id]))))
+
   (it "results in identity if the cell is already occupied"
     (let [game (assoc-in (create-game) [:board [0 0]] \O)]
       (should= game (move game [0 0]))))
+
+  (it "retains other keys associated with game when vs AI"
+    (let [game (assoc (create-game {:difficulty :easy}) :extra-key :value)]
+      (should= :value (:extra-key (move game [0 0])))))
 
   (it "retains other keys associated with game map"
     (let [game (assoc (create-game) :extra-key :value)]

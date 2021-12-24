@@ -1,7 +1,8 @@
 (ns tic-tac-toe.game
   (:require [tic-tac-toe.game-board :as b]
             [tic-tac-toe.player.human :as human]
-            [tic-tac-toe.player.player-dispatcher :as dispatcher]))
+            [tic-tac-toe.player.player-dispatcher :as dispatcher]
+            [tic-tac-toe.player.player :as p]))
 
 (defn- create-opponent [mode difficulty token-1 token-2 size]
   (if (or (= mode :player-vs-computer)
@@ -31,9 +32,26 @@
       :next-player   (human/->human token-1)
       :second-player (create-opponent mode difficulty token-1 token-2 size)})))
 
-(defn move [{:keys [board next-player second-player] :as game} cell]
-  (if (get board cell)
-    game
-    (assoc game :board (assoc board cell (:token next-player))
-                :next-player second-player
-                :second-player next-player)))
+(defn- swap-players [{:keys [next-player second-player] :as game}]
+  (assoc game :next-player second-player :second-player next-player))
+
+(defn- cell-occupied? [game cell] (get-in game [:board cell]))
+
+(defn- human-opponent? [{{type :type} :second-player}]
+  (= :human type))
+
+(defn- move-player [game {token :token} cell]
+  (assoc-in game [:board cell] token))
+
+(defn- move-vs-human [{player :next-player :as game} cell]
+  (swap-players (move-player game player cell)))
+
+(defn- move-vs-bot [{:keys [next-player second-player] :as game} cell]
+  (let [{board :board :as game} (move-player game next-player cell)]
+    (move-player game second-player (p/next-move second-player board))))
+
+(defn move [game cell]
+  (cond
+    (cell-occupied? game cell) game
+    (human-opponent? game) (move-vs-human game cell)
+    :else (move-vs-bot game cell)))
