@@ -1,6 +1,7 @@
 (ns tic-tac-toe.web.pages.home
   (:require [hiccup.core :as h]
-            [tic-tac-toe.web.response-util :as r]))
+            [tic-tac-toe.web.response-util :as r]
+            [tic-tac-toe.game-board :as g]))
 
 (def cell-style "height: 5em; width: 5em; border: solid #000 2px; display: inline-block")
 
@@ -38,10 +39,17 @@
    (->rb "Medium" :difficulty :medium)
    (->rb "Hard" :difficulty :hard)])
 
-(defn ->html [{:keys [board next-player]}]
+(defn create-title [{:keys [board next-player]}]
+  (let [{:keys [draw winner]} (g/game-results board)]
+    (cond
+      draw "Game Over, Draw!"
+      winner (str "Game Over, " winner " wins!")
+      :else (str (:token next-player) "'s turn"))))
+
+(defn ->html [{board :board :as game}]
   (h/html [:body {:style "text-align: center; margin: 0 auto;"}
            [:h1 "Tic Tac Toe"]
-           [:p (str (:token next-player) "'s turn")]
+           [:p (create-title game)]
            [:form {:method "POST" :action "/move"}
             (->ttt-board board)]
            [:form {:method "POST" :action "/new-game"}

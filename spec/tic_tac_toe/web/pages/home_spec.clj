@@ -1,6 +1,7 @@
 (ns tic-tac-toe.web.pages.home-spec
   (:require [speclj.core :refer :all]
-            [tic-tac-toe.web.pages.home :refer :all]))
+            [tic-tac-toe.web.pages.home :refer :all]
+            [tic-tac-toe.game-board :as b]))
 
 (describe "radio-button"
   (it "can be generated with text, a name, and a value"
@@ -28,6 +29,19 @@
   (it "value is the key of the cell"
     (should= [:button {:type :submit :name :cell :value \H :style cell-style} "321"]
              (->ttt-button [\H "321"]))))
+
+(describe "title"
+  (for [token [\X \O]]
+    (it (format "displays player %s's move" token)
+      (should= (str token "'s turn")
+               (create-title {:next-player {:token token} :board (b/->board [])}))))
+  (it "displays game over draw result"
+    (should= "Game Over, Draw!"
+             (create-title {:board (b/->board (range))})))
+  (for [token [\X \O]]
+    (it (format "displays win result for %s" token)
+      (should= (str "Game Over, " token " wins!")
+               (create-title {:board (b/->board [token token token])})))))
 
 (describe "ttt-board"
   (it "generates 1x1 board"
