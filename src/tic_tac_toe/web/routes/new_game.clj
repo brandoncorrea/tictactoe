@@ -3,19 +3,11 @@
             [tic-tac-toe.player.human :as human]
             [tic-tac-toe.web.pages.home :as home]
             [tic-tac-toe.data.data :as data]
-            [ring.util.codec :as r]
-            [clojure.walk :as w]
+            [tic-tac-toe.util.url :as url]
             [tic-tac-toe.player.player-dispatcher :as dispatcher]))
 
 (defn- dispatch [{:keys [size mode difficulty]}]
-  (dispatcher/->opponent (keyword mode) (keyword difficulty) size \X \O))
-
-(defn- read-body [req]
-  (let [{:keys [size mode difficulty] :as options}
-        (w/keywordize-keys (r/form-decode (first (:body req))))]
-    (assoc options :size (Integer/parseInt size)
-                   :mode (keyword mode)
-                   :difficulty (keyword difficulty))))
+  (dispatcher/->opponent mode difficulty size \X \O))
 
 (defn- new-game [db {size :size :as options}]
   (data/save-game
@@ -25,5 +17,5 @@
     (dispatch options)))
 
 (defn render [db req]
-  (new-game db (read-body req))
+  (new-game db (url/decode (first (:body req))))
   (home/render (data/last-saved-game db)))
