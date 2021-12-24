@@ -6,7 +6,7 @@
             [tic-tac-toe.web.routes.new-game :as new-game]))
 
 (defn create-routes [db]
-  {:/ {:get (partial index/render db)}
+  {:* {:get (partial index/render db)}
    :new-game {:post (partial new-game/render db)}
    :move {:post (partial move/render db)}})
 
