@@ -6,12 +6,8 @@
             [tic-tac-toe.player.human :as human]
             [tic-tac-toe.player.player-dispatcher :as dispatcher]
             [tic-tac-toe.data.data :as data]
-            [tic-tac-toe.util.datomic-mem :as dm]))
-
-(defn responses-should= [res1 res2]
-  (should= (:status res1) (:status res2))
-  (should= (:headers res1) (:headers res2))
-  (should= (map identity (:body res1)) (map identity (:body res2))))
+            [tic-tac-toe.util.datomic-mem :as dm]
+            [tic-tac-toe.util.assert-ttt :as a]))
 
 (describe "new game"
   (for [size [3 4]
@@ -22,7 +18,7 @@
             game {:board         (g/->board [] size)
                   :next-player   (human/->human \X)
                   :second-player (dispatcher/->opponent mode difficulty size \X \O)}]
-        (responses-should=
+        (a/responses-should=
           (home/render game)
           (render db {:body [(str "mode=" (subs (str mode) 1) "&size=" size "&difficulty=" (subs (str difficulty) 1) "&new-game=")]}))
         (should= game (dissoc (data/last-saved-game db) :id :ts))))))
