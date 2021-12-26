@@ -9,7 +9,7 @@
                  [quil "3.1.0"]
                  [hiccup "1.0.5"]
                  [ring/ring-codec "1.1.3"]]
-  :resource-paths ["/Users/brandoncorrea/Projects/HttpServer/out/artifacts/HttpServer_jar/HttpServer.jar"]
+  :resource-paths ["src/http_server/HttpServer.jar"]
   :profiles {:dev {:dependencies [[speclj "3.3.2"]]}}
   :plugins [[speclj "3.3.2"]]
   :test-paths ["spec"])
