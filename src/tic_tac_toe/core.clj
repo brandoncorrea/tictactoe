@@ -2,27 +2,20 @@
   (:require [tic-tac-toe.game-board :as board]
             [tic-tac-toe.ui.user-interface :as ui]
             [tic-tac-toe.ui.console-io :as console]
-            [tic-tac-toe.player.player :as player]
             [tic-tac-toe.player.player-dispatcher :as dispatcher]
             [tic-tac-toe.player.human :as human]
             [tic-tac-toe.data.data :as data]
-            [tic-tac-toe.data.datomic-db :as datomic-db]))
+            [tic-tac-toe.data.datomic-db :as datomic-db]
+            [tic-tac-toe.game :as g]))
 
 (def datomic-uri "datomic:free://localhost:4334/ttt-games-db")
 
-(defn player-move [io board player]
-  (if (= :human (:type player))
-    (ui/request-move io board player)
-    (player/next-move player board)))
-
-(defn- play [io db id board player-1 player-2]
-  (loop [board board
-         [player next-player] [player-1 player-2]]
-    (data/save-game db board player next-player id)
-    (let [results (board/game-results board)]
-      (if (:game-over results)
-        (ui/show-results io board)
-        (recur (board/mark-square board (player-move io board player) (:token player)) [next-player player])))))
+(defn- play [io db game]
+  (loop [{:keys [board next-player] :as game} game]
+    (data/save-game db game)
+    (if (g/game-over? game)
+      (ui/show-results io board)
+      (recur (g/move game (ui/request-move io board next-player))))))
 
 (defn- player-vs-player? [io]
   (= :player-vs-player (ui/request-game-mode io)))
@@ -42,13 +35,6 @@
        (-> game :board board/game-results :game-over not)
        (ui/resume-game? io)))
 
-(defn- resume [io db game]
-  (play io db
-        (:id game)
-        (:board game)
-        (:next-player game)
-        (:second-player game)))
-
 (defn -main [& _]
   (let [io (console/->consoleIO)
         db (datomic-db/->datomic-db datomic-uri)
@@ -57,5 +43,5 @@
     (ui/show-instructions io)
     (if-not (should-resume? game io)
       (create-game io db \X \O))
-    (resume io db (data/last-saved-game db))
+    (play io db (data/last-saved-game db))
     (data/disconnect db)))
