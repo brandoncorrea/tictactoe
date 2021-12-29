@@ -41,6 +41,9 @@
   (-> game :second-player :type (= :human)))
 
 (def game-over? (comp :game-over b/game-results :board))
+(def draw? (comp :draw b/game-results :board))
+(def winner (comp :winner b/game-results :board))
+(def can-resume? (comp not game-over?))
 
 (defn- move-player [game {token :token} cell]
   (assoc-in game [:board cell] token))

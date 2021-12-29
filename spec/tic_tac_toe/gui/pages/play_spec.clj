@@ -1,9 +1,10 @@
 (ns tic-tac-toe.gui.pages.play-spec
   (:require [speclj.core :refer :all]
+            [tic-tac-toe.game-board :as b]
             [tic-tac-toe.gui.pages.play :refer :all]))
 
-(def game-over-result {:play {:results {:game-over true}}})
-(def game-not-over-result {:play {:results {:game-over false}}})
+(def game-over-result {:game {:board (b/->board (range))}})
+(def game-not-over-result {:game {:board (b/->board [])}})
 
 (describe "play"
   (it "does not navigate to game over when results do not reflect a game over"

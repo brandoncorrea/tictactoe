@@ -31,8 +31,6 @@
 
 (defmethod page/update-page :play [state]
   (->> (c/update-state t/board state)
-       s/refresh-game-results
        update-bot
-       s/refresh-game-results
-       s/save-game
+       s/save
        toggle-game-over))

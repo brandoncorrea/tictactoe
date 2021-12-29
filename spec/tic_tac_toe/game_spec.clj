@@ -60,7 +60,20 @@
       (should= {:board         (b/->board [])
                 :next-player   (human/->human token-1)
                 :second-player (human/->human token-2)}
-               (create-game {:token-1 token-1 :token-2 token-1})))))
+               (create-game {:token-1 token-1 :token-2 token-1}))))
+
+  (it "cannot resume if game is nil"
+    (should= false (can-resume? nil)))
+  (it "cannot resume if board is nil"
+    (should= false (can-resume? {:board nil})))
+  (it "can be resumed if no moves are made"
+    (should= true (can-resume? {:board (b/->board [])})))
+  (it "can resume if moves are made without winners"
+    (should= true (can-resume? {:board (b/->board (range 4))})))
+  (it "cannot resume if there is a winner"
+    (should= false (can-resume? {:board (b/->board [1 1 1])})))
+  (it "cannot resume draw game"
+    (should= false (can-resume? {:board (b/->board (range))}))))
 
 (describe "move"
   (for [cell [[0 0] [1 1]]]
