@@ -31,8 +31,7 @@
                       (dispatcher/->bot (ui/request-difficulty io) token-1 token-2 size dimensions)))))
 
 (defn- should-resume? [game io]
-  (and game
-       (-> game :board board/game-results :game-over not)
+  (and (g/can-resume? game)
        (ui/resume-game? io)))
 
 (defn -main [& _]
