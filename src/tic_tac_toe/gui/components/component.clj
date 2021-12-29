@@ -1,8 +1,7 @@
 (ns tic-tac-toe.gui.components.component)
 
-(defprotocol component
-  (draw [this state])
-  (update-state [this state]))
+(defmulti draw (fn [c & _] (:type c)))
+(defmulti update-state (fn [c & _] (:type c)))
 
 (defn draw-all [components state]
   (doseq [component components]

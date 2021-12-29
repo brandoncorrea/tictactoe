@@ -22,13 +22,12 @@
         cell-width (/ (- width (* x 2)) size)]
     (map (partial ->cell-button x y cell-width cell-height) board)))
 
-(deftype ttt-board []
-  c/component
-  (draw [_ state]
-    (c/draw-all (cell-buttons state) state))
-  (update-state [_ state]
-    (if (s/game-over? state)
-      state
-      (c/update-all (cell-buttons state) state))))
+(defmethod c/draw :ttt-board [_ state]
+  (c/draw-all (cell-buttons state) state))
 
-(def board (->ttt-board))
+(defmethod c/update-state :ttt-board [_ state]
+  (if (s/game-over? state)
+    state
+    (c/update-all (cell-buttons state) state)))
+
+(def board {:type :ttt-board})

@@ -2,7 +2,12 @@
   (:require [quil.core :as q]
             [tic-tac-toe.gui.components.component :as c]))
 
-(deftype header [text] c/component
-  (draw [_ {width :screen-width height :screen-height}]
-    (q/text text (/ width 2) (/ height 25)))
-  (update-state [_ state] state))
+(defmethod c/draw :header
+  [{:keys [text]} {:keys [screen-width screen-height]}]
+  (q/text text (/ screen-width 2) (/ screen-height 25)))
+
+(defmethod c/update-state :header [_ state]
+  state)
+
+(defn ->header [text]
+  {:type :header :text text})

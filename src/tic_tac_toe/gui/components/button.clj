@@ -13,27 +13,29 @@
          (<= y up-y y2)
          (<= y down-y y2))))
 
-(deftype button
-  [text x y width height onclick text-color back-color]
-  c/component
+(defmethod c/update-state :button
+  [{:keys [x y width height onclick]} state]
+  (if (clicked? x y width height (:mouse state))
+    (onclick state)
+    state))
 
-  (draw [_ _]
-    (q/fill back-color)
-    (q/rect x y width height)
-    (q/fill text-color)
-    (q/text text (+ x (/ width 2)) (+ y (/ height 2))))
-
-  (update-state [_ state]
-    (if (clicked? x y width height (:mouse state))
-      (onclick state)
-      state)))
+(defmethod c/draw :button
+  [{:keys [back-color text-color text x y width height]} _]
+  (q/fill back-color)
+  (q/rect x y width height)
+  (q/fill text-color)
+  (q/text (str text) (+ x (/ width 2)) (+ y (/ height 2))))
 
 (defn ->button
-  ([text x y width height update text-color back-color]
-   (button. (str text) x y width height update text-color back-color))
-  ([text x y width height update]
-   (->button text x y width height update color/black color/white))
-  ([text x y width height]
-   (->button text x y width height identity))
-  ([x y width height]
-   (->button "" x y width height)))
+  ([] ->button {})
+  ([options]
+   (merge {:type :button
+           :x 0
+           :y 0
+           :back-color color/white
+           :text-color color/black
+           :onclick identity
+           :text ""}
+          options))
+  ([text x y width height onclick]
+   (->button {:text text :width width :height height :x x :y y :onclick onclick})))
