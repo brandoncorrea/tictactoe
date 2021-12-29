@@ -1,7 +1,8 @@
 (ns tic-tac-toe.gui.state-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.gui.state :refer :all]
-            [tic-tac-toe.game-board :as b]))
+            [tic-tac-toe.game-board :as b]
+            [tic-tac-toe.data.data :as data]))
 
 (describe "state"
   (for [page [:new-game :game-over]]
@@ -58,3 +59,21 @@
     (should= true (human-turn? {:game {:next-player {:type :human}}})))
   (it "is a non-human player's turn"
     (should= false (human-turn? {:game {:next-player {:type :unbeatable}}}))))
+
+(defmethod data/last-saved-game :mock [{board :board}]
+  {:board board})
+
+(describe "load game"
+  (for [moves [0 3 8]]
+    (it (format "if last game has %s moves" moves)
+      (let [board (b/->board (range moves))]
+        (should= {:db   {:type :mock :board board}
+                  :page :load-game
+                  :game {:board board}}
+                 (load-last-saved-game {:db {:type :mock :board board}})))))
+
+  (for [[message board] [["unless board is full" (b/->board (range))]
+                         ["unless board is won" (b/->board [\X \X \X])]]]
+    (it message
+      (should= {:db {:type :mock :board board}}
+               (load-last-saved-game {:db {:type :mock :board board}})))))
