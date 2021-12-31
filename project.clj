@@ -3,7 +3,7 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :main tic-tac-toe.ui.web.core
+  :main tic-tac-toe.ui.core
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [com.datomic/datomic-free "0.9.5697"]
                  [quil "3.1.0"]
