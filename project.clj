@@ -1,6 +1,6 @@
 (defproject org.clojars.brandoncorrea/ttt-data "0.1.0-SNAPSHOT"
   :description "Tic Tac Toe datomic interface"
-  :url "http://example.com/FIXME"
+  :url "https://github.com/brandoncorrea/ttt-data"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :main ttt-data.core
