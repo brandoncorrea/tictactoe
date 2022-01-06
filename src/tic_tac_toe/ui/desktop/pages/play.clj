@@ -4,7 +4,7 @@
             [tic-tac-toe.ui.desktop.components.component :as c]
             [tic-tac-toe.ui.desktop.components.header :as h]
             [tic-tac-toe.ui.desktop.components.ttt-board :as t]
-            [tic-tac-toe.player.player :as p]))
+            [ttt-core.player.player :as p]))
 
 (defn toggle-game-over [state]
   (if (s/game-over? state)

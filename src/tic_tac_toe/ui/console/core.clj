@@ -1,11 +1,11 @@
 (ns tic-tac-toe.ui.console.core
-  (:require [tic-tac-toe.game-board :as board]
+  (:require [ttt-core.game-board :as board]
             [tic-tac-toe.ui.console.io :as io]
-            [tic-tac-toe.player.player-dispatcher :as dispatcher]
-            [tic-tac-toe.player.human :as human]
+            [ttt-core.player.player-dispatcher :as dispatcher]
+            [ttt-core.player.human :as human]
             [tic-tac-toe.data.data :as data]
             [tic-tac-toe.data.datomic-db :as datomic-db]
-            [tic-tac-toe.game :as g]))
+            [ttt-core.game :as g]))
 
 (def datomic-uri "datomic:free://localhost:4334/ttt-games-db")
 

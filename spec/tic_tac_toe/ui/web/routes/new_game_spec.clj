@@ -1,9 +1,9 @@
 (ns tic-tac-toe.ui.web.routes.new-game-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.ui.web.routes.new-game :refer :all]
-            [tic-tac-toe.game-board :as g]
-            [tic-tac-toe.player.human :as human]
-            [tic-tac-toe.player.player-dispatcher :as dispatcher]
+            [ttt-core.game-board :as g]
+            [ttt-core.player.human :as human]
+            [ttt-core.player.player-dispatcher :as dispatcher]
             [tic-tac-toe.data.data :as data]
             [tic-tac-toe.util.datomic-mem :as dm]
             [tic-tac-toe.util.assert-ttt :as a]

@@ -1,6 +1,6 @@
 (ns tic-tac-toe.ui.console.formatter
   (:require [clojure.string :as s]
-            [tic-tac-toe.game-board :as board]))
+            [ttt-core.game-board :as board]))
 
 (defn- token->str [token]
   (if token (str token) "_"))

@@ -1,5 +1,5 @@
 (ns tic-tac-toe.ui.desktop.state
-  (:require [tic-tac-toe.game :as g]
+  (:require [ttt-core.game :as g]
             [tic-tac-toe.data.data :as data]))
 
 (defn navigate [state page] (assoc state :page page))

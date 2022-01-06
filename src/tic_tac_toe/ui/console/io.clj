@@ -1,16 +1,16 @@
 (ns tic-tac-toe.ui.console.io
-  (:require [tic-tac-toe.game-board :as board]
-            [tic-tac-toe.ui.console.formatter :as f]
-            [tic-tac-toe.util.collections :as util]
-            [tic-tac-toe.util.int-math :as math]))
+  (:require [ttt-core.game-board :as board]
+            [tic-tac-toe.ui.console.formatter :as f]))
 
+(defn string->int [s] (Integer. s))
+(defn any [pred coll] (first (filter pred coll)))
 (def ^:private horizontal-line (apply str (repeat 15 "-")))
 (defn- show-board [board]
   (println)
   (println (f/format-board board)))
 
 (defn parse-numbers [text]
-  (map math/string->int (re-seq #"-?\d+" text)))
+  (map string->int (re-seq #"-?\d+" text)))
 
 (defn write-header [message]
   (println horizontal-line)
@@ -23,13 +23,13 @@
   (read-line))
 
 (defn- request-until [f pred message]
-  (util/any pred (repeatedly #(f message))))
+  (any pred (repeatedly #(f message))))
 
 (def request-numbers (comp parse-numbers request-str))
 (def request-numbers-until (partial request-until request-numbers))
 (def request-str-until (partial request-until request-str))
 (defn- request-int-until [pred message]
-  (util/any pred (map first (take-while #(= 1 (count %)) (repeatedly #(request-numbers message))))))
+  (any pred (map first (take-while #(= 1 (count %)) (repeatedly #(request-numbers message))))))
 
 (defn- request-int-option [options message]
   (get options (request-int-until (set (keys options)) message)))

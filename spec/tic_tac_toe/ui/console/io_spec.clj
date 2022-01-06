@@ -1,8 +1,8 @@
 (ns tic-tac-toe.ui.console.io-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.ui.console.io :refer :all]
-            [tic-tac-toe.player.human :as human]
-            [tic-tac-toe.game-board :refer :all]
+            [ttt-core.player.human :as human]
+            [ttt-core.game-board :refer :all]
             [tic-tac-toe.ui.console.formatter :refer :all]))
 
 (def header-line "---------------\n")

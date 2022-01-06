@@ -1,7 +1,7 @@
 (ns tic-tac-toe.ui.web.pages.home
   (:require [hiccup.core :as h]
             [tic-tac-toe.ui.web.response-util :as r]
-            [tic-tac-toe.game-board :as g]))
+            [ttt-core.game-board :as g]))
 
 (def cell-style
   "height: 5em; width: 5em; border: solid #000 1px; display: inline-block; background-color: #fff; vertical-align: middle")

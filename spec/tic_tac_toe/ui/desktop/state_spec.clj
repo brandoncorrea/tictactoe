@@ -1,7 +1,7 @@
 (ns tic-tac-toe.ui.desktop.state-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.ui.desktop.state :refer :all]
-            [tic-tac-toe.game-board :as b]
+            [ttt-core.game-board :as b]
             [tic-tac-toe.data.data :as data]))
 
 (describe "state"

@@ -1,11 +1,11 @@
 (ns tic-tac-toe.ui.web.routes.index-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.ui.web.routes.index :refer :all]
-            [tic-tac-toe.game-board :as g]
+            [ttt-core.game-board :as g]
             [tic-tac-toe.util.datomic-mem :as dm]
             [tic-tac-toe.data.data :as data]
-            [tic-tac-toe.player.human :as human]
-            [tic-tac-toe.player.player-dispatcher :as dispatcher]))
+            [ttt-core.player.human :as human]
+            [ttt-core.player.player-dispatcher :as dispatcher]))
 
 (describe "last board"
   (it "should load if it is game over"

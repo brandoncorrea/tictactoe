@@ -1,7 +1,7 @@
 (ns tic-tac-toe.data.datomic-db
   (:require [datomic.api :as d]
             [tic-tac-toe.data.data :as data]
-            [tic-tac-toe.game-board :as board]))
+            [ttt-core.game-board :as board]))
 
 (def ^:private schema (load-file "src/tic_tac_toe/data/schema.edn"))
 

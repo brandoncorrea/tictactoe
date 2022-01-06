@@ -1,7 +1,7 @@
 (ns tic-tac-toe.ui.desktop.components.ttt-board
   (:require [tic-tac-toe.ui.desktop.components.component :as c]
             [tic-tac-toe.ui.desktop.components.button :as b]
-            [tic-tac-toe.game-board :as g]
+            [ttt-core.game-board :as g]
             [tic-tac-toe.ui.desktop.state :as s]))
 
 (defn- ->cell-button [x y width height [[r c] token]]

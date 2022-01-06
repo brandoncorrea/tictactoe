@@ -1,9 +1,9 @@
 (ns tic-tac-toe.ui.web.routes.index
   (:require [tic-tac-toe.ui.web.pages.home :as home]
-            [tic-tac-toe.game-board :as g]
+            [ttt-core.game-board :as g]
             [tic-tac-toe.data.data :as data]
-            [tic-tac-toe.player.player-dispatcher :as dispatcher]
-            [tic-tac-toe.player.human :as human]))
+            [ttt-core.player.player-dispatcher :as dispatcher]
+            [ttt-core.player.human :as human]))
 
 (defn should-load? [board]
   (= 2 (g/dimensions board)))

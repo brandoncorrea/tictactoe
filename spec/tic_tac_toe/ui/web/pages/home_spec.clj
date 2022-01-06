@@ -1,7 +1,7 @@
 (ns tic-tac-toe.ui.web.pages.home-spec
   (:require [speclj.core :refer :all]
             [tic-tac-toe.ui.web.pages.home :refer :all]
-            [tic-tac-toe.game-board :as b]))
+            [ttt-core.game-board :as b]))
 
 (describe "radio-button"
   (it "can be generated with text, a name, and a value"

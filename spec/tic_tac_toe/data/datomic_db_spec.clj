@@ -2,7 +2,7 @@
   (:require [speclj.core :refer :all]
             [tic-tac-toe.data.datomic-db :refer :all]
             [tic-tac-toe.data.data :refer :all]
-            [tic-tac-toe.game-board :as board]
+            [ttt-core.game-board :as board]
             [tic-tac-toe.util.datomic-mem :as dm]))
 
 (def empty-3x3 (board/->board []))

@@ -3,8 +3,8 @@
             [tic-tac-toe.ui.web.routes.move :refer :all]
             [tic-tac-toe.util.datomic-mem :as dm]
             [tic-tac-toe.data.data :as data]
-            [tic-tac-toe.game-board :as g]
-            [tic-tac-toe.player.human :as human]
+            [ttt-core.game-board :as g]
+            [ttt-core.player.human :as human]
             [tic-tac-toe.util.assert-ttt :as a]
             [http-server.core :as h]))
 
