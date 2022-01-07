@@ -8,4 +8,4 @@
            [(if (g/draw? game)
               "Game Over – Draw!"
               (str "Game Over – " (g/winner game) " Wins!"))]
-           []))))
+           [(str (get-in game [:next-player :token]) "'s turn")]))))
