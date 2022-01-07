@@ -32,3 +32,6 @@
 
 (defn new-game []
   (swap! state #(assoc % :game (g/create-game (:new-game %)))))
+
+(defn move [cell]
+  (swap! state #(assoc % :game (g/move (:game %) cell))))

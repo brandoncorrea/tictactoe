@@ -18,34 +18,23 @@
     (should= @s/state s/state-init)))
 
 (describe "accessors"
-  (it "retrieves game mode"
-    (should= (get-in @s/state [:new-game :mode]) (s/game-mode)))
-  (it "retrieves game size"
-    (should= (get-in @s/state [:new-game :size]) (s/size)))
-  (it "retrieves game difficulty"
-    (should= (get-in @s/state [:new-game :difficulty]) (s/difficulty)))
-  (it "retrieves game board"
-    (should= (get-in @s/state [:game :board]) (s/board))))
+  (for [[title ks read] [["game mode" [:new-game :mode] s/game-mode]
+                         ["size" [:new-game :size] s/size]
+                         ["difficulty" [:new-game :difficulty] s/difficulty]
+                         ["game board" [:game :board] s/board]]]
+    (it (str "retrieves " title)
+      (should= (get-in @s/state ks) (read)))))
 
 (describe "setters"
-  (it "updates game mode"
-    (s/set-game-mode :test-1)
-    (should= :test-1 (s/game-mode))
-    (s/set-game-mode :another-test)
-    (should= :another-test (s/game-mode))
-    (reset! s/state s/state-init))
-  (it "updates game size"
-    (s/set-size 5)
-    (should= 5 (s/size))
-    (s/set-size 4)
-    (should= 4 (s/size))
-    (reset! s/state s/state-init))
-  (it "updates difficulty"
-    (s/set-difficulty :hard)
-    (should= :hard (s/difficulty))
-    (s/set-difficulty :really-hard)
-    (should= :really-hard (s/difficulty))
-    (reset! s/state s/state-init)))
+  (for [[title set read [v1 v2]] [["game mode" s/set-game-mode s/game-mode [:test-1 :dummy]]
+                                  ["size" s/set-size s/size [5 4]]
+                                  ["difficulty" s/set-difficulty s/difficulty [:hard :really-hard]]]]
+    (it (str "updates " title)
+      (set v1)
+      (should= v1 (read))
+      (set v2)
+      (should= v2 (read))
+      (reset! s/state s/state-init))))
 
 (describe "updaters"
   (for [[name setter reader updater value]
@@ -72,4 +61,12 @@
       (s/set-size size)
       (s/set-difficulty difficulty)
       (s/new-game)
-      (should= (g/create-game {:size size :mode mode :difficulty difficulty}) (:game @s/state)))))
+      (should= (g/create-game {:size size :mode mode :difficulty difficulty}) (:game @s/state))
+      (reset! s/state s/state-init))))
+
+(describe "move"
+  (for [cell [[0 0] [1 2]]]
+    (it (str "moves current player to " cell)
+      (let [game (:game @s/state)]
+        (s/move cell)
+        (should= (:game @s/state) (g/move game cell))))))
