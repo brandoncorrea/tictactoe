@@ -3,6 +3,11 @@
   (:require [speclj.core]
             [ttt-cljs.components.board :as c]))
 
+(describe "parse-value"
+  (for [[x y :as cell] [[0 1] [1 2]]]
+    (it (str "parses vector text value: " cell)
+      (should= cell (c/parse-value (str x "," y))))))
+
 (describe "cell"
   (it "contains styling properties"
     (should= {:width "5em"
@@ -10,11 +15,18 @@
               :border "solid #000 1px"
               :text-align "center"
               :vertical-align "middle"
-              :line-height "5em"}
+              :line-height "5em"
+              :background-color "#fff"}
              c/col-style))
-  (for [token [\X \O nil]]
+  (for [cell [[0 0] [1 2]]
+        token [\X \O nil]]
     (it (str "is a div .col element " (or token "nil") " token")
-      (should= [:div {:class "col" :style c/col-style} (or token "")] (c/cell [nil token])))))
+      (should= [:button {:class "col"
+                         :value cell
+                         :style c/col-style
+                         :on-click c/cell-click}
+                (or token "")]
+               (c/cell [cell token])))))
 
 (describe "row"
   (it "contains styling properties"
