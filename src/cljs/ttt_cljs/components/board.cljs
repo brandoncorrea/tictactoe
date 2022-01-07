@@ -4,10 +4,11 @@
 (def col-style
   {:width "5em"
    :height "5em"
+   :line-height "5em"
+   :font-size "18px"
    :border "solid #000 1px"
    :text-align "center"
    :vertical-align "middle"
-   :line-height "5em"
    :background-color "#fff"})
 
 (def row-style
@@ -24,18 +25,17 @@
 
 (defn cell [[cell token]]
   [:button
-   {:class    "col"
-    :style    col-style
+   {:style    col-style
     :on-click cell-click
     :value    cell}
    (str token)])
 
 (defn row [cells]
   (vec (concat
-         [:div {:class "row" :style row-style}]
+         [:div {:style row-style}]
          (map cell (sort-by first cells)))))
 
 (defn board [cells]
   (vec (concat
-         [:div {:class "container"}]
+         [:div]
          (map (comp row second) (sort-by first (group-by ffirst cells))))))

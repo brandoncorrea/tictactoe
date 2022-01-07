@@ -12,17 +12,17 @@
   (it "contains styling properties"
     (should= {:width "5em"
               :height "5em"
+              :line-height "5em"
+              :font-size "18px"
               :border "solid #000 1px"
               :text-align "center"
               :vertical-align "middle"
-              :line-height "5em"
               :background-color "#fff"}
              c/col-style))
   (for [cell [[0 0] [1 2]]
         token [\X \O nil]]
-    (it (str "is a div .col element " (or token "nil") " token")
-      (should= [:button {:class "col"
-                         :value cell
+    (it (str "is a button element with " (or token "nil") " token")
+      (should= [:button {:value cell
                          :style c/col-style
                          :on-click c/cell-click}
                 (or token "")]
@@ -35,17 +35,17 @@
               :block-size "fit-content"}
              c/row-style))
   (it "creates an empty row"
-    (should= [:div {:class "row" :style c/row-style}] (c/row [])))
+    (should= [:div {:style c/row-style}] (c/row [])))
   (it "creates a row with one item"
-    (should= [:div {:class "row" :style c/row-style} (c/cell [[0 0] \X])]
+    (should= [:div {:style c/row-style} (c/cell [[0 0] \X])]
              (c/row [[[0 0] \X]])))
   (it "creates a row with two items"
-    (should= [:div {:class "row" :style c/row-style}
+    (should= [:div {:style c/row-style}
               (c/cell [[0 0] \X])
               (c/cell [[0 1] \O])]
              (c/row [[[0 0] \X] [[0 1] \O]])))
   (it "sorts row by key"
-    (should= [:div {:class "row" :style c/row-style}
+    (should= [:div {:style c/row-style}
               (c/cell [[0 0] \X])
               (c/cell [[0 1] \Y])
               (c/cell [[0 2] \Z])]
@@ -55,19 +55,16 @@
 
 (describe "board"
   (it "creates empty board"
-    (should= [:div {:class "container"}]
-             (c/board {})))
+    (should= [:div] (c/board {})))
   (it "creates board with one cell"
-    (should= [:div {:class "container"}
-              (c/row {[0 0] \X})]
-             (c/board {[0 0] \X})))
+    (should= [:div (c/row {[0 0] \X})] (c/board {[0 0] \X})))
   (it "creates board with two rows"
-    (should= [:div {:class "container"}
+    (should= [:div
               (c/row {[0 0] \X})
               (c/row {[1 0] \O})]
              (c/board {[0 0] \X [1 0] \O})))
   (it "sorts by row number"
-    (should= [:div {:class "container"}
+    (should= [:div
               (c/row {[0 0] \X})
               (c/row {[1 0] \Y [1 1] "YA"})
               (c/row {[2 0] \Z})]

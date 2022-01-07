@@ -1,19 +1,15 @@
 (ns ttt-cljs.components.menu
   (:require [ttt-cljs.state :as s]))
 
-(defn ->radio [{:keys [text checked id] :as opts}]
-  [:div {:class "form-check form-check-inline"}
-   [:input (merge {:class "form-check-input"
-                   :type  "radio"
+(defn ->radio [{:keys [text checked] :as opts}]
+  [:div {:style {:padding "5px 10px"}}
+   [:input (merge {:type  "radio"
                    :checked (if checked true false)}
                   (dissoc opts :text :checked))]
-   [:label
-    (merge {:class "form-check-label"}
-           (if id {:for id} {}))
-    (or text "")]])
+   [:label (or text "")]])
 
 (defn game-mode []
-  [:div
+  [:div {:style {:display "flex"}}
    (->radio
      {:name :game-mode
       :text "Player vs Computer"
@@ -28,7 +24,7 @@
       :checked (= :player-vs-player (s/game-mode))})])
 
 (defn difficulty []
-  [:div
+  [:div {:style {:display "flex"}}
    (->radio {:name :difficulty
              :text "Easy"
              :value :easy
@@ -46,7 +42,7 @@
              :checked (= :hard (s/difficulty))})])
 
 (defn size []
-  [:div
+  [:div {:style {:display "flex"}}
    (->radio {:name    :size
              :text    "3x3 Board"
              :value   3
@@ -59,10 +55,19 @@
              :checked (= 4 (s/size))})])
 
 (def new-game
-  [:div {:class "d-grid gap-2"}
-   [:input {:type "button"
-            :class "btn btn-success"
+  [:div
+   [:input {:type  "button"
             :value "New Game"
+            :style {:display "block"
+                    :width "100%"
+                    :border "none"
+                    :background-color "#04AA6D"
+                    :color "#fff"
+                    :padding "14px 28px"
+                    :font-size "16px"
+                    :cursor "pointer"
+                    :border-radius "10px"
+                    :text-align "center"}
             :on-click s/new-game}]])
 
 (defn menu []

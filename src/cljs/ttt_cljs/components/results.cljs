@@ -3,7 +3,7 @@
 
 (defn results [game]
   (vec (concat
-         [:div {:style {:text-align "center"}}]
+         [:h3 {:style {:text-align "center"}}]
          (if (g/game-over? game)
            [(if (g/draw? game)
               "Game Over – Draw!"
