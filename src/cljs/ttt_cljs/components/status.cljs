@@ -1,7 +1,7 @@
-(ns ttt-cljs.components.results
+(ns ttt-cljs.components.status
   (:require [ttt-core.game :as g]))
 
-(defn results [game]
+(defn status [game]
   (vec (concat
          [:h3 {:style {:text-align "center"}}]
          (if (g/game-over? game)
