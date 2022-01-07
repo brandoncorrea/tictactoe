@@ -11,46 +11,32 @@
 (defn game-mode []
   [:div {:style {:display "flex"}}
    (->radio
-     {:name :game-mode
-      :text "Player vs Computer"
-      :value :player-vs-computer
+     {:text "Player vs Computer"
       :on-click s/set-pvc
       :checked (= :player-vs-computer (s/game-mode))})
    (->radio
-     {:name :game-mode
-      :text "Player vs Player"
-      :value :player-vs-player
+     {:text "Player vs Player"
       :on-click s/set-pvp
       :checked (= :player-vs-player (s/game-mode))})])
 
 (defn difficulty []
   [:div {:style {:display "flex"}}
-   (->radio {:name :difficulty
-             :text "Easy"
-             :value :easy
+   (->radio {:text "Easy"
              :on-click s/set-easy
              :checked (= :easy (s/difficulty))})
-   (->radio {:name :difficulty
-             :text "Medium"
-             :value :medium
+   (->radio {:text "Medium"
              :on-click s/set-medium
              :checked (= :medium (s/difficulty))})
-   (->radio {:name :difficulty
-             :text "Hard"
-             :value :hard
+   (->radio {:text "Hard"
              :on-click s/set-hard
              :checked (= :hard (s/difficulty))})])
 
 (defn size []
   [:div {:style {:display "flex"}}
-   (->radio {:name    :size
-             :text    "3x3 Board"
-             :value   3
+   (->radio {:text    "3x3 Board"
              :on-click s/set-3x3
              :checked (= 3 (s/size))})
-   (->radio {:name :size
-             :text "4x4 Board"
-             :value 4
+   (->radio {:text "4x4 Board"
              :on-click s/set-4x4
              :checked (= 4 (s/size))})])
 

@@ -72,14 +72,10 @@
 (describe "game-mode"
   (it "renders PVP and PVC options"
     (should= [:div {:style {:display "flex"}}
-              (m/->radio {:name     :game-mode
-                          :text     "Player vs Computer"
-                          :value    :player-vs-computer
+              (m/->radio {:text     "Player vs Computer"
                           :on-click s/set-pvc
                           :checked (= :player-vs-computer (s/game-mode))})
-              (m/->radio {:name :game-mode
-                          :text "Player vs Player"
-                          :value :player-vs-player
+              (m/->radio {:text "Player vs Player"
                           :on-click s/set-pvp
                           :checked (= :player-vs-player (s/game-mode))})]
              (m/game-mode))))
@@ -87,19 +83,13 @@
 (describe "difficulty"
   (it "renders Easy, Medium, and Hard options"
     (should= [:div {:style {:display "flex"}}
-              (m/->radio {:name :difficulty
-                          :text "Easy"
-                          :value :easy
+              (m/->radio {:text "Easy"
                           :on-click s/set-easy
                           :checked (= :easy (s/difficulty))})
-              (m/->radio {:name :difficulty
-                          :text "Medium"
-                          :value :medium
+              (m/->radio {:text "Medium"
                           :on-click s/set-medium
                           :checked (= :medium (s/difficulty))})
-              (m/->radio {:name :difficulty
-                          :text "Hard"
-                          :value :hard
+              (m/->radio {:text "Hard"
                           :on-click s/set-hard
                           :checked (= :hard (s/difficulty))})]
              (m/difficulty))))
@@ -107,14 +97,10 @@
 (describe "size"
   (it "renders 3x3 and 4x4 options"
     (should= [:div {:style {:display "flex"}}
-              (m/->radio {:name :size
-                          :text "3x3 Board"
-                          :value 3
+              (m/->radio {:text "3x3 Board"
                           :on-click s/set-3x3
                           :checked (= 3 (s/size))})
-              (m/->radio {:name    :size
-                          :text    "4x4 Board"
-                          :value   4
+              (m/->radio {:text    "4x4 Board"
                           :on-click s/set-4x4
                           :checked (= 4 (s/size))})]
              (m/size))))
