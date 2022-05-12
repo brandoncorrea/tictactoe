@@ -6,7 +6,7 @@
 pom.xml
 *.jar
 *.class
-.idea
+../../.idea
 .specljs-timestamp
 .lein-deps-sum
 .lein-failures
