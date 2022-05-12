@@ -4,7 +4,6 @@
 /checkouts
 pom.xml
 *.iml
-*.jar
 *.class
 .idea
 out
