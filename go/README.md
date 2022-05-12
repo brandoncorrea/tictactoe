@@ -32,7 +32,6 @@ Your Move: 2 2
 | _ | _ | _ |
 | _ | _ | O |
 ````
-
 ### Execute
 `go run main.go`
 
